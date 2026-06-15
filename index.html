@@ -17,35 +17,47 @@
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
 
-        /* CONTENITORE SWIPE REALE - SCORRIMENTO NATIVO FLUIDO */
-        #home-screen { 
-            background-color: #000; 
-            overflow-x: scroll;
-            overflow-y: hidden;
-            display: flex;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-        /* Nasconde la barra di scorrimento del browser */
-        #home-screen::-webkit-scrollbar { display: none; }
-        
-        .page {
-            flex: 0 0 100%;
-            width: 100vw;
-            height: 100vh;
+        #home-screen {
+            background-image: url('sfondo.PNG');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            scroll-snap-align: start;
-            box-sizing: border-box;
         }
-        
-        #page1 { background-image: url('home1.PNG'); }
-        #page2 { background-image: url('home2.PNG'); }
-        #page3 { background-image: url('home3.PNG'); }
+
+        #icons-slider {
+            display: flex;
+            width: 300%; 
+            height: calc(100% - 150px); 
+            margin-top: 50px; 
+            transition: transform 0.28s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+
+        .grid-page {
+            width: 33.333%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            box-sizing: border-box;
+            padding: 10px 20px;
+            gap: 15px;
+        }
+
+        .icon-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            background-color: rgba(255,255,255,0.15);
+        }
 
         #status-bar {
-            position: fixed;
+            position: absolute;
             top: 0; left: 0; right: 0;
             z-index: 10;
             display: flex; justify-content: space-between;
@@ -53,7 +65,6 @@
             pointer-events: none; 
         }
 
-        /* INTERFACCIA SVEGLIA */
         #clock-screen { background-color: #000; box-sizing: border-box; z-index: 20; }
         .clock-header { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -92,9 +103,11 @@
     </div>
 
     <div id="home-screen" class="screen">
-        <div class="page" id="page1"></div>
-        <div class="page" id="page2"></div>
-        <div class="page" id="page3"></div>
+        <div id="icons-slider">
+            <div class="grid-page" id="p1"></div>
+            <div class="grid-page" id="p2"></div>
+            <div class="grid-page" id="p3"></div>
+        </div>
     </div>
 
     <div id="clock-screen" class="screen hidden">
@@ -107,8 +120,11 @@
     </div>
 
     <script>
-        let inputDigits = []; 
-        const homeScreen = document.getElementById('home-screen');
+        let inputDigits = [];
+        let currentIndex = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isMoving = false;
 
         function updateClock() {
             const now = new Date();
@@ -117,60 +133,82 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // CATTURA IL TOCCO INIZIALE (Nessun lag numerico e swipe libero)
-        homeScreen.addEventListener('touchstart', (e) => {
-            if (e.touches && e.touches.length > 0) {
-                const touch = e.touches[0];
-                
-                if (inputDigits.length < 4) {
-                    const digit = getDigitFromCoords(touch.clientX, touch.clientY);
-                    inputDigits.push(digit);
-                    console.log("Inserito:", digit, "Sequenza attuale:", inputDigits);
-                } else {
-                    // Se l'orario è già completo (4 cifre inserite), il tocco apre la sveglia
-                    // Per farlo in modo naturale, controlliamo che l'utente sia tornato a Pagina 1
-                    const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
-                    if (currentPage === 0) {
-                        apriSveglia();
-                    }
+        function createGridCells(pageId) {
+            const page = document.getElementById(pageId);
+            for (let r = 1; r <= 6; r++) {
+                for (let c = 1; c <= 4; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'icon-cell';
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    
+                    const img = document.createElement('div');
+                    img.className = 'icon-img';
+                    cell.appendChild(img);
+                    
+                    page.appendChild(cell);
                 }
+            }
+        }
+        createGridCells('p1');
+        createGridCells('p2');
+        createGridCells('p3');
+
+        const slider = document.getElementById('icons-slider');
+
+        slider.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            isMoving = false;
+
+            const element = document.elementFromPoint(touchStartX, touchStartY);
+            const cell = element ? element.closest('.icon-cell') : null;
+
+            if (cell && inputDigits.length < 4) {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                
+                let digit = 0;
+                if (row === 5 && col === 2) digit = 1;
+                else if (row === 5 && col === 3) digit = 2;
+                else if (row === 5 && col === 4) digit = 3;
+                else if (row === 6 && col === 2) digit = 4;
+                else if (row === 6 && col === 3) digit = 5;
+                else if (row === 6 && col === 4) digit = 6;
+                else if (row === 7 && col === 2) digit = 7; 
+                else if (row === 7 && col === 3) digit = 8;
+                else if (row === 7 && col === 4) digit = 9;
+
+                inputDigits.push(digit);
             }
         }, { passive: true });
 
-        // TASTIERINO MATEMATICO 3x3 IN BASSO A DESTRA
-        function getDigitFromCoords(x, y) {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
+        slider.addEventListener('touchmove', (e) => {
+            isMoving = true;
+        }, { passive: true });
 
-            // Zona attiva: metà inferiore destra dello schermo
-            const isRightSide = x > (w * 0.25); 
-            const isBottomSide = y > (h * 0.5); 
+        slider.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diffX = touchEndX - touchStartX;
 
-            if (isRightSide && isBottomSide) {
-                // Calcola le coordinate relative nella griglia
-                const gridX = Math.floor((x - (w * 0.25)) / ((w * 0.75) / 3));
-                const gridY = Math.floor((y - (h * 0.5)) / ((h * 0.5) / 3));
-
-                // Mappatura fissa da 1 a 9 senza righe vuote
-                const matrix = [
-                    [1, 2, 3],
-                    [4, 5, 6],
-                    [7, 8, 9]
-                ];
-
-                const targetY = Math.max(0, Math.min(gridY, 2));
-                const targetX = Math.max(0, Math.min(gridX, 2));
-                
-                return matrix[targetY][targetX];
+            if (isMoving && Math.abs(diffX) > 60) {
+                if (diffX < 0 && currentIndex < 2) {
+                    currentIndex++; 
+                } else if (diffX > 0 && currentIndex > 0) {
+                    currentIndex--; 
+                }
+                slider.style.transform = `translateX(-${currentIndex * 33.333}%)`;
             }
-            return 0; // Qualsiasi tocco fuori dal quadrato genera uno 0
-        }
+
+            if (currentIndex === 0 && inputDigits.length >= 4 && !isMoving) {
+                setTimeout(apriSveglia, 250);
+            }
+        });
 
         function apriSveglia() {
-            homeScreen.classList.add('hidden');
+            document.getElementById('home-screen').classList.add('hidden');
             document.getElementById('clock-screen').classList.remove('hidden');
 
-            // Recupera gli elementi o inserisce lo zero protettivo
             const d1 = inputDigits[0] !== undefined ? inputDigits[0] : 0;
             const d2 = inputDigits[1] !== undefined ? inputDigits[1] : 0;
             const d3 = inputDigits[2] !== undefined ? inputDigits[2] : 0;
@@ -207,9 +245,10 @@
 
         function resetApp() {
             inputDigits = [];
-            homeScreen.scrollLeft = 0; 
+            currentIndex = 0;
+            slider.style.transform = `translateX(0%)`;
             document.getElementById('clock-screen').classList.add('hidden');
-            homeScreen.classList.remove('hidden');
+            document.getElementById('home-screen').classList.remove('hidden');
         }
     </script>
 </body>
