@@ -26,8 +26,7 @@
             overflow-y: hidden;
             display: flex;
             scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: auto;
-
+            -webkit-overflow-scrolling: touch;
         }
         
         #home-screen::-webkit-scrollbar {
@@ -108,6 +107,8 @@
             transition: transform 0.2s;
         }
         .ios-switch.on .ios-switch-handle { transform: translateX(20px); }
+        overscroll-behavior-x: contain;
+
     </style>
 </head>
 <body>
@@ -213,19 +214,10 @@
                 lastPage = currentPage; 
             }
 
-                      if (currentPage === 0 && inputDigits.length >= 4) {
+            if (currentPage === 0 && inputDigits.length >= 4) {
                 apriSveglia();
             }
         });
-
-        // MODIFICA CHIRURGICA: Forza l'arresto del motore di scorrimento iOS al rilascio del dito
-        homeScreen.addEventListener('touchend', () => {
-            const currentPosition = homeScreen.scrollLeft;
-            // Sovrascrive la posizione di un pixel per forzare iOS a interrompere l'inerzia invisibile
-            homeScreen.scrollLeft = currentPosition + 1;
-            homeScreen.scrollLeft = currentPosition;
-        }, { passive: true });
-
 
 
         function apriSveglia() {
