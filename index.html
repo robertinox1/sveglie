@@ -15,7 +15,26 @@
             -webkit-user-select: none;
         }
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
-        .hidden { display: none !important; }
+                /* Nuovo sistema di transizione stile iOS */
+        #clock-screen {
+            background-color: #000;
+            box-sizing: border-box;
+            z-index: 20;
+            /* Parte invisibile, rimpicciolita e centrata su Riga 1 Colonna 2 */
+            opacity: 0;
+            transform: scale(0.01);
+            transform-origin: 25% 10%; /* Posizione approssimativa di Riga 1 Colonna 2 */
+            transition: transform 0.38s cubic-bezier(0.24, 1.1, 0.45, 1), opacity 0.25s ease-out;
+            pointer-events: none; /* Impedisce tocchi quando è chiusa */
+        }
+
+        /* Stato attivo: l'app si espande a schermo intero */
+        #clock-screen.open {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto; /* Riattiva i tocchi sulla sveglia */
+        }
+
 
         #home-screen {
             background-image: url('sfondo.PNG');
@@ -126,7 +145,7 @@
         </div>
     </div>
 
-    <div id="clock-screen" class="screen hidden">
+        <div id="clock-screen" class="screen">
         <div class="clock-header">
             <span class="back-btn" onclick="resetApp()">✕</span>
             <h2>Sveglia</h2>
@@ -224,8 +243,8 @@
 
 
         function apriSveglia() {
-            homeScreen.classList.add('hidden');
-            document.getElementById('clock-screen').classList.remove('hidden');
+                        document.getElementById('clock-screen').classList.add('open');
+
 
             const d1 = inputDigits[0] !== undefined ? inputDigits[0] : 0;
             const d2 = inputDigits[1] !== undefined ? inputDigits[1] : 0;
@@ -266,8 +285,8 @@
             temporaryDigit = 0;
             lastPage = 0;
             homeScreen.scrollLeft = 0; 
-            document.getElementById('clock-screen').classList.add('hidden');
-            homeScreen.classList.remove('hidden');
+                       document.getElementById('clock-screen').classList.remove('open');
+
         }
     </script>
 </body>
