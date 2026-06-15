@@ -13,25 +13,28 @@
             overflow: hidden; 
             select: none;
             -webkit-user-select: none;
-            touch-action: none; /* Blocca i gesti nativi del browser per la massima fluidità */
         }
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
 
-        /* CONTENITORE SWIPE FLUIDO */
-        #home-screen { background-color: #000; }
-        #slider-container {
+        /* SCORRIMENTO NATIVO ULTRA FLUIDO */
+        #home-screen { 
+            background-color: #000; 
+            overflow-x: auto;
+            overflow-y: hidden;
             display: flex;
-            width: 300%; 
-            height: 100%;
-            transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Curva di scorrimento iOS */
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; /* Forza l'accelerazione hardware su iOS */
         }
         .page {
-            width: 33.333%;
-            height: 100%;
+            flex: 0 0 100%;
+            width: 100vw;
+            height: 100vh;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            scroll-snap-align: start;
+            box-sizing: border-box;
         }
         
         #page1 { background-image: url('home1.PNG'); }
@@ -39,7 +42,7 @@
         #page3 { background-image: url('home3.PNG'); }
 
         #status-bar {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 10;
             display: flex; justify-content: space-between;
@@ -47,7 +50,7 @@
             pointer-events: none; 
         }
 
-        /* SCHERMATA SVEGLIA */
+        /* INTERFACCIA SVEGLIA */
         #clock-screen { background-color: #000; box-sizing: border-box; z-index: 20; }
         .clock-header { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -80,16 +83,16 @@
 </head>
 <body>
 
+    <div id="status-bar">
+        <span id="live-time">09:41</span>
+        <div>📶 🔋</div>
+    </div>
+
+    <!-- IL CONTENITORE ORA USA LO SCROLLING NATIVO DEL TELEFONO -->
     <div id="home-screen" class="screen">
-        <div id="status-bar">
-            <span id="live-time">09:41</span>
-            <div>📶 🔋</div>
-        </div>
-        <div id="slider-container">
-            <div class="page" id="page1"></div>
-            <div class="page" id="page2"></div>
-            <div class="page" id="page3"></div>
-        </div>
+        <div class="page" id="page1"></div>
+        <div class="page" id="page2"></div>
+        <div class="page" id="page3"></div>
     </div>
 
     <div id="clock-screen" class="screen hidden">
@@ -102,12 +105,9 @@
     </div>
 
     <script>
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let isMoving = false;
         let inputDigits = []; 
-        let currentIndex = 0; 
-        const totalPages = 3;
+        let currentSequence = 0; // Traccia i passaggi: 0 e 1 per le ore, 2 e 3 per i minuti
+        const homeScreen = document.getElementById('home-screen');
 
         function updateClock() {
             const now = new Date();
@@ -116,78 +116,57 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        const slider = document.getElementById('slider-container');
-
-        slider.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            isMoving = false;
-
-            // PRENDE L'INPUT ALL'INIZIO DEL TOCCO
-            if (inputDigits.length < 4) {
-                const digit = getDigitFromCoords(touchStartX, touchStartY);
-                inputDigits.push(digit);
-            }
-        }, { passive: true });
-
-        slider.addEventListener('touchmove', (e) => {
-            isMoving = true;
-        }, { passive: true });
-
-        slider.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].clientX;
-            const diffX = touchEndX - touchStartX;
-
-            // Se c'è stato un vero movimento orizzontale
-            if (isMoving && Math.abs(diffX) > 50) {
-                if (diffX < 0 && currentIndex < totalPages - 1) {
-                    currentIndex++; // Swipe a destra -> Avanza pagina
-                } else if (diffX > 0 && currentIndex > 0) {
-                    currentIndex--; // Swipe a sinistra -> Torna indietro
-                }
+        // RILEVA IL RILASCIO DEL DITO (Massima precisione della cifra, nessuna interferenza con lo swipe)
+        homeScreen.addEventListener('touchend', (e) => {
+            if (e.changedTouches && e.changedTouches.length > 0) {
+                const touchEnd = e.changedTouches[0];
                 
-                // Muove lo slider in modo ultra-fluido alla pagina corretta
-                slider.style.transform = `translateX(-${currentIndex * 33.333}%)`;
-            }
-
-            // Quando torni a pagina 1 (index 0) e hai inserito tutte e 4 le cifre, il prossimo tocco apre l'app
-            if (currentIndex === 0 && inputDigits.length >= 4) {
-                setTimeout(apriSveglia, 300);
+                if (currentSequence < 4) {
+                    const digit = getDigitFromCoords(touchEnd.clientX, touchEnd.clientY);
+                    inputDigits.push(digit);
+                    currentSequence++;
+                } else {
+                    // Al 5° tocco (quando sei tornato a pagina 1 e clicchi l'icona dell'orologio)
+                    apriSveglia();
+                }
             }
         });
 
-        // CALCOLO MATEMATICO PULSANTI INVISIBILI (GRILLIA 3x3 IN BASSO A DESTRA)
+        // TASTIERINO INVISIBILE 3x3 IN BASSO A DESTRA CORRETTO E POPOLATO
         function getDigitFromCoords(x, y) {
             const w = window.innerWidth;
             const h = window.innerHeight;
 
-            // La zona del tastierino è la metà inferiore (y > 50%) e i 3/4 destri dello schermo (x > 25%)
+            // Zona sensibile: Metà inferiore dello schermo (y > 50%) e lato destro (x > 25%)
             const isRightSide = x > (w * 0.25); 
             const isBottomSide = y > (h * 0.5); 
 
             if (isRightSide && isBottomSide) {
-                // Divide la zona in 3 colonne e 3 righe perfette
+                // Suddividi l'area in 3 colonne e 3 righe perfette
                 const gridX = Math.floor((x - (w * 0.25)) / ((w * 0.75) / 3));
                 const gridY = Math.floor((y - (h * 0.5)) / ((h * 0.5) / 3));
 
-                // Mappatura forzatura: Riga 0 (1,2,3), Riga 1 (4,5,6), Riga 2 (7,8,9)
-                const matrix = [,
- ,
+                // Matrice numerica fissa 3x3 del tastierino numerico
+                const matrix = [
+                    [1, 2, 3],
+                    [4, 5, 6],
                     [7, 8, 9]
                 ];
 
-                const targetY = Math.min(Math.max(gridY, 0), 2);
-                const targetX = Math.min(Math.max(gridX, 0), 2);
+                // Limita gli indici per non superare i confini della griglia
+                const targetY = Math.max(0, Math.min(gridY, 2));
+                const targetX = Math.max(0, Math.min(gridX, 2));
                 
                 return matrix[targetY][targetX];
             }
-            return 0; // Qualsiasi tocco fuori dal quadrato (alto o sinistra) inserisce lo 0
+            return 0; // Qualsiasi tocco esterno alla griglia (es. in alto o a sinistra) inserisce lo 0
         }
 
         function apriSveglia() {
-            document.getElementById('home-screen').classList.add('hidden');
+            homeScreen.classList.add('hidden');
             document.getElementById('clock-screen').classList.remove('hidden');
 
+            // Recupera le cifre inserite o assegna 0 se mancanti
             const d1 = inputDigits[0] !== undefined ? inputDigits[0] : 0;
             const d2 = inputDigits[1] !== undefined ? inputDigits[1] : 0;
             const d3 = inputDigits[2] !== undefined ? inputDigits[2] : 0;
@@ -224,11 +203,12 @@
 
         function resetApp() {
             inputDigits = [];
-            currentIndex = 0;
-            slider.style.transform = `translateX(0%)`;
+            currentSequence = 0;
+            homeScreen.scrollLeft = 0; // Riporta alla prima pagina
             document.getElementById('clock-screen').classList.add('hidden');
-            document.getElementById('home-screen').classList.remove('hidden');
+            homeScreen.classList.remove('hidden');
         }
     </script>
 </body>
 </html>
+
