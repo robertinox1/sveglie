@@ -130,7 +130,8 @@
 
     <script>
         let inputDigits = [];
-        let lastTouchTime = 0;
+        let temporaryDigit = 0; 
+        let lastPage = 0; 
         const homeScreen = document.getElementById('home-screen');
 
         function updateClock() {
@@ -162,14 +163,8 @@
         createGridCells('p3');
 
         homeScreen.addEventListener('touchstart', (e) => {
-            const now = Date.now();
-            if (now - lastTouchTime < 150) return; // Sistema di sicurezza anti-interferenza
-            lastTouchTime = now;
-
             if (e.touches && e.touches.length > 0) {
                 const touch = e.touches[0];
-                const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
-
                 const element = document.elementFromPoint(touch.clientX, touch.clientY);
                 const cell = element ? element.closest('.icon-cell') : null;
 
@@ -177,27 +172,33 @@
                     const row = parseInt(cell.dataset.row);
                     const col = parseInt(cell.dataset.col);
                     
-                    let digit = 0;
-                    
-                    if (row === 4 && col === 2) digit = 1;
-                    else if (row === 4 && col === 3) digit = 2;
-                    else if (row === 4 && col === 4) digit = 3;
-                    else if (row === 5 && col === 2) digit = 4;
-                    else if (row === 5 && col === 3) digit = 5;
-                    else if (row === 5 && col === 4) digit = 6;
-                    else if (row === 6 && col === 2) digit = 7;
-                    else if (row === 6 && col === 3) digit = 8;
-                    else if (row === 6 && col === 4) digit = 9;
-
-                    inputDigits.push(digit);
+                    if (row === 4 && col === 2) temporaryDigit = 1;
+                    else if (row === 4 && col === 3) temporaryDigit = 2;
+                    else if (row === 4 && col === 4) temporaryDigit = 3;
+                    else if (row === 5 && col === 2) temporaryDigit = 4;
+                    else if (row === 5 && col === 3) temporaryDigit = 5;
+                    else if (row === 5 && col === 4) temporaryDigit = 6;
+                    else if (row === 6 && col === 2) temporaryDigit = 7;
+                    else if (row === 6 && col === 3) temporaryDigit = 8;
+                    else if (row === 6 && col === 4) temporaryDigit = 9;
+                    else temporaryDigit = 0;
+                } else {
+                    temporaryDigit = 0;
                 }
             }
         }, { passive: true });
 
-        // CONTROLLO CONTINUO INVECE DEL TIMER FISSO
         homeScreen.addEventListener('scroll', () => {
-            // Se lo scorrimento si ferma esattamente su Pagina 1 e la sequenza è completata
-            if (homeScreen.scrollLeft === 0 && inputDigits.length >= 4) {
+            const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
+            
+            if (currentPage !== lastPage) {
+                if (inputDigits.length < 4) {
+                    inputDigits.push(temporaryDigit);
+                }
+                lastPage = currentPage; 
+            }
+
+            if (currentPage === 0 && inputDigits.length >= 4) {
                 apriSveglia();
             }
         });
@@ -242,6 +243,8 @@
 
         function resetApp() {
             inputDigits = [];
+            temporaryDigit = 0;
+            lastPage = 0;
             homeScreen.scrollLeft = 0; 
             document.getElementById('clock-screen').classList.add('hidden');
             homeScreen.classList.remove('hidden');
