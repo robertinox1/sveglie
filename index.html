@@ -17,15 +17,18 @@
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
 
-        /* SCORRIMENTO NATIVO ULTRA FLUIDO */
+        /* CONTENITORE SWIPE REALE - SCORRIMENTO NATIVO FLUIDO */
         #home-screen { 
             background-color: #000; 
-            overflow-x: auto;
+            overflow-x: scroll;
             overflow-y: hidden;
             display: flex;
             scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch; /* Forza l'accelerazione hardware su iOS */
+            -webkit-overflow-scrolling: touch;
         }
+        /* Nasconde la barra di scorrimento del browser */
+        #home-screen::-webkit-scrollbar { display: none; }
+        
         .page {
             flex: 0 0 100%;
             width: 100vw;
@@ -88,7 +91,6 @@
         <div>📶 🔋</div>
     </div>
 
-    <!-- IL CONTENITORE ORA USA LO SCROLLING NATIVO DEL TELEFONO -->
     <div id="home-screen" class="screen">
         <div class="page" id="page1"></div>
         <div class="page" id="page2"></div>
@@ -106,7 +108,6 @@
 
     <script>
         let inputDigits = []; 
-        let currentSequence = 0; // Traccia i passaggi: 0 e 1 per le ore, 2 e 3 per i minuti
         const homeScreen = document.getElementById('home-screen');
 
         function updateClock() {
@@ -116,57 +117,60 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // RILEVA IL RILASCIO DEL DITO (Massima precisione della cifra, nessuna interferenza con lo swipe)
-        homeScreen.addEventListener('touchend', (e) => {
-            if (e.changedTouches && e.changedTouches.length > 0) {
-                const touchEnd = e.changedTouches[0];
+        // CATTURA IL TOCCO INIZIALE (Nessun lag numerico e swipe libero)
+        homeScreen.addEventListener('touchstart', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                const touch = e.touches[0];
                 
-                if (currentSequence < 4) {
-                    const digit = getDigitFromCoords(touchEnd.clientX, touchEnd.clientY);
+                if (inputDigits.length < 4) {
+                    const digit = getDigitFromCoords(touch.clientX, touch.clientY);
                     inputDigits.push(digit);
-                    currentSequence++;
+                    console.log("Inserito:", digit, "Sequenza attuale:", inputDigits);
                 } else {
-                    // Al 5° tocco (quando sei tornato a pagina 1 e clicchi l'icona dell'orologio)
-                    apriSveglia();
+                    // Se l'orario è già completo (4 cifre inserite), il tocco apre la sveglia
+                    // Per farlo in modo naturale, controlliamo che l'utente sia tornato a Pagina 1
+                    const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
+                    if (currentPage === 0) {
+                        apriSveglia();
+                    }
                 }
             }
-        });
+        }, { passive: true });
 
-        // TASTIERINO INVISIBILE 3x3 IN BASSO A DESTRA CORRETTO E POPOLATO
+        // TASTIERINO MATEMATICO 3x3 IN BASSO A DESTRA
         function getDigitFromCoords(x, y) {
             const w = window.innerWidth;
             const h = window.innerHeight;
 
-            // Zona sensibile: Metà inferiore dello schermo (y > 50%) e lato destro (x > 25%)
+            // Zona attiva: metà inferiore destra dello schermo
             const isRightSide = x > (w * 0.25); 
             const isBottomSide = y > (h * 0.5); 
 
             if (isRightSide && isBottomSide) {
-                // Suddividi l'area in 3 colonne e 3 righe perfette
+                // Calcola le coordinate relative nella griglia
                 const gridX = Math.floor((x - (w * 0.25)) / ((w * 0.75) / 3));
                 const gridY = Math.floor((y - (h * 0.5)) / ((h * 0.5) / 3));
 
-                // Matrice numerica fissa 3x3 del tastierino numerico
+                // Mappatura fissa da 1 a 9 senza righe vuote
                 const matrix = [
                     [1, 2, 3],
                     [4, 5, 6],
                     [7, 8, 9]
                 ];
 
-                // Limita gli indici per non superare i confini della griglia
                 const targetY = Math.max(0, Math.min(gridY, 2));
                 const targetX = Math.max(0, Math.min(gridX, 2));
                 
                 return matrix[targetY][targetX];
             }
-            return 0; // Qualsiasi tocco esterno alla griglia (es. in alto o a sinistra) inserisce lo 0
+            return 0; // Qualsiasi tocco fuori dal quadrato genera uno 0
         }
 
         function apriSveglia() {
             homeScreen.classList.add('hidden');
             document.getElementById('clock-screen').classList.remove('hidden');
 
-            // Recupera le cifre inserite o assegna 0 se mancanti
+            // Recupera gli elementi o inserisce lo zero protettivo
             const d1 = inputDigits[0] !== undefined ? inputDigits[0] : 0;
             const d2 = inputDigits[1] !== undefined ? inputDigits[1] : 0;
             const d3 = inputDigits[2] !== undefined ? inputDigits[2] : 0;
@@ -203,12 +207,10 @@
 
         function resetApp() {
             inputDigits = [];
-            currentSequence = 0;
-            homeScreen.scrollLeft = 0; // Riporta alla prima pagina
+            homeScreen.scrollLeft = 0; 
             document.getElementById('clock-screen').classList.add('hidden');
             homeScreen.classList.remove('hidden');
         }
     </script>
 </body>
 </html>
-
