@@ -2,10 +2,9 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Home</title>
     <style>
-        /* STILE GENERALE */
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
@@ -18,16 +17,14 @@
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
 
-        /* STRUTTURA A 3 PAGINE SCORREVOLI */
         #home-screen {
             background-color: #000;
         }
         #slider-container {
             display: flex;
-            width: 300%; /* Spazio per 3 pagine affiancate */
+            width: 300%; 
             height: 100%;
-            transition: transform 0.3s ease-out; /* Animazione dello swipe flessibile ed elegante */
-            transform: translateX(0%);
+            will-change: transform;
         }
         .page {
             width: 33.333%;
@@ -36,7 +33,7 @@
             background-position: center;
             background-repeat: no-repeat;
         }
-        /* Assegnazione dei tuoi 3 screenshot */
+        
         #page1 { background-image: url('home1.PNG'); }
         #page2 { background-image: url('home2.PNG'); }
         #page3 { background-image: url('home3.PNG'); }
@@ -48,15 +45,14 @@
             display: flex; justify-content: space-between;
             padding: 14px 24px 0 24px; font-size: 15px; font-weight: 600;
             letter-spacing: -0.2px;
-            pointer-events: none; /* Impedisce alla barra di bloccare i tocchi */
+            pointer-events: none; 
         }
         .battery-icons { font-size: 14px; letter-spacing: 2px; }
 
-        /* INTERFACCIA SVEGLIA STYLE iOS */
         #clock-screen { background-color: #000; box-sizing: border-box; z-index: 20; }
         .clock-header { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 20px 20px 10px 20px; border-bottom: 0.5px solid #1c1c1e; 
+            padding: 40px 20px 10px 20px; border-bottom: 0.5px solid #1c1c1e; 
         }
         .clock-header h2 { margin: 0; color: #ff9f0a; font-size: 26px; font-weight: bold; }
         .back-btn, .add-btn { color: #ff9f0a; font-size: 24px; cursor: pointer; font-weight: 400; }
@@ -91,14 +87,12 @@
 </head>
 <body>
 
-    <!-- SCHERMATA HOME IPHONE -->
     <div id="home-screen" class="screen">
         <div id="status-bar">
             <span id="live-time">09:41</span>
             <div class="battery-icons">📶 🔋</div>
         </div>
         
-        <!-- Contenitore delle 3 pagine della Home -->
         <div id="slider-container">
             <div class="page" id="page1"></div>
             <div class="page" id="page2"></div>
@@ -106,24 +100,26 @@
         </div>
     </div>
 
-    <!-- SCHERMATA FALSA SVEGLIA -->
     <div id="clock-screen" class="screen hidden">
         <div class="clock-header">
             <span class="back-btn" onclick="resetApp()">✕</span>
             <h2>Sveglia</h2>
             <span class="add-btn">+</span>
         </div>
-        <div id="alarms-list">
-            <!-- Generato dinamicamente -->
-        </div>
+        <div id="alarms-list"></div>
     </div>
 
     <script>
         let touchStartX = 0;
         let touchStartY = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let isDragging = false;
+        let animationId = 0;
+        
         let inputDigits = []; 
-        let swipeCount = 0;
-        let currentPage = 0; // Traccia la pagina visiva attuale (0, 1 o 2)
+        let currentIndex = 0; 
+        const totalPages = 3;
 
         function updateClock() {
             const now = new Date();
@@ -132,41 +128,67 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        const homeScreen = document.getElementById('home-screen');
-        const sliderContainer = document.getElementById('slider-container');
+        const slider = document.getElementById('slider-container');
+        const widthPage = window.innerWidth;
 
-        homeScreen.addEventListener('touchstart', (e) => {
-            if (swipeCount >= 4) return; 
+        slider.addEventListener('touchstart', touchStart);
+        slider.addEventListener('touchmove', touchMove);
+        slider.addEventListener('touchend', touchEnd);
 
-            const touch = e.touches[0];
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
+        function touchStart(e) {
+            isDragging = true;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            
+            if (inputDigits.length < 4) {
+                const digit = getDigitFromCoords(touchStartX, touchStartY);
+                inputDigits.push(digit);
+            }
+            
+            slider.style.transition = 'none'; 
+            animationId = requestAnimationFrame(animation);
+        }
 
-            // Prende l'input segreto nel punto esatto del touch
-            const digit = getDigitFromCoords(touchStartX, touchStartY);
-            inputDigits.push(digit);
-            swipeCount++;
+        function touchMove(e) {
+            if (!isDragging) return;
+            const currentX = e.touches[0].clientX;
+            const currentTranslateX = prevTranslate + (currentX - touchStartX);
+            
+            if (currentTranslateX > 0) currentTranslate = 0;
+            else if (currentTranslateX < -(widthPage * (totalPages - 1))) currentTranslate = -(widthPage * (totalPages - 1));
+            else currentTranslate = currentTranslateX;
+        }
 
-            // Gestione del movimento visivo delle pagine in base agli swipe richiesti:
-            // Swipe 1 (ora decine): va a Pagina 2 (Index 1)
-            // Swipe 2 (ora unità): va a Pagina 3 (Index 2)
-            // Swipe 3 (minuti decine): torna a Pagina 2 (Index 1)
-            // Swipe 4 (minuti unità): torna a Pagina 1 (Index 0)
-            if (swipeCount === 1) currentPage = 1;
-            else if (swipeCount === 2) currentPage = 2;
-            else if (swipeCount === 3) currentPage = 1;
-            else if (swipeCount === 4) currentPage = 0;
+        function touchEnd(e) {
+            isDragging = false;
+            cancelAnimationFrame(animationId);
+            
+            const movedBy = currentTranslate - prevTranslate;
 
-            // Applica lo spostamento visivo immediato o fluido dello schermo
-            sliderContainer.style.transform = `translateX(-${currentPage * 33.333}%)`;
-        }, { passive: true });
+            if (movedBy < -100 && currentIndex < totalPages - 1) {
+                currentIndex += 1;
+            } else if (movedBy > 100 && currentIndex > 0) {
+                currentIndex -= 1;
+            }
 
-        homeScreen.addEventListener('touchend', (e) => {
-            // Dopo il 4° tocco/swipe, l'orario è completo. Il prossimo tocco sblocca la sveglia.
-            if (swipeCount >= 4) {
+            slider.style.transition = 'transform 0.3s ease-out';
+            currentTranslate = currentIndex * -widthPage;
+            prevTranslate = currentTranslate;
+            setSliderPosition();
+
+            if (currentIndex === 0 && inputDigits.length >= 4) {
                 setTimeout(apriSveglia, 400);
             }
-        });
+        }
+
+        function animation() {
+            setSliderPosition();
+            if (isDragging) requestAnimationFrame(animation);
+        }
+
+        function setSliderPosition() {
+            slider.style.transform = `translateX(${currentTranslate}px)`;
+        }
 
         function getDigitFromCoords(x, y) {
             const w = window.innerWidth;
@@ -193,10 +215,16 @@
         }
 
         function apriSveglia() {
-            homeScreen.classList.add('hidden');
+            document.getElementById('home-screen').classList.add('hidden');
             document.getElementById('clock-screen').classList.remove('hidden');
 
-            const oraForzata = `${inputDigits[0] || 0}${inputDigits[1] || 0}:${inputDigits[2] || 0}${inputDigits[3] || 0}`;
+            const d1 = inputDigits[0] !== undefined ? inputDigits[0] : 0;
+            const d2 = inputDigits[1] !== undefined ? inputDigits[1] : 0;
+            const d3 = inputDigits[2] !== undefined ? inputDigits[2] : 0;
+            const d4 = inputDigits[3] !== undefined ? inputDigits[3] : 0;
+
+            const oraForzata = `${d1}${d2}:${d3}${d4}`;
+            
             let sveglieStandard = ["06:15", "07:00", "07:30", "08:45", "12:00", "14:15", "19:30", "22:00", "23:15"];
             
             if (!sveglieStandard.includes(oraForzata)) {
@@ -226,11 +254,13 @@
 
         function resetApp() {
             inputDigits = [];
-            swipeCount = 0;
-            currentPage = 0;
-            sliderContainer.style.transform = `translateX(0%)`;
+            currentIndex = 0;
+            currentTranslate = 0;
+            prevTranslate = 0;
+            slider.style.transition = 'none';
+            setSliderPosition();
             document.getElementById('clock-screen').classList.add('hidden');
-            homeScreen.classList.remove('hidden');
+            document.getElementById('home-screen').classList.remove('hidden');
         }
     </script>
 </body>
