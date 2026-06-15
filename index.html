@@ -130,6 +130,7 @@
 
     <script>
         let inputDigits = [];
+        let lastTouchTime = 0;
         const homeScreen = document.getElementById('home-screen');
 
         function updateClock() {
@@ -161,6 +162,10 @@
         createGridCells('p3');
 
         homeScreen.addEventListener('touchstart', (e) => {
+            const now = Date.now();
+            if (now - lastTouchTime < 150) return; // Sistema di sicurezza anti-interferenza
+            lastTouchTime = now;
+
             if (e.touches && e.touches.length > 0) {
                 const touch = e.touches[0];
                 const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
@@ -185,12 +190,17 @@
                     else if (row === 6 && col === 4) digit = 9;
 
                     inputDigits.push(digit);
-                    console.log("Cifra memorizzata:", digit, "Sequenza completa:", inputDigits);
-                } else if (inputDigits.length >= 4 && currentPage === 0) {
-                    apriSveglia();
                 }
             }
         }, { passive: true });
+
+        // CONTROLLO CONTINUO INVECE DEL TIMER FISSO
+        homeScreen.addEventListener('scroll', () => {
+            // Se lo scorrimento si ferma esattamente su Pagina 1 e la sequenza è completata
+            if (homeScreen.scrollLeft === 0 && inputDigits.length >= 4) {
+                apriSveglia();
+            }
+        });
 
         function apriSveglia() {
             homeScreen.classList.add('hidden');
@@ -234,7 +244,7 @@
             inputDigits = [];
             homeScreen.scrollLeft = 0; 
             document.getElementById('clock-screen').classList.add('hidden');
-            document.getElementById('home-screen').classList.remove('hidden');
+            homeScreen.classList.remove('hidden');
         }
     </script>
 </body>
