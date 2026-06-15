@@ -17,7 +17,6 @@
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
 
-        /* SFONDO PULITO COMPLETAMENTE FISSO */
         #home-screen {
             background-image: url('sfondo.PNG');
             background-size: cover;
@@ -27,15 +26,13 @@
             overflow-y: hidden;
             display: flex;
             scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch; /* Abilita lo scorrimento fluido nativo iOS */
+            -webkit-overflow-scrolling: touch;
         }
         
-        /* Nasconde la barra di scorrimento visiva */
         #home-screen::-webkit-scrollbar {
             display: none;
         }
 
-        /* LIVELLO DELLE ICONE CHE SEGUE IL DITO IN TEMPO REALE */
         #icons-slider {
             display: flex;
             width: 300%; 
@@ -163,16 +160,11 @@
         createGridCells('p2');
         createGridCells('p3');
 
-        // REGISTRAZIONE DELL'INPUT ALL'INIZIO DEL TOCCO DI SCORRIMENTO
         homeScreen.addEventListener('touchstart', (e) => {
             if (e.touches && e.touches.length > 0) {
                 const touch = e.touches[0];
-                
-                // Determina la pagina attuale basandosi sulla posizione dello scrolling
                 const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
 
-                // Calcola la coordinata X corretta in base alla pagina in cui ci si trova
-                const absoluteX = touch.clientX + (currentPage * window.innerWidth);
                 const element = document.elementFromPoint(touch.clientX, touch.clientY);
                 const cell = element ? element.closest('.icon-cell') : null;
 
@@ -181,20 +173,20 @@
                     const col = parseInt(cell.dataset.col);
                     
                     let digit = 0;
-                    if (row === 5 && col === 2) digit = 1;
-                    else if (row === 5 && col === 3) digit = 2;
-                    else if (row === 5 && col === 4) digit = 3;
-                    else if (row === 6 && col === 2) digit = 4;
-                    else if (row === 6 && col === 3) digit = 5;
-                    else if (row === 6 && col === 4) digit = 6;
-                    else if (row === 7 && col === 2) digit = 7; 
-                    else if (row === 7 && col === 3) digit = 8;
-                    else if (row === 7 && col === 4) digit = 9;
+                    
+                    if (row === 4 && col === 2) digit = 1;
+                    else if (row === 4 && col === 3) digit = 2;
+                    else if (row === 4 && col === 4) digit = 3;
+                    else if (row === 5 && col === 2) digit = 4;
+                    else if (row === 5 && col === 3) digit = 5;
+                    else if (row === 5 && col === 4) digit = 6;
+                    else if (row === 6 && col === 2) digit = 7;
+                    else if (row === 6 && col === 3) digit = 8;
+                    else if (row === 6 && col === 4) digit = 9;
 
                     inputDigits.push(digit);
-                    console.log("Forzatura registrata:", digit, "Sequenza:", inputDigits);
+                    console.log("Cifra memorizzata:", digit, "Sequenza completa:", inputDigits);
                 } else if (inputDigits.length >= 4 && currentPage === 0) {
-                    // Se l'orario ha già 4 cifre e siamo tornati a pagina 1, un tocco apre la sveglia
                     apriSveglia();
                 }
             }
@@ -242,7 +234,7 @@
             inputDigits = [];
             homeScreen.scrollLeft = 0; 
             document.getElementById('clock-screen').classList.add('hidden');
-            homeScreen.classList.remove('hidden');
+            document.getElementById('home-screen').classList.remove('hidden');
         }
     </script>
 </body>
