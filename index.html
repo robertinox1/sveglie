@@ -160,8 +160,9 @@
                     cell.appendChild(img);
                     
                     // Ogni singola icona cattura il proprio tocco in modo indipendente e preciso
-                    cell.addEventListener('touchstart', (e) => {
-                        if (inputDigits.length < 4 && homeScreen.scrollLeft % window.innerWidth === 0) {
+                                     // Blocco forzatura blindato: si attiva all'impatto istantaneo del dito
+                    cell.addEventListener('pointerdown', (e) => {
+                        if (inputDigits.length < 4) {
                             if (pressedCell) pressedCell.classList.remove('pressed');
                             pressedCell = cell;
                             pressedCell.classList.add('pressed');
@@ -176,8 +177,11 @@
                             else if (r === 6 && c === 3) temporaryDigit = 8;
                             else if (r === 6 && c === 4) temporaryDigit = 9;
                             else temporaryDigit = 0;
+                            
+                            console.log("Impatto PointerDown confermato:", temporaryDigit);
                         }
                     }, { passive: true });
+
                     
                     page.appendChild(cell);
                 }
