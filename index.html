@@ -165,10 +165,13 @@
         homeScreen.addEventListener('touchstart', (e) => {
             if (e.touches && e.touches.length > 0) {
                 const touch = e.touches[0];
+                if (homeScreen.scrollLeft % window.innerWidth !== 0) return;
+
                 const element = document.elementFromPoint(touch.clientX, touch.clientY);
                 const cell = element ? element.closest('.icon-cell') : null;
 
                 if (cell && inputDigits.length < 4) {
+
                     const row = parseInt(cell.dataset.row);
                     const col = parseInt(cell.dataset.col);
                     
@@ -188,12 +191,13 @@
             }
         }, { passive: true });
 
-        homeScreen.addEventListener('scroll', () => {
+              homeScreen.addEventListener('scroll', () => {
             const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
             
             if (currentPage !== lastPage) {
                 if (inputDigits.length < 4) {
                     inputDigits.push(temporaryDigit);
+                    temporaryDigit = 0;
                 }
                 lastPage = currentPage; 
             }
@@ -202,6 +206,7 @@
                 apriSveglia();
             }
         });
+
 
         function apriSveglia() {
             homeScreen.classList.add('hidden');
