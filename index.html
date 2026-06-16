@@ -13,6 +13,7 @@
             overflow: hidden; 
             select: none;
             -webkit-user-select: none;
+             position: relative;
         }
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
                 /* Nuovo sistema di transizione stile iOS */
@@ -37,6 +38,11 @@
 
 
         #home-screen {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
             background-image: url('sfondo.PNG');
             background-size: cover;
             background-position: center;
@@ -46,7 +52,9 @@
             display: flex;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
+            z-index: 1;
         }
+
         
         #home-screen::-webkit-scrollbar {
             display: none;
