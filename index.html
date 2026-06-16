@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
         <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+       <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 
     <title>Home</title>
     <style>
-        body, html {
+             body, html {
             margin: 0; padding: 0;
             width: 100%; 
-            /* Sfrutta l'altezza totale ignorando i blocchi di sicurezza di iOS */
             height: 100vh;
             height: 100dvh; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -19,14 +19,14 @@
             select: none;
             -webkit-user-select: none;
             
-            /* Gestione Sfondo Totale */
+            /* Sfondo totale e zoomato senza spostamenti artificiali */
             background-image: url('sfondo.PNG');
             background-repeat: no-repeat;
-            background-size: cover; 
+            background-size: cover; /* Zooma automaticamente per tappare qualsiasi buco */
             background-position: center center; 
-
             background-color: #000;
         }
+
 
 
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
@@ -88,7 +88,7 @@
             grid-template-rows: repeat(6, 1fr);
             box-sizing: border-box;
             /* Inserisce 65px di spazio trasparente in alto per spingere le icone sotto l'isola */
-            padding: 65px 20px 20px 20px; 
+            padding: 50px 20px 20px 20px; 
             gap: 15px;
             scroll-snap-align: start;
         }
