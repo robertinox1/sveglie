@@ -52,12 +52,13 @@
             display: none;
         }
 
-        #icons-slider {
+            #icons-slider {
             display: flex;
             width: 300%; 
-            height: calc(100% - 150px); 
-            margin-top: 50px; 
+            height: calc(100% - 100px); /* Prende quasi tutto lo schermo e lascia 100px in basso per il futuro Dock */
+            margin-top: 0px; /* Porta la griglia delle icone a toccare il bordo superiore estremo */
         }
+
 
         .grid-page {
             width: 33.333%;
@@ -138,11 +139,6 @@
 </head>
 <body>
 
-    <div id="status-bar">
-        <span id="live-time">09:41</span>
-        <div>📶 🔋</div>
-    </div>
-
     <div id="home-screen" class="screen">
         <div id="icons-slider">
             <div class="grid-page" id="p1"></div>
@@ -166,12 +162,6 @@
         let lastPage = 0; 
         const homeScreen = document.getElementById('home-screen');
 
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('live-time').innerText = now.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
 
                      function createGridCells(pageId) {
             const page = document.getElementById(pageId);
