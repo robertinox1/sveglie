@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
         <meta name="apple-mobile-web-app-capable" content="yes">
-       <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 
     <title>Home</title>
     <style>
-             body, html {
+                    body, html {
             margin: 0; padding: 0;
             width: 100%; 
-            height: 100vh;
-            height: 100dvh; 
+            /* Allunghiamo l'altezza per coprire l'offset negativo di iOS */
+            height: calc(100vh + 60px);
+            height: calc(100dvh + 60px); 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden; 
             select: none;
             -webkit-user-select: none;
             
-            /* Sfondo totale e zoomato senza spostamenti artificiali */
+            /* Gestione Sfondo Totale */
             background-image: url('sfondo.PNG');
             background-repeat: no-repeat;
-            background-size: cover; /* Zooma automaticamente per tappare qualsiasi buco */
+            background-size: cover; 
             background-position: center center; 
             background-color: #000;
         }
