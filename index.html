@@ -22,10 +22,9 @@
             /* Gestione Sfondo Totale */
             background-image: url('sfondo.PNG');
             background-repeat: no-repeat;
-            /* Zoomato al 120% per darti più margine ed eliminare i tagli */
-            background-size: auto 120%; 
-            /* Abbassa la foto di 30px per coprire chirurgicamente l'area nera inferiore */
-            background-position: center calc(50% + 30px); 
+            background-size: cover; 
+            background-position: center center; 
+
             background-color: #000;
         }
 
@@ -76,7 +75,7 @@
             #icons-slider {
             display: flex;
             width: 300%; 
-            height: calc(100% - 100px); /* Prende quasi tutto lo schermo e lascia 100px in basso per il futuro Dock */
+            height: 100%;
             margin-top: 0px; /* Porta la griglia delle icone a toccare il bordo superiore estremo */
         }
 
@@ -156,7 +155,6 @@
             transition: transform 0.2s;
         }
         .ios-switch.on .ios-switch-handle { transform: translateX(20px); }
-        overscroll-behavior-x: contain;
 
     </style>
 </head>
