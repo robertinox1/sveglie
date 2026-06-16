@@ -8,16 +8,22 @@
 
     <title>Home</title>
     <style>
-        body, html {
+         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #000; color: #fff;
             overflow: hidden; 
             select: none;
             -webkit-user-select: none;
-             position: relative;
+            /* Lo sfondo viene applicato qui sul corpo della pagina */
+            background-image: url('sfondo.PNG');
+            background-repeat: no-repeat;
+            background-position: center center;
+            /* 115% applica uno zoom perfetto stile iOS. Se lo vuoi ancora più zoomato, aumenta a 125% o 130% */
+            background-size: auto 115%; 
+            background-color: #000; 
         }
+
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
                 /* Nuovo sistema di transizione stile iOS */
         #clock-screen {
@@ -40,17 +46,13 @@
         }
 
 
-        #home-screen {
+              #home-screen {
+            width: 100%;
+            height: 100%;
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100vh; /* Riserva per browser datati */
-            height: 100dvh; /* Prende l'altezza totale reale del display eliminando la banda nera sotto */
-            background-image: url('sfondo.PNG');
-             background-size: 100% 100%; /* Zooma e adatta lo sfondo automaticamente senza distorcerlo */
-            background-position: center;
-            background-repeat: no-repeat;
+            background: transparent; /* Rimosso sfondo.PNG da qui per eliminare il bug della banda nera */
             overflow-x: scroll;
             overflow-y: hidden;
             display: flex;
@@ -58,6 +60,7 @@
             -webkit-overflow-scrolling: touch;
             z-index: 1;
         }
+
 
         
         #home-screen::-webkit-scrollbar {
