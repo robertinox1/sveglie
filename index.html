@@ -8,21 +8,27 @@
 
     <title>Home</title>
     <style>
-         body, html {
+        body, html {
             margin: 0; padding: 0;
-            width: 100%; height: 100%;
+            width: 100%; 
+            /* Sfrutta l'altezza totale ignorando i blocchi di sicurezza di iOS */
+            height: 100vh;
+            height: 100dvh; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden; 
             select: none;
             -webkit-user-select: none;
-            /* Lo sfondo viene applicato qui sul corpo della pagina */
+            
+            /* Gestione Sfondo Totale */
             background-image: url('sfondo.PNG');
             background-repeat: no-repeat;
-            background-position: center 25px;
-            /* 115% applica uno zoom perfetto stile iOS. Se lo vuoi ancora più zoomato, aumenta a 125% o 130% */
-            background-size: auto 115%; 
-            background-color: #000; 
+            /* Zoomato al 120% per darti più margine ed eliminare i tagli */
+            background-size: auto 120%; 
+            /* Abbassa la foto di 30px per coprire chirurgicamente l'area nera inferiore */
+            background-position: center calc(50% + 30px); 
+            background-color: #000;
         }
+
 
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; }
                 /* Nuovo sistema di transizione stile iOS */
