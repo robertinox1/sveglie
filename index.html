@@ -254,7 +254,7 @@
                 // Dizionario delle icone: associa la posizione al file dell'immagine
         const mappaIcone = {
             // PAGINA 1
-            'icon-p1-r1-c1': 'fotocamera.PNG',
+            'icon-p1-r1-c1': { img: 'fotocamera.PNG', nome: 'Fotocamera' },
             'icon-p1-r1-c2': 'fotocamera.PNG', // LA TUA APP SVEGLIA PER IL TRUCCO
             'icon-p1-r1-c3': 'fotocamera.PNG',
             'icon-p1-r1-c4': 'fotocamera.PNG',
@@ -267,14 +267,30 @@
             // Puoi continuare ad aggiungere qui tutte le altre icone seguendo lo stesso schema
         };
 
-        // Applica le immagini di sfondo a ogni icona definita nella mappa
-        Object.keys(mappaIcone).forEach(id => {
+              Object.keys(mappaIcone).forEach(id => {
             const elementoIcona = document.getElementById(id);
             if (elementoIcona) {
-                elementoIcona.style.backgroundImage = `url('${mappaIcone[id]}')`;
-                elementoIcona.style.backgroundColor = 'transparent'; // Rimuove il grigio di riserva
+                // Prende i dati corretti dal nuovo dizionario
+                const datiApp = mappaIcone[id];
+                elementoIcona.style.backgroundImage = `url('${datiApp.img}')`;
+                elementoIcona.style.backgroundColor = 'transparent'; 
+                
+                // Crea il testo con il nome dell'applicazione stile iOS
+                const testoNome = document.createElement('span');
+                testoNome.innerText = datiApp.nome;
+                
+                // Stile del testo integrato per lasciarlo pulito ed elegante
+                testoNome.style.fontSize = '11px';
+                testoNome.style.color = '#fff';
+                testoNome.style.marginTop = '6px';
+                testoNome.style.textAlign = 'center';
+                testoNome.style.whiteSpace = 'nowrap';
+                
+                // Inserisce il testo dentro la cella, subito sotto l'immagine
+                elementoIcona.parentElement.appendChild(testoNome);
             }
         });
+
 
         let pressedCell = null;
 
