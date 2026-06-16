@@ -107,7 +107,7 @@
             height: 68px;
             border-radius: 17px;
             background-color: rgba(255,255,255,0.15);
-            background-size: contain;
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
                    background-clip: content-box;
@@ -269,27 +269,27 @@
             // Puoi continuare ad aggiungere qui tutte le altre icone seguendo lo stesso schema
         };
 
-              Object.keys(mappaIcone).forEach(id => {
+                     // Applica le immagini e inserisce i nomi sotto le icone in modo corretto
+        Object.keys(mappaIcone).forEach(id => {
             const elementoIcona = document.getElementById(id);
             if (elementoIcona) {
-                // Prende i dati corretti dal nuovo dizionario
                 const datiApp = mappaIcone[id];
+                
+                // NOTA LA CORREZIONE: usiamo datiApp.img per estrarre il testo del file .PNG
                 elementoIcona.style.backgroundImage = `url('${datiApp.img}')`;
-                elementoIcona.style.backgroundColor = 'transparent'; 
+                elementoIcona.style.backgroundColor = 'transparent'; // Rimuove il grigio di riserva se la foto c'è
                 
                 // Crea il testo con il nome dell'applicazione stile iOS
                 const testoNome = document.createElement('span');
                 testoNome.innerText = datiApp.nome;
                 
-                // Stile del testo integrato per lasciarlo pulito ed elegante
                 testoNome.style.fontSize = '11px';
-                 testoNome.style.fontWeight = '500';
+                testoNome.style.fontWeight = '500';
                 testoNome.style.color = '#fff';
                 testoNome.style.marginTop = '3px';
                 testoNome.style.textAlign = 'center';
                 testoNome.style.whiteSpace = 'nowrap';
                 
-                // Inserisce il testo dentro la cella, subito sotto l'immagine
                 elementoIcona.parentElement.appendChild(testoNome);
             }
         });
