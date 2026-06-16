@@ -107,7 +107,9 @@
             height: 68px;
             border-radius: 17px;
             background-color: rgba(255,255,255,0.15);
-            object-fit: fill; 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             pointer-events: none; /* Rende l'icona invisibile ai tocchi nativi */
             -webkit-user-drag: none; /* Impedisce di "sollevare" l'immagine su iOS */
             user-drag: none;
@@ -206,13 +208,10 @@
                     cell.dataset.row = r;
                     cell.dataset.col = c;
                     
-                                    const img = document.createElement('img'); // Trasformato in tag IMG reale
+                    const img = document.createElement('div');
                     img.className = 'icon-img';
                     img.id = `icon-${pageId}-r${r}-c${c}`;
-                    // Di base carichiamo la fotocamera per dare a tutte lo stesso punto di partenza perfetto
-                    img.src = 'fotocamera.PNG'; 
                     cell.appendChild(img);
-
                     
                     cell.addEventListener('pointerdown', (e) => {
 
@@ -268,26 +267,27 @@
             // Puoi continuare ad aggiungere qui tutte le altre icone seguendo lo stesso schema
         };
 
-                     // Applica le immagini e inserisce i nomi sotto le icone in modo corretto
-        Object.keys(mappaIcone).forEach(id => {
+              Object.keys(mappaIcone).forEach(id => {
             const elementoIcona = document.getElementById(id);
             if (elementoIcona) {
-                               const datiApp = mappaIcone[id];
-                // Cambia la sorgente dell'immagine nativa con il tuo file del dizionario
-                elementoIcona.src = datiApp.img; 
+                // Prende i dati corretti dal nuovo dizionario
+                const datiApp = mappaIcone[id];
+                elementoIcona.style.backgroundImage = `url('${datiApp.img}')`;
                 elementoIcona.style.backgroundColor = 'transparent'; 
-
+                
                 // Crea il testo con il nome dell'applicazione stile iOS
                 const testoNome = document.createElement('span');
                 testoNome.innerText = datiApp.nome;
                 
+                // Stile del testo integrato per lasciarlo pulito ed elegante
                 testoNome.style.fontSize = '11px';
-                testoNome.style.fontWeight = '500';
+                 testoNome.style.fontWeight = '500';
                 testoNome.style.color = '#fff';
                 testoNome.style.marginTop = '3px';
                 testoNome.style.textAlign = 'center';
                 testoNome.style.whiteSpace = 'nowrap';
                 
+                // Inserisce il testo dentro la cella, subito sotto l'immagine
                 elementoIcona.parentElement.appendChild(testoNome);
             }
         });
