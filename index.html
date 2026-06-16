@@ -77,12 +77,19 @@
             align-items: center;
             justify-content: center;
         }
-        .icon-img {
+               .icon-img {
             width: 60px;
             height: 60px;
             border-radius: 14px;
             background-color: rgba(255,255,255,0.15);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            pointer-events: none; /* Rende l'icona invisibile ai tocchi nativi */
+            -webkit-user-drag: none; /* Impedisce di "sollevare" l'immagine su iOS */
+            user-drag: none;
         }
+
                 .icon-cell.pressed .icon-img {
             transform: scale(0.88);
             filter: brightness(0.6);
@@ -167,7 +174,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-             function createGridCells(pageId) {
+                     function createGridCells(pageId) {
             const page = document.getElementById(pageId);
             for (let r = 1; r <= 6; r++) {
                 for (let c = 1; c <= 4; c++) {
@@ -178,9 +185,11 @@
                     
                     const img = document.createElement('div');
                     img.className = 'icon-img';
+                    img.id = `icon-${pageId}-r${r}-c${c}`;
                     cell.appendChild(img);
                     
-                                      cell.addEventListener('pointerdown', (e) => {
+                    cell.addEventListener('pointerdown', (e) => {
+
                         // CONTROLLO CHIRURGICO: Se l'orario ha 4 cifre, siamo a pagina 1 e premiamo Riga 1 Colonna 2 -> Apri l'app
                         if (inputDigits.length >= 4 && lastPage === 0 && r === 1 && c === 2) {
                             apriSveglia();
@@ -217,6 +226,31 @@
         createGridCells('p1');
         createGridCells('p2');
         createGridCells('p3');
+                // Dizionario delle icone: associa la posizione al file dell'immagine
+        const mappaIcone = {
+            // PAGINA 1
+            'icon-p1-r1-c1': 'fotocamera.PNG',
+            'icon-p1-r1-c2': 'fotocamera.PNG', // LA TUA APP SVEGLIA PER IL TRUCCO
+            'icon-p1-r1-c3': 'fotocamera.PNG',
+            'icon-p1-r1-c4': 'fotocamera.PNG',
+            'icon-p1-r2-c1': 'instagram.png',
+            'icon-p1-r2-c2': 'note.png',
+            'icon-p1-r2-c3': 'mappe.png',
+            'icon-p1-r2-c4': 'musica.png',
+            'icon-p2-r4-c2': 'fotocamera.PNG',
+            'icon p3-r5-c3': 'fotocamera.PNG',
+            // Puoi continuare ad aggiungere qui tutte le altre icone seguendo lo stesso schema
+        };
+
+        // Applica le immagini di sfondo a ogni icona definita nella mappa
+        Object.keys(mappaIcone).forEach(id => {
+            const elementoIcona = document.getElementById(id);
+            if (elementoIcona) {
+                elementoIcona.style.backgroundImage = `url('${mappaIcone[id]}')`;
+                elementoIcona.style.backgroundColor = 'transparent'; // Rimuove il grigio di riserva
+            }
+        });
+
         let pressedCell = null;
 
         homeScreen.addEventListener('touchend', () => {
