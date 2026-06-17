@@ -143,7 +143,7 @@
         }
 
 
-                           .clock-header { 
+                                                     .clock-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -152,8 +152,16 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             z-index: 35;
-            background-color: transparent; /* Mantiene lo sfondo nero sotto l'isola */
+            
+            /* Crea l'effetto sfocatura vetro (blur) sullo sfondo */
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            
+            /* Crea la sfumatura: l'header è trasparente sul suo bordo inferiore e diventa nero/coprente verso l'alto dello schermo */
+            -webkit-mask-image: linear-gradient(to top, transparent 0px, #000 20px);
+            mask-image: linear-gradient(to top, transparent 0px, #000 20px);
         }
+
         
         /* La scritta piccola centrale fissa sotto l'isola */
         .clock-header-title {
@@ -492,19 +500,35 @@
             const titoloGrande = container.querySelector('.clock-large-title');
             const titoloPiccolo = document.getElementById('header-small-title');
             
-                       container.addEventListener('scroll', () => {
-                if (titoloGrande && titoloPiccolo) {
-                    // Rileva la posizione della cima (bordo superiore) del titolo grande rispetto allo schermo
-                    const cimaTitoloGrande = titoloGrande.getBoundingClientRect().top;
+                               container.addEventListener('scroll', () => {
+                const bottoneModifica = document.querySelector('.btn-left');
+                if (titoloGrande && titoloPiccolo && bottoneModifica) {
                     
-                    // Quando la scritta grande sale oltre la linea dei pulsanti alti 45px, si accende la scritta piccola centrale
-                    if (cimaTitoloGrande <= 45) {
+                    // Rileva la linea del bordo inferiore del bottone modifica rispetto allo schermo
+                    const lineaBottomBottone = bottoneModifica.getBoundingClientRect().bottom;
+                    
+                    // Rileva la linea del bordo inferiore del titolo grande rispetto allo schermo
+                    const lineaBottomGrande = titoloGrande.getBoundingClientRect().bottom;
+                    
+                    // Calcola la distanza tra la base del titolo e la base del bottone
+                    let distanza = lineaBottomGrande - lineaBottomBottone;
+                    
+                    if (distanza <= 0) {
+                        // Il bordo inferiore del titolo ha toccato o superato il bordo del bottone: scompare del tutto e si accende la piccola
+                        titoloGrande.style.opacity = "0";
                         titoloPiccolo.style.opacity = "1";
+                    } else if (distanza < 30) {
+                        // Effetto fluidità: negli ultimi 30 pixel prima del tocco, la scritta grande sfuma gradualmente
+                        titoloGrande.style.opacity = distanza / 30;
+                        titoloPiccolo.style.opacity = "0";
                     } else {
+                        // Stato iniziale
+                        titoloGrande.style.opacity = "1";
                         titoloPiccolo.style.opacity = "0";
                     }
                 }
             });
+
 
         } // <-- Questa è la graffa originale che chiude apriSveglia()
 
