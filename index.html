@@ -223,6 +223,17 @@
             transition: transform 0.2s;
         }
         .ios-switch.on .ios-switch-handle { transform: translateX(20px); }
+                .sleep-section {
+            padding: 0 20px;
+            margin-top: -5px;
+        }
+        .sleep-full-img {
+            height: 22px; /* Regola l'altezza per renderla proporzionata al font originale */
+            width: auto;
+            object-fit: contain;
+            -webkit-user-drag: none;
+        }
+
 
     </style>
 </head>
@@ -245,6 +256,11 @@
         
         <!-- Titolo Sveglia spostato in basso in modalità testo grande, stile Apple -->
         <h1 class="clock-large-title">Sveglie</h1>
+                       <!-- Sezione Sonno/Risveglio con immagine unica -->
+        <div class="sleep-section">
+            <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
+        </div>
+
         
         <!-- Lista delle sveglie generate dal trucco -->
         <div id="alarms-list"></div>
