@@ -143,7 +143,7 @@
         }
 
 
-                                                     .clock-header { 
+                                                                               .clock-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -152,14 +152,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             z-index: 35;
-            
-            /* Crea l'effetto sfocatura vetro (blur) sullo sfondo */
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            
-            /* Crea la sfumatura: l'header è trasparente sul suo bordo inferiore e diventa nero/coprente verso l'alto dello schermo */
-            -webkit-mask-image: linear-gradient(to top, transparent 0px, #000 20px);
-            mask-image: linear-gradient(to top, transparent 0px, #000 20px);
+            background-color: transparent; /* Totale trasparenza per non coprire nulla */
         }
 
         
@@ -195,12 +188,17 @@
             letter-spacing: -0.5px;
         }
         
-              #alarms-list { 
+                        #alarms-list { 
             overflow-y: auto; 
             flex-grow: 1; 
-            padding: 120px 20px 100px 20px; /* Sostituito il 25vh con uno spazio fisso per ospitare i titoli all'inizio */
+            padding: 120px 20px 100px 20px; 
             margin-bottom: 0px; 
+            
+            /* Sfumatura graduale e leggerissima: le sveglie sono al 100% visibili fino a 110px dall'alto, poi sfumano dolcemente verso il trasparente totale a 45px, lasciando i bottoni intatti */
+            -webkit-mask-image: linear-gradient(to bottom, transparent 45px, rgba(0,0,0,0.3) 80px, #000 110px);
+            mask-image: linear-gradient(to bottom, transparent 45px, rgba(0,0,0,0.3) 80px, #000 110px);
         }
+
 
 
         .alarm-item {
