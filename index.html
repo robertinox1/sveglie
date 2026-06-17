@@ -143,13 +143,31 @@
         }
 
 
-               .clock-header { 
+                           .clock-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             padding: 45px 16px 5px 16px; 
             box-sizing: border-box;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 35;
+            background-color: #000; /* Mantiene lo sfondo nero sotto l'isola */
         }
+        
+        /* La scritta piccola centrale fissa sotto l'isola */
+        .clock-header-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
+            opacity: 0; /* Invisibile all'inizio */
+            transition: opacity 0.2s ease;
+            z-index: 36;
+        }
+
         
         /* I tuoi due nuovi bottoni immagine in alto */
         .header-img-btn {
@@ -172,9 +190,13 @@
               #alarms-list { 
             overflow-y: auto; 
             flex-grow: 1; 
-            padding: 25vh 20px 100px 20px; /* Il padding-bottom da 100px crea dello spazio vuoto alla fine della lista per non far coprire l'ultima sveglia dalla bolla */
-            margin-bottom: 0px; /* Rimosso il blocco: ora la lista arriva fino in fondo allo schermo */
+            padding: 120px 20px 100px 20px; /* Sostituito il 25vh con uno spazio fisso per ospitare i titoli all'inizio */
+            margin-bottom: 0px; 
+            /* Sfumatura ad altezza isola/header per far sparire gli elementi in dissolvenza */
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent 60px, #000 130px);
+            mask-image: linear-gradient(to bottom, transparent 0px, transparent 60px, #000 130px);
         }
+
 
         .alarm-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -258,27 +280,19 @@
         </div>
     </div>
 
-           <div id="clock-screen" class="screen">
-        <!-- Nuova testata stile iOS con i due pulsanti immagine e il titolo -->
+             <div id="clock-screen" class="screen">
+        <!-- Header Fisso con i pulsanti e la scritta piccola centrale -->
         <div class="clock-header">
             <img src="pulsante-sinistro.PNG" class="header-img-btn btn-left" onclick="resetApp()" alt="Modifica">
+            <span id="header-small-title" class="clock-header-title">Sveglie</span>
             <img src="pulsante-destra.PNG" class="header-img-btn btn-right" alt="Aggiungi">
         </div>
         
-        <!-- Titolo Sveglia spostato in basso in modalità testo grande, stile Apple -->
-        <h1 class="clock-large-title">Sveglie</h1>
-                       <!-- Sezione Sonno/Risveglio con immagine unica -->
-        <div class="sleep-section">
-            <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
-        </div>
-        <!-- Riga Nessuna sveglia / Configura con immagine unica -->
-        <div class="sleep-row-section">
-            <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
+        <!-- Contenitore della Lista: ora i titoli e le immagini sono inseriti qui dentro in modo che scorrano insieme -->
+        <div id="alarms-list">
+            <!-- Questi elementi statici verranno scritti all'avvio dal CSS/HTML iniziale -->
         </div>
 
-        
-        <!-- Lista delle sveglie generate dal trucco -->
-        <div id="alarms-list"></div>
         
         <!-- La bolla/barra di navigazione fissa sul fondo dello schermo -->
         <div class="clock-footer">
