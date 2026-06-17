@@ -178,10 +178,10 @@
 
         .alarm-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 0; border-bottom: 0.5px solid #1c1c1e;
+            padding: 14px 0; border-bottom: 0.5px solid rgba(255, 255, 255, 0.25);
         }
                 .alarm-item:first-child {
-            border-top: 0.5px solid #1c1c1e;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.25);
         }
 
         .alarm-time { font-size: 48px; font-weight: 200; color: #8e8e93; line-height: 1; }
@@ -191,7 +191,7 @@
         /* La tua bolla/barra inferiore fissa */
             .clock-footer {
             position: absolute;
-            bottom: 30px; /* Alza la bolla di 10px dal fondo per farla fluttuare (puoi modificare questo valore) */
+            bottom: 50px; /* Alza la bolla di 10px dal fondo per farla fluttuare (puoi modificare questo valore) */
             left: 5%; /* Centra la bolla lasciando spazio ai lati */
             width: 90%; /* La bolla non prende più tutto lo schermo ma solo il 90% della larghezza */
             height: 65px; /* Altezza iniziale della bolla (la adatteremo passo dopo passo) */
