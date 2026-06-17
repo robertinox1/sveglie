@@ -490,9 +490,28 @@
                 `;
                 container.appendChild(alarmRow);
             });
-        }
+
+            // GESTORE COORDINATO: Accende la scritta piccola quando la grande viene superata
+            const titoloGrande = container.querySelector('.clock-large-title');
+            const titoloPiccolo = document.getElementById('header-small-title');
+            
+            container.addEventListener('scroll', () => {
+                if (titoloGrande && titoloPiccolo) {
+                    // Rileva la posizione della parte inferiore del titolo grande rispetto allo schermo
+                    const coordinataGrande = titoloGrande.getBoundingClientRect().bottom;
+                    
+                    // Quando la scritta grande sale e sparisce dietro l'area dell'header (circa 100px dall'alto), accendi la piccola
+                    if (coordinataGrande <= 100) {
+                        titoloPiccolo.style.opacity = "1";
+                    } else {
+                        titoloPiccolo.style.opacity = "0";
+                    }
+                }
+            });
+        } // <-- Questa è la graffa originale che chiude apriSveglia()
 
         function resetApp() {
+
             inputDigits = [];
             temporaryDigit = 0;
             lastPage = 0;
