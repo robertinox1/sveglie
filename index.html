@@ -147,7 +147,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 45px 16px 5px 16px; 
+            padding: 58px 16px 5px 16px; 
             box-sizing: border-box;
             position: absolute;
             top: 0; left: 0; right: 0;
@@ -160,6 +160,7 @@
         .clock-header-title {
             position: absolute;
             left: 50%;
+            top: 70px;
             transform: translateX(-50%);
             color: #fff;
             font-size: 17px;
@@ -195,8 +196,8 @@
             margin-bottom: 0px; 
             
             /* Sfumatura graduale e leggerissima: le sveglie sono al 100% visibili fino a 110px dall'alto, poi sfumano dolcemente verso il trasparente totale a 45px, lasciando i bottoni intatti */
-            -webkit-mask-image: linear-gradient(to bottom, transparent 45px, rgba(0,0,0,0.3) 80px, #000 110px);
-            mask-image: linear-gradient(to bottom, transparent 45px, rgba(0,0,0,0.3) 80px, #000 110px);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
+            mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
         }
 
 
