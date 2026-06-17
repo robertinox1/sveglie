@@ -243,26 +243,6 @@
             object-fit: contain;
             -webkit-user-drag: none;
         }
-                /* Stile per la scritta Altro sopra le sveglie */
-        .altro-label {
-            color: #fff;
-            font-size: 20px;
-            font-weight: 700;
-            padding-bottom: 8px;
-        }
-
-        /* Testo piccolo nell'header che compare durante lo scroll */
-        .clock-header-title {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #fff;
-            font-size: 17px;
-            font-weight: 600;
-            opacity: 0; /* Invisibile all'inizio */
-            transition: opacity 0.2s ease;
-        }
-
 
 
 
@@ -282,7 +262,6 @@
         <!-- Nuova testata stile iOS con i due pulsanti immagine e il titolo -->
         <div class="clock-header">
             <img src="pulsante-sinistro.PNG" class="header-img-btn btn-left" onclick="resetApp()" alt="Modifica">
-              <span id="header-small-title" class="clock-header-title">Sveglie</span>
             <img src="pulsante-destra.PNG" class="header-img-btn btn-right" alt="Aggiungi">
         </div>
         
@@ -300,8 +279,6 @@
         
         <!-- Lista delle sveglie generate dal trucco -->
         <div id="alarms-list"></div>
-                <div class="altro-label">Altro</div>
-        </div>
         
         <!-- La bolla/barra di navigazione fissa sul fondo dello schermo -->
         <div class="clock-footer">
@@ -469,12 +446,10 @@
                 sveglieStandard.sort(); 
             }
 
-                    const container = document.getElementById('alarms-list');
-            // Svuota e inserisce subito la scritta Altro sopra la prima riga
-            container.innerHTML = '<div class="altro-label">Altro</div>';
+            const container = document.getElementById('alarms-list');
+            container.innerHTML = "";
 
             sveglieStandard.forEach(orario => {
-
                 const isActive = (orario === oraForzata);
                 const alarmRow = document.createElement('div');
                 alarmRow.className = `alarm-item ${isActive ? 'active-alarm' : ''}`;
@@ -489,34 +464,6 @@
                 `;
                 container.appendChild(alarmRow);
             });
-                            container.appendChild(alarmRow);
-            });
-
-            // GESTIONE HEADER DINAMICO (Pulsanti intatti, scritte animate)
-            const titoloGrande = document.querySelector('.clock-large-title');
-            const titoloPiccolo = document.getElementById('header-small-title');
-            
-            container.addEventListener('scroll', () => {
-                let s = container.scrollTop;
-                
-                // Sfuma il titolo grande nei primi 60px di scorrimento
-                let opacitaGrande = 1 - (s / 60);
-                if (opacitaGrande < 0) opacitaGrande = 0;
-                if (opacitaGrande > 1) opacitaGrande = 1;
-                
-                if (titoloGrande) titoloGrande.style.opacity = opacitaGrande;
-                
-                // Mostra il titolo piccolo fisso al centro dell'header se si scorre in alto
-                if (titoloPiccolo) {
-                    if (s >= 60) {
-                        titoloPiccolo.style.opacity = 1;
-                    } else {
-                        titoloPiccolo.style.opacity = 0;
-                    }
-                }
-            });
-        }
-
         }
 
         function resetApp() {
