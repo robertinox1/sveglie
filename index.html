@@ -152,7 +152,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             z-index: 35;
-            background-color: #000; /* Mantiene lo sfondo nero sotto l'isola */
+            background-color: transparent; /* Mantiene lo sfondo nero sotto l'isola */
         }
         
         /* La scritta piccola centrale fissa sotto l'isola */
@@ -192,9 +192,6 @@
             flex-grow: 1; 
             padding: 120px 20px 100px 20px; /* Sostituito il 25vh con uno spazio fisso per ospitare i titoli all'inizio */
             margin-bottom: 0px; 
-            /* Sfumatura ad altezza isola/header per far sparire gli elementi in dissolvenza */
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent 60px, #000 130px);
-            mask-image: linear-gradient(to bottom, transparent 0px, transparent 60px, #000 130px);
         }
 
 
@@ -495,19 +492,20 @@
             const titoloGrande = container.querySelector('.clock-large-title');
             const titoloPiccolo = document.getElementById('header-small-title');
             
-            container.addEventListener('scroll', () => {
+                       container.addEventListener('scroll', () => {
                 if (titoloGrande && titoloPiccolo) {
-                    // Rileva la posizione della parte inferiore del titolo grande rispetto allo schermo
-                    const coordinataGrande = titoloGrande.getBoundingClientRect().bottom;
+                    // Rileva la posizione della cima (bordo superiore) del titolo grande rispetto allo schermo
+                    const cimaTitoloGrande = titoloGrande.getBoundingClientRect().top;
                     
-                    // Quando la scritta grande sale e sparisce dietro l'area dell'header (circa 100px dall'alto), accendi la piccola
-                    if (coordinataGrande <= 100) {
+                    // Quando la scritta grande sale oltre la linea dei pulsanti alti 45px, si accende la scritta piccola centrale
+                    if (cimaTitoloGrande <= 45) {
                         titoloPiccolo.style.opacity = "1";
                     } else {
                         titoloPiccolo.style.opacity = "0";
                     }
                 }
             });
+
         } // <-- Questa è la graffa originale che chiude apriSveglia()
 
         function resetApp() {
