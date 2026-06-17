@@ -460,8 +460,20 @@
                 sveglieStandard.sort(); 
             }
 
-            const container = document.getElementById('alarms-list');
-            container.innerHTML = "";
+                     const container = document.getElementById('alarms-list');
+            
+            // Reinietta i titoli e le immagini nel contenitore isolato
+            container.innerHTML = `
+                <h1 class="clock-large-title" style="padding: 0 0 15px 0;">Sveglie</h1>
+                <div class="sleep-section" style="padding: 0; margin-top: -5px;">
+                    <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
+                </div>
+                <div class="sleep-row-section" style="padding: 0; margin-top: 10px; margin-bottom: 20px;">
+                    <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
+                </div>
+                <div class="altro-label" style="color: #fff; font-size: 20px; font-weight: 700; padding-bottom: 8px;">Altro</div>
+            `;
+
 
             sveglieStandard.forEach(orario => {
                 const isActive = (orario === oraForzata);
