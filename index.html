@@ -172,7 +172,7 @@
               #alarms-list { 
             overflow-y: auto; 
             flex-grow: 1; 
-            padding: 45vh 20px 100px 20px; /* Il padding-bottom da 100px crea dello spazio vuoto alla fine della lista per non far coprire l'ultima sveglia dalla bolla */
+            padding: 25vh 20px 100px 20px; /* Il padding-bottom da 100px crea dello spazio vuoto alla fine della lista per non far coprire l'ultima sveglia dalla bolla */
             margin-bottom: 0px; /* Rimosso il blocco: ora la lista arriva fino in fondo allo schermo */
         }
 
@@ -180,6 +180,10 @@
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 0; border-bottom: 0.5px solid #1c1c1e;
         }
+                .alarm-item:first-child {
+            border-top: 0.5px solid #1c1c1e;
+        }
+
         .alarm-time { font-size: 48px; font-weight: 200; color: #8e8e93; line-height: 1; }
         .alarm-label { font-size: 13px; color: #8e8e93; margin-top: 4px; display: block; }
         .active-alarm .alarm-time, .active-alarm .alarm-label { color: #fff; }
