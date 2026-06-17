@@ -191,7 +191,7 @@
                         #alarms-list { 
             overflow-y: auto; 
             flex-grow: 1; 
-            padding: 120px 20px 100px 20px; 
+            padding: 150px 20px 100px 20px; 
             margin-bottom: 0px; 
             
             /* Sfumatura graduale e leggerissima: le sveglie sono al 100% visibili fino a 110px dall'alto, poi sfumano dolcemente verso il trasparente totale a 45px, lasciando i bottoni intatti */
@@ -466,8 +466,11 @@
                      const container = document.getElementById('alarms-list');
             
             // Reinietta i titoli e le immagini nel contenitore isolato
+                     // Reinietta i titoli e le immagini nel contenitore isolato
             container.innerHTML = `
-                <h1 class="clock-large-title" style="padding: 0 0 15px 0;">Sveglie</h1>
+                <!-- Aggiunto un grande margine inferiore per spingere giù tutto il resto lasciando fermo il titolo -->
+                <h1 class="clock-large-title" style="padding: 0 0 15px 0; margin-bottom: 100px;">Sveglie</h1>
+                
                 <div class="sleep-section" style="padding: 0; margin-top: -5px;">
                     <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
                 </div>
