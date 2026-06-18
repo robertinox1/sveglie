@@ -296,6 +296,8 @@
         <div id="alarms-list">
             <!-- Questi elementi statici verranno scritti all'avvio dal CSS/HTML iniziale -->
         </div>
+                 <div id="altro-label-fissa" style="color: #fff; font-size: 20px; font-weight: 700; position: fixed; left: 20px; z-index: 35; width: calc(100% - 40px); pointer-events: none; opacity: 0; transition: opacity 0.2s ease;">Altro</div>
+
 
         
         <!-- La bolla/barra di navigazione fissa sul fondo dello schermo -->
@@ -478,7 +480,6 @@
                 <div class="sleep-row-section" style="padding: 0; margin-top: 10px; margin-bottom: 50px;">
                     <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
                 </div>
- <div class="altro-label" style="color: #fff; font-size: 20px; font-weight: 700; padding-bottom: 8px; position: relative; width: 100%; box-sizing: border-box; z-index: 35;">Altro</div>
             `;
 
             sveglieStandard.forEach(orario => {
@@ -496,6 +497,10 @@
                 `;
                 container.appendChild(alarmRow);
             });
+                        // Mostra la scritta esterna all'apertura dell'applicazione
+            const labelAltroEsterna = document.getElementById('altro-label-fissa');
+            if (labelAltroEsterna) labelAltroEsterna.style.opacity = "1";
+
 
             // GESTORE COORDINATO: Accende la scritta piccola quando la grande viene superata
             const titoloGrande = container.querySelector('.clock-large-title');
@@ -504,7 +509,8 @@
             container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
                 const fotoSonno = container.querySelector('.sleep-section');
-                const labelAltro = container.querySelector('.altro-label');
+                const labelAltro = document.getElementById('altro-label-fissa');
+
                 
                 if (titoloGrande && titoloPiccolo && bottoneModifica && fotoSonno && labelAltro) {
                     
@@ -531,19 +537,7 @@
                     let sogliaBloccoAltro = 225; // Modifica questo numero per decidere quando deve bloccarsi
                     let pixelDallAltoDelloSchermo = 120; // CORRETTO: Variabile unita senza spazi
 
-                     if (scorrimento >= sogliaBloccoAltro) {
-                        // Trasforma la scritta in un elemento fisso e immobile a ridosso del bottone
-                        labelAltro.style.setProperty("position", "fixed", "important");
-                        labelAltro.style.setProperty("top", `${pixelDallAltoDelloSchermo}px`, "important");
-                        labelAltro.style.left = "20px"; 
-                        labelAltro.style.transform = "none";
-                    } else {
-                        // Quando si torna sopra la soglia, torna ad essere una riga normale che si muove
-                        labelAltro.style.setProperty("position", "relative", "important");
-                        labelAltro.style.setProperty("top", "auto", "important");
-                        labelAltro.style.left = "auto";
-                        labelAltro.style.transform = "none";
-                    }
+                   
 
                     // Gestione originale della Foto Sonno (Invariata)
                     if (scorrimento >= 65) {
