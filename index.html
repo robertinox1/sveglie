@@ -478,7 +478,8 @@
                 <div class="sleep-row-section" style="padding: 0; margin-top: 10px; margin-bottom: 50px;">
                     <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
                 </div>
-                <div class="altro-label" style="color: #fff; font-size: 20px; font-weight: 700; padding-bottom: 8px;">Altro</div>
+               <div class="altro-label" style="color: #fff; font-size: 20px; font-weight: 700; padding-bottom: 8px; position: relative; z-index: 99;">Altro</div>
+
             `;
 
 
@@ -506,6 +507,8 @@
                                                                        container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
                 const fotoSonno = container.querySelector('.sleep-section');
+                const labelAltro = container.querySelector('.altro-label');
+                                                           
                 
                 if (titoloGrande && titoloPiccolo && bottoneModifica && fotoSonno) {
                     
@@ -526,38 +529,48 @@
                     }
                     
                     // 2. GESTIONE CALAMITA BLOCCATA ED ELIMINAZIONE TRACCE
+                               // 2. GESTIONE CALAMITA BLOCCATA ED EFFETTO REVERSIBILE
                     let scorrimento = container.scrollTop;
                     
+                    // Calcoliamo quanti pixel di distanza iniziale ci sono tra la foto del sonno e la scritta Altro
+                    let offsetInizialeAltro = labelAltro.offsetTop - fotoSonno.offsetTop;
+                    // La scritta deve bloccarsi quando lo scorrimento ha coperto i 65px della foto + questa distanza
+                    let puntoDiBloccoAltro = 65 + offsetInizialeAltro;
+
+                    if (scorrimento >= puntoDiBloccoAltro) {
+                        // Una volta raggiunta la posizione in alto della foto, la scritta si inchioda lì
+                        labelAltro.style.transform = `translateY(${scorrimento - puntoDiBloccoAltro}px)`;
+                    } else {
+                        // Finché non raggiunge quel punto in alto, sale normalmente con la pagina
+                        labelAltro.style.transform = "translateY(0px)";
+                    }
+
+                    // Gestione originale della Foto Sonno (Invariata)
                     if (scorrimento >= 65) {
-                        // Ripristina la visibilità nel caso fosse tornato su
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
                         
                         if (scorrimento >= 160) {
                             fotoSonno.style.opacity = "0";
-                            // CANCELLAZIONE CHIRURGICA ANTI-TRACCIA: Nasconde totalmente l'elemento
                             fotoSonno.style.visibility = "hidden";  
                         } else if (scorrimento > 130) {
                             fotoSonno.style.visibility = "visible";
-                            // BLOCCO DELLA POSIZIONE: Quando inizia a sfumare, la posizione si congela fissa a 130px (130 - 65 = 65)
                             fotoSonno.style.transform = "translateY(65px)";
-                            
                             let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
-                            // Fase calamita standard tra 65px e 130px
-                             fotoSonno.style.visibility = "visible";
+                            fotoSonno.style.visibility = "visible";
                             fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
-                        // Stato iniziale sotto i 65px
                         fotoSonno.style.visibility = "visible";
                         fotoSonno.style.display = "block";
                         fotoSonno.style.transform = "translateY(0px)";
                         fotoSonno.style.opacity = "1";
                         fotoSonno.style.zIndex = "30";
                     }
+
                 }
             });
 
