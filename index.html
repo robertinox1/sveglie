@@ -503,12 +503,11 @@
             const titoloGrande = container.querySelector('.clock-large-title');
             const titoloPiccolo = document.getElementById('header-small-title');
             
-                                                     container.addEventListener('scroll', () => {
+                                                                container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
                 const fotoSonno = container.querySelector('.sleep-section');
-                const rigaConfigura = container.querySelector('.sleep-row-section');
                 
-                if (titoloGrande && titoloPiccolo && bottoneModifica) {
+                if (titoloGrande && titoloPiccolo && bottoneModifica && fotoSonno) {
                     
                     const lineaBottomBottone = bottoneModifica.getBoundingClientRect().bottom;
                     const lineaBottomGrande = titoloGrande.getBoundingClientRect().bottom;
@@ -526,42 +525,33 @@
                         titoloPiccolo.style.opacity = "0";
                     }
                     
-                    // 2. Gestione Calamita Avanzata e Blocco prima di Sparire
-                    if (fotoSonno && rigaConfigura) {
-                        let scorrimento = container.scrollTop;
+                    // 2. NUOVA GESTIONE CALAMITA PURA IN SOVRAPOSIZIONE (Senza bug di rimbalzo)
+                    let scorrimento = container.scrollTop;
+                    
+                    // Soglia ridotta a 65px: la foto sale ancora di più, vicinissima al bottone, prima di bloccarsi
+                    if (scorrimento >= 65) {
+                        // Mantiene la foto immobile vicina al bottone
+                        fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
                         
-                        // Modificato a 55px: la foto sale più in alto prima di inchiodarsi vicino al bottone
-                        if (scorrimento >= 55) {
-                            fotoSonno.style.transform = `translateY(${scorrimento - 55}px)`;
-                            
-                            const rettangoloConfigura = rigaConfigura.getBoundingClientRect();
-                            const cimaFoto = fotoSonno.getBoundingClientRect().top;
-                            
-                            // Rileva la cima superiore della riga Configura
-                            const cimaConfigura = rettangoloConfigura.top;
-                            
-                            // Calcola la distanza tra la cima della riga Configura e il fondo della foto fissa
-                            let distanzaImpatto = cimaConfigura - cimaFoto;
-                            
-                            // CREAZIONE DEL GRADINO DI BLOCCO PRIMA DI SPARIRE
-                            if (distanzaImpatto <= -15) {
-                                // Superato anche il gradino di blocco di 15px, la foto sparisce del tutto
-                                fotoSonno.style.opacity = "0";
-                            } else if (distanzaImpatto <= 10) {
-                                // La riga si trova tra 10px sopra la base e 15px oltre: qui la foto rimane bloccata visibile (opacità 1)
-                                fotoSonno.style.opacity = "1";
-                            } else if (distanzaImpatto < 40) {
-                                // Sfumatura iniziale graduale prima di entrare nella zona di blocco temporaneo
-                                let fattore = (distanzaImpatto - 10) / 30;
-                                fotoSonno.style.opacity = Math.max(0, fattore);
-                            } else {
-                                fotoSonno.style.opacity = "1";
-                            }
+                        // Per far passare la foto in sovraimpressione sopra le scritte che salgono
+                        fotoSonno.style.zIndex = "32"; 
+                        
+                        // Controlliamo la sparizione basandoci solo sui pixel scorsi
+                        // La foto rimane totalmente visibile mentre le scritte sotto ci passano dietro.
+                        // Inizia a sfumare a 130px di scroll e svanisce del tutto a 160px.
+                        if (scorrimento >= 160) {
+                            fotoSonno.style.opacity = "0";
+                        } else if (scorrimento > 130) {
+                            let fattoreDissolvenza = (scorrimento - 130) / 30; // Gradualità di 30px
+                            fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
-                            // All'inizio la foto si muove normalmente col dito
-                            fotoSonno.style.transform = "translateY(0px)";
                             fotoSonno.style.opacity = "1";
                         }
+                    } else {
+                        // All'inizio lo scorrimento è naturale col dito
+                        fotoSonno.style.transform = "translateY(0px)";
+                        fotoSonno.style.opacity = "1";
+                        fotoSonno.style.zIndex = "30";
                     }
                 }
             });
