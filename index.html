@@ -297,10 +297,7 @@
             <!-- Questi elementi statici verranno scritti all'avvio dal CSS/HTML iniziale -->
         </div>
            <!-- LA RIGA DIV DEFINITIVA DA METTERE SOTTO ALARMS-LIST -->
-<!-- La scatola trasparente che fa muovere e bloccare la scritta in modo nativo -->
-<div id="scatola-altro-sticky" style="position: absolute; top: 0; left: 0; width: 100%; height: calc(100vh + 500px); pointer-events: none; z-index: 35; opacity: 0; transition: opacity 0.2s ease;">
-    <div id="altro-label-fissa" style="color: #fff; font-size: 20px; font-weight: 700; position: sticky; top: 120px; margin-top: 345px; left: 20px; width: calc(100% - 40px);">Altro</div>
-</div>
+<div id="altro-label-fissa" style="color: #fff; font-size: 20px; font-weight: 700; position: fixed; left: 20px; z-index: 35; width: calc(100% - 40px); pointer-events: none; opacity: 0; transition: opacity 0.2s ease;">Altro</div>
 
         
         <!-- La bolla/barra di navigazione fissa sul fondo dello schermo -->
@@ -500,10 +497,16 @@
                 `;
                 container.appendChild(alarmRow);
             });
-                      
-// INSERISCI QUESTO: Accende la scatola all'apertura dell'app
-const scatolaSticky = document.getElementById('scatola-altro-sticky');
-if (scatolaSticky) scatolaSticky.style.opacity = "1";
+                        // Mostra la scritta esterna all'apertura dell'applicazione
+                      // Mostra la scritta esterna all'apertura posizionandola già nel punto iniziale corretto
+            const labelAltroEsterna = document.getElementById('altro-label-fissa');
+            if (labelAltroEsterna) {
+                labelAltroEsterna.style.opacity = "1";
+                // Forza il calcolo iniziale a scorrimento zero: 120 + (225 - 0) = 345px dall'alto
+                let sogliaIniziale = 225;
+                let pixelIniziali = 120;
+                labelAltroEsterna.style.top = `${pixelIniziali + sogliaIniziale}px`;
+            }
 
 
 
@@ -514,7 +517,7 @@ if (scatolaSticky) scatolaSticky.style.opacity = "1";
             container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
                 const fotoSonno = container.querySelector('.sleep-section');
-
+                const labelAltro = document.getElementById('altro-label-fissa');
 
                 
                 if (titoloGrande && titoloPiccolo && bottoneModifica && fotoSonno && labelAltro) {
@@ -538,7 +541,17 @@ if (scatolaSticky) scatolaSticky.style.opacity = "1";
                     // 2. GESTIONE CALAMITA BLOCCATA ED EFFETTO REVERSIBILE
                     let scorrimento = container.scrollTop;
                     
-                 
+                    // IL TUO NUOVO INTERRUTTORE FISSO (Zero tremolii, zero calcoli continui)
+                    let sogliaBloccoAltro = 225; // Modifica questo numero per decidere quando deve bloccarsi
+                    let pixelDallAltoDelloSchermo = 120; // CORRETTO: Variabile unita senza 
+                                        // INSERISCI QUESTO BLOCCO QUI:
+                    if (scorrimento < sogliaBloccoAltro) {
+                        // La scritta sale fluida insieme al dito contrastando lo scroll inverso
+                        labelAltro.style.top = `${pixelDallAltoDelloSchermo + (sogliaBloccoAltro - scorrimento)}px`;
+                    } else {
+                        // Una volta raggiunta la soglia, rimane immobile come una roccia al suo posto
+                        labelAltro.style.top = `${pixelDallAltoDelloSchermo}px`;
+                    }
 
 
                    
@@ -580,9 +593,6 @@ if (scatolaSticky) scatolaSticky.style.opacity = "1";
             lastPage = 0;
             homeScreen.scrollLeft = 0; 
                        document.getElementById('clock-screen').classList.remove('open');
-    // INSERISCI QUESTO: Spegne la scatola quando chiudi l'app
-    const scatolaStickyReset = document.getElementById('scatola-altro-sticky');
-    if (scatolaStickyReset) scatolaStickyReset.style.opacity = "0";
 
         }
     </script>
