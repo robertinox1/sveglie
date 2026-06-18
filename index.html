@@ -252,6 +252,13 @@
                 .sleep-section {
             padding: 0 20px;
             margin-top: -5px;
+            /* Attiva l'effetto calamita bloccando la foto 15px sotto il tasto Modifica */
+            position: sticky;
+            top: 118px; 
+            z-index: 30;
+            background-color: #000; /* Impedisce alle sveglie reali di vedersi dietro la foto mentre passano */
+        }
+
         }
         .sleep-full-img {
             height: 22px; /* Regola l'altezza per renderla proporzionata al font originale */
@@ -503,35 +510,54 @@
             const titoloGrande = container.querySelector('.clock-large-title');
             const titoloPiccolo = document.getElementById('header-small-title');
             
-                               container.addEventListener('scroll', () => {
+                                         container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
-                if (titoloGrande && titoloPiccolo && bottoneModifica) {
+                const fotoSonno = container.querySelector('.sleep-section');
+                const rigaConfigura = container.querySelector('.sleep-row-section');
+                
+                if (titoloGrande && titoloPiccolo && bottoneModifica && fotoSonno && rigaConfigura) {
                     
-                    // Rileva la linea del bordo inferiore del bottone modifica rispetto allo schermo
                     const lineaBottomBottone = bottoneModifica.getBoundingClientRect().bottom;
-                    
-                    // Rileva la linea del bordo inferiore del titolo grande rispetto allo schermo
                     const lineaBottomGrande = titoloGrande.getBoundingClientRect().bottom;
+                    const lineaTopConfigura = rigaConfigura.getBoundingClientRect().top;
                     
-                    // Calcola la distanza tra la base del titolo e la base del bottone
-                    let distanza = lineaBottomGrande - lineaBottomBottone;
+                    // Definisce la linea di stop reale della foto (bordo del bottone + 15px di spazio protettivo)
+                    const lineaFermoFoto = lineaBottomBottone + 15;
                     
-                    if (distanza <= 0) {
-                        // Il bordo inferiore del titolo ha toccato o superato il bordo del bottone: scompare del tutto e si accende la piccola
+                    // 1. Gestione Scambio Titoli Originale (Scritta Grande -> Scritta Piccola)
+                    let distanzaTitolo = lineaBottomGrande - lineaBottomBottone;
+                    if (distanzaTitolo <= 0) {
                         titoloGrande.style.opacity = "0";
-                        titoloPiccolo.style.opacity = "1";
-                    } else if (distanza < 30) {
-                        // Effetto fluidità: negli ultimi 30 pixel prima del tocco, la scritta grande sfuma gradualmente
-                        titoloGrande.style.opacity = distanza / 30;
-                        titoloPiccolo.style.opacity = "0";
+                    } else if (distanzaTitolo < 30) {
+                        titoloGrande.style.opacity = distanzaTitolo / 30;
                     } else {
-                        // Stato iniziale
                         titoloGrande.style.opacity = "1";
-                        titoloPiccolo.style.opacity = "0";
+                    }
+                    
+                    // 2. Gestione Effetto Calamita e Sparizione Coordinata Foto Sonno
+                    // Calcola la distanza tra la riga Configura (Nessuna sveglia) e la linea di arresto della foto
+                    let distanzaSonno = lineaTopConfigura - lineaFermoFoto;
+                    
+                    if (distanzaSonno <= 0) {
+                        // La riga Configura ha raggiunto l'altezza della foto ferma: la foto scompare e la scritta piccola si accende stabilmente
+                        fotoSonno.style.opacity = "0";
+                        titoloPiccolo.style.opacity = "1";
+                    } else if (distanzaSonno < 40) {
+                        // Sfumatura incrociata a specchio negli ultimi 40 pixel: la foto svanisce e la scritta piccola compare
+                        let fattore = distanzaSonno / 40;
+                        fotoSonno.style.opacity = fattore;
+                        titoloPiccolo.style.opacity = 1 - fattore;
+                    } else {
+                        // Stato iniziale: foto visibile al 100%. La scritta piccola risponde solo se il titolo grande è già superato
+                        fotoSonno.style.opacity = "1";
+                        if (distanzaTitolo <= 0) {
+                            titoloPiccolo.style.opacity = "1";
+                        } else {
+                            titoloPiccolo.style.opacity = "0";
+                        }
                     }
                 }
             });
-
 
         } // <-- Questa è la graffa originale che chiude apriSveglia()
 
