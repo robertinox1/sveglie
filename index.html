@@ -503,7 +503,7 @@
             const titoloGrande = container.querySelector('.clock-large-title');
             const titoloPiccolo = document.getElementById('header-small-title');
             
-                                                                container.addEventListener('scroll', () => {
+                                                                       container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
                 const fotoSonno = container.querySelector('.sleep-section');
                 
@@ -525,30 +525,32 @@
                         titoloPiccolo.style.opacity = "0";
                     }
                     
-                    // 2. NUOVA GESTIONE CALAMITA PURA IN SOVRAPOSIZIONE (Senza bug di rimbalzo)
+                    // 2. GESTIONE CALAMITA BLOCCATA ED ELIMINAZIONE TRACCE
                     let scorrimento = container.scrollTop;
                     
-                    // Soglia ridotta a 65px: la foto sale ancora di più, vicinissima al bottone, prima di bloccarsi
                     if (scorrimento >= 65) {
-                        // Mantiene la foto immobile vicina al bottone
-                        fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
-                        
-                        // Per far passare la foto in sovraimpressione sopra le scritte che salgono
+                        // Ripristina la visibilità nel caso fosse tornato su
+                        fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
                         
-                        // Controlliamo la sparizione basandoci solo sui pixel scorsi
-                        // La foto rimane totalmente visibile mentre le scritte sotto ci passano dietro.
-                        // Inizia a sfumare a 130px di scroll e svanisce del tutto a 160px.
                         if (scorrimento >= 160) {
                             fotoSonno.style.opacity = "0";
+                            // CANCELLAZIONE CHIRURGICA ANTI-TRACCIA: Nasconde totalmente l'elemento
+                            fotoSonno.style.display = "none"; 
                         } else if (scorrimento > 130) {
-                            let fattoreDissolvenza = (scorrimento - 130) / 30; // Gradualità di 30px
+                            // BLOCCO DELLA POSIZIONE: Quando inizia a sfumare, la posizione si congela fissa a 130px (130 - 65 = 65)
+                            fotoSonno.style.transform = "translateY(65px)";
+                            
+                            let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
+                            // Fase calamita standard tra 65px e 130px
+                            fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
-                        // All'inizio lo scorrimento è naturale col dito
+                        // Stato iniziale sotto i 65px
+                        fotoSonno.style.display = "block";
                         fotoSonno.style.transform = "translateY(0px)";
                         fotoSonno.style.opacity = "1";
                         fotoSonno.style.zIndex = "30";
