@@ -538,6 +538,7 @@
                             // CANCELLAZIONE CHIRURGICA ANTI-TRACCIA: Nasconde totalmente l'elemento
                             fotoSonno.style.visibility = "hidden";  
                         } else if (scorrimento > 130) {
+                            fotoSonno.style.visibility = "visible";
                             // BLOCCO DELLA POSIZIONE: Quando inizia a sfumare, la posizione si congela fissa a 130px (130 - 65 = 65)
                             fotoSonno.style.transform = "translateY(65px)";
                             
@@ -545,11 +546,13 @@
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             // Fase calamita standard tra 65px e 130px
+                             fotoSonno.style.visibility = "visible";
                             fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
                         // Stato iniziale sotto i 65px
+                        fotoSonno.style.visibility = "visible";
                         fotoSonno.style.display = "block";
                         fotoSonno.style.transform = "translateY(0px)";
                         fotoSonno.style.opacity = "1";
