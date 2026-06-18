@@ -503,35 +503,66 @@
             const titoloGrande = container.querySelector('.clock-large-title');
             const titoloPiccolo = document.getElementById('header-small-title');
             
-                               container.addEventListener('scroll', () => {
+                                          container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
+                const fotoSonno = container.querySelector('.sleep-section');
+                const rigaConfigura = container.querySelector('.sleep-row-section');
+                
                 if (titoloGrande && titoloPiccolo && bottoneModifica) {
                     
-                    // Rileva la linea del bordo inferiore del bottone modifica rispetto allo schermo
                     const lineaBottomBottone = bottoneModifica.getBoundingClientRect().bottom;
-                    
-                    // Rileva la linea del bordo inferiore del titolo grande rispetto allo schermo
                     const lineaBottomGrande = titoloGrande.getBoundingClientRect().bottom;
-                    
-                    // Calcola la distanza tra la base del titolo e la base del bottone
                     let distanza = lineaBottomGrande - lineaBottomBottone;
                     
+                    // 1. Gestione Scambio Titoli originale (Grande -> Piccola)
                     if (distanza <= 0) {
-                        // Il bordo inferiore del titolo ha toccato o superato il bordo del bottone: scompare del tutto e si accende la piccola
                         titoloGrande.style.opacity = "0";
                         titoloPiccolo.style.opacity = "1";
                     } else if (distanza < 30) {
-                        // Effetto fluidità: negli ultimi 30 pixel prima del tocco, la scritta grande sfuma gradualmente
-                        titoloGrande.style.opacity = distanza / 30;
+                        titoloGrande.style.opacity = Math.max(0, distanza / 30);
                         titoloPiccolo.style.opacity = "0";
                     } else {
-                        // Stato iniziale
                         titoloGrande.style.opacity = "1";
                         titoloPiccolo.style.opacity = "0";
                     }
+                    
+                    // 2. Nuova Gestione Calamita e Sparizione a metà riga Configura
+                    if (fotoSonno && rigaConfigura) {
+                        let scorrimento = container.scrollTop;
+                        
+                        // Calcoliamo la distanza iniziale tra la foto e i 15px sotto il bottone Modifica
+                        // La foto smette di salire quando lo scorrimento raggiunge circa 40px
+                        if (scorrimento >= 40) {
+                            // Blocca la foto a pochi pixel dal bottone contrastando lo scroll
+                            fotoSonno.style.transform = `translateY(${scorrimento - 40}px)`;
+                            
+                            // Prende le coordinate in tempo reale della foto e della riga configura
+                            const rettangoloConfigura = rigaConfigura.getBoundingClientRect();
+                            const cimaFoto = fotoSonno.getBoundingClientRect().top;
+                            
+                            // Trova la metà esatta della riga Configura (cima + metà altezza)
+                            const metaConfigura = rettangoloConfigura.top + (rettangoloConfigura.height / 2);
+                            
+                            // Calcola la distanza tra la metà della riga Configura e la foto fissa
+                            let distanzaImpatto = metaConfigura - cimaFoto;
+                            
+                            if (distanzaImpatto <= 0) {
+                                // Superata la metà, la foto sparisce del tutto
+                                fotoSonno.style.opacity = "0";
+                            } else if (distanzaImpatto < 30) {
+                                // Sfuma con la stessa gradualità (30px) della scritta grande
+                                fotoSonno.style.opacity = Math.max(0, distanzaImpatto / 30);
+                            } else {
+                                fotoSonno.style.opacity = "1";
+                            }
+                        } else {
+                            // All'inizio (sotto i 40px di scroll) la foto sale normalmente con il dito
+                            fotoSonno.style.transform = "translateY(0px)";
+                            fotoSonno.style.opacity = "1";
+                        }
+                    }
                 }
             });
-
 
         } // <-- Questa è la graffa originale che chiude apriSveglia()
 
