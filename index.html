@@ -503,7 +503,7 @@
             const titoloGrande = container.querySelector('.clock-large-title');
             const titoloPiccolo = document.getElementById('header-small-title');
             
-                                          container.addEventListener('scroll', () => {
+                                                     container.addEventListener('scroll', () => {
                 const bottoneModifica = document.querySelector('.btn-left');
                 const fotoSonno = container.querySelector('.sleep-section');
                 const rigaConfigura = container.querySelector('.sleep-row-section');
@@ -526,37 +526,39 @@
                         titoloPiccolo.style.opacity = "0";
                     }
                     
-                    // 2. Nuova Gestione Calamita e Sparizione a metà riga Configura
+                    // 2. Gestione Calamita Avanzata e Blocco prima di Sparire
                     if (fotoSonno && rigaConfigura) {
                         let scorrimento = container.scrollTop;
                         
-                        // Calcoliamo la distanza iniziale tra la foto e i 15px sotto il bottone Modifica
-                        // La foto smette di salire quando lo scorrimento raggiunge circa 40px
-                        if (scorrimento >= 40) {
-                            // Blocca la foto a pochi pixel dal bottone contrastando lo scroll
-                            fotoSonno.style.transform = `translateY(${scorrimento - 40}px)`;
+                        // Modificato a 55px: la foto sale più in alto prima di inchiodarsi vicino al bottone
+                        if (scorrimento >= 55) {
+                            fotoSonno.style.transform = `translateY(${scorrimento - 55}px)`;
                             
-                            // Prende le coordinate in tempo reale della foto e della riga configura
                             const rettangoloConfigura = rigaConfigura.getBoundingClientRect();
                             const cimaFoto = fotoSonno.getBoundingClientRect().top;
                             
-                            // Trova la metà esatta della riga Configura (cima + metà altezza)
-                            const metaConfigura = rettangoloConfigura.top + (rettangoloConfigura.height / 2);
+                            // Rileva la cima superiore della riga Configura
+                            const cimaConfigura = rettangoloConfigura.top;
                             
-                            // Calcola la distanza tra la metà della riga Configura e la foto fissa
-                            let distanzaImpatto = metaConfigura - cimaFoto;
+                            // Calcola la distanza tra la cima della riga Configura e il fondo della foto fissa
+                            let distanzaImpatto = cimaConfigura - cimaFoto;
                             
-                            if (distanzaImpatto <= 0) {
-                                // Superata la metà, la foto sparisce del tutto
+                            // CREAZIONE DEL GRADINO DI BLOCCO PRIMA DI SPARIRE
+                            if (distanzaImpatto <= -15) {
+                                // Superato anche il gradino di blocco di 15px, la foto sparisce del tutto
                                 fotoSonno.style.opacity = "0";
-                            } else if (distanzaImpatto < 30) {
-                                // Sfuma con la stessa gradualità (30px) della scritta grande
-                                fotoSonno.style.opacity = Math.max(0, distanzaImpatto / 30);
+                            } else if (distanzaImpatto <= 10) {
+                                // La riga si trova tra 10px sopra la base e 15px oltre: qui la foto rimane bloccata visibile (opacità 1)
+                                fotoSonno.style.opacity = "1";
+                            } else if (distanzaImpatto < 40) {
+                                // Sfumatura iniziale graduale prima di entrare nella zona di blocco temporaneo
+                                let fattore = (distanzaImpatto - 10) / 30;
+                                fotoSonno.style.opacity = Math.max(0, fattore);
                             } else {
                                 fotoSonno.style.opacity = "1";
                             }
                         } else {
-                            // All'inizio (sotto i 40px di scroll) la foto sale normalmente con il dito
+                            // All'inizio la foto si muove normalmente col dito
                             fotoSonno.style.transform = "translateY(0px)";
                             fotoSonno.style.opacity = "1";
                         }
