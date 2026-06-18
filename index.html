@@ -478,7 +478,7 @@
                 <div class="sleep-row-section" style="padding: 0; margin-top: 10px; margin-bottom: 50px;">
                     <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
                 </div>
-              <div class="altro-label" style="color: #fff; font-size: 20px; font-weight: 700; padding-bottom: 8px; position: relative; z-index: 35;">Altro</div>
+<div class="altro-label" style="color: #fff; font-size: 20px; font-weight: 700; padding-bottom: 8px; position: relative; width: 100%; box-sizing: border-box; z-index: 35;">Altro</div>
 
             `;
 
@@ -534,17 +534,24 @@
                                // 2. GESTIONE CALAMITA BLOCCATA ED EFFETTO REVERSIBILE
                     let scorrimento = container.scrollTop;
                     
-                                      // IL TUO CONTROLLO FISSO E CALIBRABILE (Zero tremolii)
-                    // Puoi cambiare questo 130 con il numero esatto di pixel che preferisci
-                    let sogliaBloccoAltro = 130; 
+                                       // IL TUO NUOVO INTERRUTTORE FISSO (Zero tremolii, zero calcoli continui)
+                    let sogliaBloccoAltro = 90; // Modifica questo numero per decidere quando deve bloccarsi
+                    let pixelDallAltoDello Schermo = 200; // Modifica questo numero per decidere a che altezza dello schermo deve piantarsi
 
                     if (scorrimento >= sogliaBloccoAltro) {
-                        // Blocca la scritta esattamente a questa altezza sottraendo il valore di soglia
-                        labelAltro.style.transform = `translateY(${scorrimento - sogliaBloccoAltro}px)`;
+                        // Trasforma la scritta in un elemento fisso sullo schermo: immobile al 100%
+                        labelAltro.style.position = "fixed";
+                        labelAltro.style.top = `${pixelDallAltoDello Schermo}px`;
+                        labelAltro.style.left = "20px"; // Mantiene il padding laterale allineato alle sveglie
+                        labelAltro.style.transform = "none";
                     } else {
-                        // Finché non raggiunge la soglia, la scritta sale normalmente con la pagina
-                        labelAltro.style.transform = "translateY(0px)";
+                        // Quando si torna sopra la soglia, torna ad essere una riga normale che si muove
+                        labelAltro.style.position = "relative";
+                        labelAltro.style.top = "auto";
+                        labelAltro.style.left = "auto";
+                        labelAltro.style.transform = "none";
                     }
+
 
                    
 
