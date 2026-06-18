@@ -546,11 +546,13 @@
                     let pixelDallAltoDelloSchermo = 120; // CORRETTO: Variabile unita senza 
                                         // INSERISCI QUESTO BLOCCO QUI:
                     if (scorrimento < sogliaBloccoAltro) {
-                        // La scritta sale fluida insieme al dito contrastando lo scroll inverso
-                        labelAltro.style.top = `${pixelDallAltoDelloSchermo + (sogliaBloccoAltro - scorrimento)}px`;
+                        // Sali insieme alla pagina in modo fluido tramite scheda grafica
+                        labelAltro.style.top = `${pixelDallAltoDelloSchermo + sogliaBloccoAltro}px`;
+                        labelAltro.style.transform = `translateY(${-scorrimento}px)`;
                     } else {
-                        // Una volta raggiunta la soglia, rimane immobile come una roccia al suo posto
+                        // Quando arrivi alla soglia, la funzione si attiva e la scritta si pianta fissa a 120px
                         labelAltro.style.top = `${pixelDallAltoDelloSchermo}px`;
+                        labelAltro.style.transform = "none";
                     }
 
 
