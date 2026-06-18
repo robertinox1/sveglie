@@ -536,7 +536,7 @@
                         if (scorrimento >= 160) {
                             fotoSonno.style.opacity = "0";
                             // CANCELLAZIONE CHIRURGICA ANTI-TRACCIA: Nasconde totalmente l'elemento
-                            fotoSonno.style.display = "none"; 
+                            fotoSonno.style.visibility = "hidden";  
                         } else if (scorrimento > 130) {
                             // BLOCCO DELLA POSIZIONE: Quando inizia a sfumare, la posizione si congela fissa a 130px (130 - 65 = 65)
                             fotoSonno.style.transform = "translateY(65px)";
