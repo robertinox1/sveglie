@@ -498,8 +498,16 @@
                 container.appendChild(alarmRow);
             });
                         // Mostra la scritta esterna all'apertura dell'applicazione
+                      // Mostra la scritta esterna all'apertura posizionandola già nel punto iniziale corretto
             const labelAltroEsterna = document.getElementById('altro-label-fissa');
-            if (labelAltroEsterna) labelAltroEsterna.style.opacity = "1";
+            if (labelAltroEsterna) {
+                labelAltroEsterna.style.opacity = "1";
+                // Forza il calcolo iniziale a scorrimento zero: 120 + (225 - 0) = 345px dall'alto
+                let sogliaIniziale = 225;
+                let pixelIniziali = 120;
+                labelAltroEsterna.style.top = `${pixelIniziali + sogliaIniziale}px`;
+            }
+
 
 
             // GESTORE COORDINATO: Accende la scritta piccola quando la grande viene superata
