@@ -195,9 +195,7 @@
             padding: 140px 20px 100px 20px; 
             margin-bottom: 0px; 
             
-            /* Sfumatura graduale e leggerissima: le sveglie sono al 100% visibili fino a 110px dall'alto, poi sfumano dolcemente verso il trasparente totale a 45px, lasciando i bottoni intatti */
-            -webkit-mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
-            mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
+      
         }
 
 
@@ -276,6 +274,8 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     z-index: 20;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
+    mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
 }
 
 /* La classe che blocca la scritta sul vetro dello schermo */
