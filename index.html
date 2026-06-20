@@ -241,16 +241,17 @@
 
 
         .ios-switch {
-            width: 51px; height: 31px; background-color: #2c2c2e;
+            width: 60px; height: 31px; background-color: #48484a;
             border-radius: 16px; position: relative; transition: background-color 0.2s;
+             cursor: pointer;
         }
         .ios-switch.on { background-color: #34c759; }
         .ios-switch-handle {
-            width: 27px; height: 27px; background-color: #fff;
-            border-radius: 50%; position: absolute; top: 2px; left: 2px;
-            transition: transform 0.2s;
+            width: 32px; height: 27px; background-color: #fff;
+            border-radius: 14px; position: absolute; top: 2px; left: 2px;
+            transition: transform 0.2s,  width 0.2s;
         }
-        .ios-switch.on .ios-switch-handle { transform: translateX(20px); }
+        .ios-switch.on .ios-switch-handle { transform: translateX(24px); }
                 .sleep-section {
             padding: 0 20px;
             margin-top: -5px;
@@ -600,6 +601,19 @@ let sveglieStandard = [
                         <div class="ios-switch-handle"></div>
                     </div>
                 `;
+                // RENDE TUTTI GLI INTERRUTTORI CLICCABILI IN MODO INDIPENDENTE
+alarmRow.querySelector('.ios-switch').addEventListener('click', function() {
+    // Cambia lo stato "on" dello switch al tocco
+    this.classList.toggle('on');
+    
+    // Cambia il colore del testo della riga (acceso = bianco, spento = grigio)
+    if (this.classList.contains('on')) {
+        alarmRow.classList.add('active-alarm');
+    } else {
+        alarmRow.classList.remove('active-alarm');
+    }
+});
+
                 container.appendChild(alarmRow);
             });
 const labelAltroEsterna = document.getElementById('altro-label-fissa');
