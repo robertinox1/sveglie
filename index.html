@@ -269,6 +269,10 @@
             object-fit: contain;
             -webkit-user-drag: none;
         }
+        .altro-bloccata {
+    top: 120px !important;
+}
+
 
 
 
@@ -297,7 +301,9 @@
             <!-- Questi elementi statici verranno scritti all'avvio dal CSS/HTML iniziale -->
         </div>
            <!-- LA RIGA DIV DEFINITIVA DA METTERE SOTTO ALARMS-LIST -->
+<!-- INSERISCI QUESTA RIGA NELL'HTML (SENZA TRANSIZIONE SUL TOP): -->
 <div id="altro-label-fissa" style="color: #fff; font-size: 20px; font-weight: 700; position: fixed; left: 20px; z-index: 35; width: calc(100% - 40px); pointer-events: none; opacity: 0; transition: opacity 0.2s ease;">Altro</div>
+
 
         
         <!-- La bolla/barra di navigazione fissa sul fondo dello schermo -->
@@ -499,12 +505,16 @@
             });
                         // Mostra la scritta esterna all'apertura dell'applicazione
                       // Mostra la scritta esterna all'apertura posizionandola già nel punto iniziale corretto
-          const labelAltroEsterna = document.getElementById('altro-label-fissa');
+           // INSERISCI QUESTO BLOCCO AL SUO POSTO:
+const labelAltroEsterna = document.getElementById('altro-label-fissa');
 if (labelAltroEsterna) {
+    labelAltroEsterna.classList.remove('altro-bloccata'); // Resetta lo stato
     labelAltroEsterna.style.opacity = "1";
-    labelAltroEsterna.style.top = "120px"; // La fissiamo subito all'altezza del tuo blocco perfetto
-    labelAltroEsterna.style.transform = "translateY(225px)"; // La spingiamo giù alla partenza
+    let sogliaIniziale = 225;
+    let pixelIniziali = 120;
+    labelAltroEsterna.style.top = `${pixelIniziali + sogliaIniziale}px`;
 }
+
 
 
 
@@ -543,14 +553,14 @@ if (labelAltroEsterna) {
                     let sogliaBloccoAltro = 225; // Modifica questo numero per decidere quando deve bloccarsi
                     let pixelDallAltoDelloSchermo = 120; // CORRETTO: Variabile unita senza 
                                         // INSERISCI QUESTO BLOCCO QUI:
-                if (scorrimento < sogliaBloccoAltro) {
-    // Incolla la scritta al dito senza microscatti grazie a un micro-ammortizzatore hardware
-    labelAltro.style.transition = "transform 0.05s linear";
-    labelAltro.style.transform = `translateY(${sogliaBloccoAltro - scorrimento}px)`;
+             // INSERISCI QUESTO PEZZO AL SUO POSTO:
+if (scorrimento < sogliaBloccoAltro) {
+    // Rimuove il blocco fisso: la scritta segue il dito con la tua formula originale
+    labelAltro.classList.remove('altro-bloccata');
+    labelAltro.style.top = `${pixelDallAltoDelloSchermo + (sogliaBloccoAltro - scorrimento)}px`;
 } else {
-    // Si schianta a zero (ovvero rimane fissa a 120px) senza rimbalzi o scatti successivi
-    labelAltro.style.transition = "none";
-    labelAltro.style.transform = "translateY(0px)";
+    // Attiva la classe CSS: la scritta si ancora istantaneamente a 120px e diventa immobile
+    labelAltro.classList.add('altro-bloccata');
 }
 
 
