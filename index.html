@@ -192,7 +192,7 @@
                         #alarms-list { 
             overflow-y: visible; 
             flex-grow: 1; 
-            padding: 115px 20px 100px 20px; 
+            padding: 150px 20px 100px 20px; 
             margin-bottom: 0px; 
             
       
@@ -207,7 +207,7 @@
       /* INSERISCI QUESTO BLOCCO AL SUO POSTO: */
 /* INSERISCI QUESTO BLOCCO: */
 .sleep-row-section + .alarm-item {
-    border-top: 0.5px solid rgba(255, 255, 255, 0.25) !important; 
+    border-top: 0.5px solid rgba(255, 255, 255, 0.25) !important;
 }
 
 
@@ -262,8 +262,8 @@
             -webkit-user-drag: none;
         }
                 .sleep-row-section {
-            padding: 0 20px 70px 20px;
-            margin-top: 15px; 
+            padding: 0 20px;
+            margin-top: 10px; /* Distanza provvisoria dalla scritta sopra */
         }
         .sleep-row-img {
             width: 100%; /* Prende tutta la larghezza disponibile tra i padding */
@@ -614,21 +614,21 @@ if (scorrimento < sogliaBloccoAltro) {
                    
 
                     // Gestione originale della Foto Sonno (Invariata)
-                    if (scorrimento >= 50) {
+                    if (scorrimento >= 65) {
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
                         
-                        if (scorrimento >= 145) {
+                        if (scorrimento >= 160) {
                             fotoSonno.style.opacity = "0";
                             fotoSonno.style.visibility = "hidden";  
-                        } else if (scorrimento > 115) {
+                        } else if (scorrimento > 130) {
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = "translateY(50px)";
-                            let fattoreDissolvenza = (scorrimento - 115) / 30; 
+                            fotoSonno.style.transform = "translateY(65px)";
+                            let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = `translateY(${scorrimento - 50}px)`;
+                            fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
