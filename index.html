@@ -204,7 +204,12 @@
             display: flex; justify-content: space-between; align-items: center;
             padding: 9px 0; border-bottom: 0.5px solid rgba(255, 255, 255, 0.25);
         }
- 
+      /* INSERISCI QUESTO BLOCCO AL SUO POSTO: */
+/* INSERISCI QUESTO BLOCCO: */
+.sleep-row-section + .alarm-item {
+    border-top: 0.5px solid rgba(255, 255, 255, 0.25) !important;
+}
+
 
 
         .alarm-time { font-size: 58px; font-weight: 200; color: #8e8e93; line-height: 1; }
@@ -536,10 +541,6 @@
                 const isActive = (orario === oraForzata);
                 const alarmRow = document.createElement('div');
                 alarmRow.className = `alarm-item ${isActive ? 'active-alarm' : ''}`;
-                   // TRUCCO CHIRURGICO: se l'indice è 0 (cioè è la prima sveglia), mette il bordo superiore in linea
-    if (index === 0) {
-        alarmRow.style.borderTop = "0.5px solid rgba(255, 255, 255, 0.25)";
-    }
                 alarmRow.innerHTML = `
                     <div class="alarm-time-info">
                         <span class="alarm-time">${orario}</span>
