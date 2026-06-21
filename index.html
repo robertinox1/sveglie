@@ -181,32 +181,34 @@
             -webkit-user-drag: none;
         }
 
-             /* Il titolo grande "Sveglia" riallineato a sinistra e alzato */
+        /* Ripristinato: Titolo allineato a sinistra e alzato senza rompere i calcoli */
         .clock-large-title {
             margin: 0;
-            padding: 0 0 15px 0;
+            padding: 10px 20px 15px 20px !important;
+            margin-top: -25px !important; 
             font-size: 34px;
             font-weight: 700;
             color: #fff;
             letter-spacing: -0.5px;
-            text-align: left;
-        }
-        
-        /* Nuova testata fissa indipendente */
-        #clock-header-block {
-            padding: 105px 20px 0 20px; 
-            box-sizing: border-box;
-            width: 100%;
+            text-align: left !important;
         }
 
-        /* La lista ora contiene SOLO le righe delle sveglie, senza padding-top eccessivo */
+        /* Ripristinato come blocco unico originale con il padding-top nativo */
         #alarms-list { 
             overflow-y: visible; 
             flex-grow: 1; 
-            padding: 0px 20px 100px 20px; 
+            padding: 150px 20px 100px 20px; 
             margin-bottom: 0px; 
         }
 
+        /* TRUCCO PER SCEGLIERE DOVE NASCONO LE SVEGLIE:
+           Questo elemento invisibile si mette tra la foto configura e la prima sveglia.
+           Modifica il 'height' (es. 40px, 60px, 80px) per decidere dove far nascere le sveglie! */
+        .sleep-row-section::after {
+            content: "";
+            display: block;
+            height: 30px; 
+        }
 
 
 
@@ -596,30 +598,20 @@ let sveglieStandard = [
                 sveglieStandard.sort(); 
             }
 
-                     const container = document.getElementById('alarms-list');
+                            const container = document.getElementById('alarms-list');
             
-            // Reinietta i titoli e le immagini nel contenitore isolato
-                   // Crea il blocco di testa separato fuori dalla lista se non esiste già
-            let headerBlock = document.getElementById('clock-header-block');
-            if (!headerBlock) {
-                headerBlock = document.createElement('div');
-                headerBlock.id = 'clock-header-block';
-                container.parentNode.insertBefore(headerBlock, container);
-            }
-
-            // Inietta il titolo e le foto nel blocco superiore indipendente
-            headerBlock.innerHTML = `
+            // Ripristinato il blocco unico dentro alarms-list
+            container.innerHTML = `
                 <h1 class="clock-large-title">Sveglie</h1>
+                
                 <div class="sleep-section">
                     <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
                 </div>
-                <div class="sleep-row-section" style="margin-bottom: 25px;">
+                
+                <div class="sleep-row-section">
                     <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
                 </div>
             `;
-
-            // Svuota la lista per accogliere solo i righi numerici
-            container.innerHTML = '';
 
 
             sveglieStandard.forEach(orario => {
@@ -709,24 +701,22 @@ if (scorrimento < sogliaBloccoAltro) {
 
 
 
-                   
-
-                                   // Gestione della Foto Sonno adattata alle nuove altezze
-                    if (scorrimento >= 35) { 
+                                       // Ripristinati i calcoli originali al 100% per far funzionare l'animazione
+                    if (scorrimento >= 65) {
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
                         
-                        if (scorrimento >= 130) { 
+                        if (scorrimento >= 160) {
                             fotoSonno.style.opacity = "0";
                             fotoSonno.style.visibility = "hidden";  
-                        } else if (scorrimento > 100) { 
+                        } else if (scorrimento > 130) {
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = "translateY(35px)"; 
-                            let fattoreDissolvenza = (scorrimento - 100) / 30; 
+                            fotoSonno.style.transform = "translateY(65px)";
+                            let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = `translateY(${scorrimento - 35}px)`; 
+                            fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
