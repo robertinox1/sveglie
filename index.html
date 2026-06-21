@@ -288,21 +288,6 @@
     position: fixed !important;
     top: 120px !important;
 }
-                /* Dock fisso come immagine singola */
-        #home-dock-image {
-            position: fixed;
-           bottom: calc(5px + env(safe-area-inset-bottom));
-            left: 2%;
-            width: 96%;
-            height: 95px; /* Regola l'altezza in base alle proporzioni della tua foto */
-            background-image: url('dock.PNG'); /* Inserisci qui il nome esatto del tuo file PNG */
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 5; /* Rimane sopra lo slider delle pagine ma sotto la schermata sveglia */
-            pointer-events: none; /* Evita che l'immagine blocchi lo scorrimento delle pagine con il dito */
-        }
-
 
 
 
@@ -317,8 +302,6 @@
             <div class="grid-page" id="p2"></div>
             <div class="grid-page" id="p3"></div>
         </div>
-         <div id="home-dock-image"></div>
-    </div>
     </div>
 
              <div id="clock-screen" class="screen">
