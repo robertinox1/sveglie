@@ -592,10 +592,10 @@ let sveglieStandard = [
             
             // Reinietta i titoli e le immagini nel contenitore isolato
             container.innerHTML = `
-                <h1 class="clock-large-title" style="padding: 0 0 5px 0; margin-top: -30px;">Sveglie</h1>
+               <h1 class="clock-large-title" style="padding: 0px 20px 15px 20px; margin-top: -25px;">Sveglie</h1>
                 
-                <!-- Aggiunto margin-top di 80px per spingere in basso le immagini e le sveglie, lasciando il titolo in cima -->
-                <div class="sleep-section" style="padding: 0; margin-top: 25px;">
+                <!-- MODIFICATO: Aumentiamo il margin-top da 25px a 50px per compensare i 25px persi sopra. Le immagini NON si muovono! -->
+                <div class="sleep-section" style="padding: 0; margin-top: 50px;">
                     <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
                 </div>
                 
