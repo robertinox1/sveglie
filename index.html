@@ -42,6 +42,8 @@
             transform-origin: 25% 10%; /* Posizione approssimativa di Riga 1 Colonna 2 */
             transition: transform 0.5s cubic-bezier(0.24, 1.1, 0.45, 1), opacity 0.35s ease-out;
             pointer-events: none; /* Impedisce tocchi quando è chiusa */
+              will-change: transform, opacity;
+    transform: scale(0.01) translateZ(0);
         }
 
         /* Stato attivo: l'app si espande a schermo intero */
@@ -292,7 +294,7 @@
             position: fixed; 
             
             /* Incollato al fondo reale dello schermo dell'iPhone */
-            bottom: calc(-17px + env(safe-area-inset-bottom));
+            bottom: calc(-23px + env(safe-area-inset-bottom));
             
             /* Largo e centrato */
             width: 95%;
@@ -732,6 +734,17 @@ if (scorrimento < sogliaBloccoAltro) {
 
 
         }
+        // Pre-caricamento forzato in memoria per eliminare i micro-scatti
+function precaricaImmaginiSveglia() {
+    const immagini = ['sonno-risveglio.PNG', 'riga-configura.PNG'];
+    immagini.forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+}
+// Avvia il caricamento silenzioso all'avvio dell'app
+precaricaImmaginiSveglia();
+
     </script>
 </body>
 </html>
