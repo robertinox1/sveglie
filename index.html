@@ -193,47 +193,54 @@
             text-align: left !important;
         }
 
-        /* Forza il contenitore a resettare i margini laterali per le foto, ma mantiene lo spazio per i testi */
+        /* Gestione contenitore: azzerato il padding laterale per dare il controllo totale alle sezioni */
         #alarms-list { 
             overflow-y: visible; 
             flex-grow: 1; 
-            padding: 150px 0px 100px 0px !important; /* Azzerato il padding laterale del contenitore per liberare le foto */
+            padding: 150px 0px 100px 0px !important; 
             margin-bottom: 0px; 
         }
 
-        /* Forza le due sezioni delle immagini a prendere il 100% della linea orizzontale dello schermo */
-        .sleep-section, .sleep-row-section {
+        /* 1. SEZIONE SONNO (Piccola e allineata a sinistra sotto la scritta) */
+        .sleep-section {
             width: 100% !important;
-            padding: 0 !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
+            padding: 0 20px !important; /* Allinea perfettamente a sinistra con la scritta Sveglie */
+            box-sizing: border-box;
+        }
+        .sleep-full-img {
+            height: 22px !important; /* Ritorna piccola alla sua altezza proporzionata originale */
+            width: auto !important;   /* Mantiene le proporzioni reali senza allargarsi */
+            display: block;
         }
 
-        /* Espande le immagini da bordo a bordo a schermo intero */
-        .sleep-full-img, .sleep-row-img {
+        /* 2. SEZIONE CONFIGURA (Inizia a sinistra in linea con i testi e finisce speculare a destra) */
+        .sleep-row-section {
             width: 100% !important;
+            padding: 0 20px !important; /* Margine simmetrico di 20px identico alla scritta e alle sveglie */
+            box-sizing: border-box;
+            margin-top: 10px !important;
+        }
+        .sleep-row-img {
+            width: 100% !important;  /* Riempie tutta la linea orizzontale racchiusa tra i due padding */
             height: auto !important;
             display: block;
         }
 
-        /* Le righe delle sveglie numeriche mantengono il loro spazio elegante dai bordi */
+        /* Le righe delle sveglie numeriche mantengono lo spazio elegante di 20px dai bordi */
         .alarm-item {
-            padding: 9px 20px !important; /* Ripristina il padding laterale solo per i righi delle sveglie */
+            padding: 9px 20px !important; 
             display: flex; 
             justify-content: space-between; 
             align-items: center;
             border-bottom: 0.5px solid rgba(255, 255, 255, 0.25);
         }
 
-        /* 1. REGOLAZIONE NASCITA SVEGLIE: questo elemento invisibile spinge giù la lista delle sveglie numeriche. 
-           Modifica l'altezza (es. 40px, 70px, 110px) per decidere a che altezza far nascere le sveglie sullo schermo! */
+        /* 3. DISTANZIATORE: Spinge la lista delle sveglie numeriche molto più in basso */
         .sleep-row-section::after {
             content: "";
             display: block;
-            height: 45px; 
+            height: 120px; /* Modifica questo numero (es. 140px, 160px) se vuoi spostarle ancora più giù */
         }
-
-
 
 
         .alarm-time { font-size: 58px; font-weight: 200; color: #8e8e93; line-height: 1; }
