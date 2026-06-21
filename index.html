@@ -181,24 +181,32 @@
             -webkit-user-drag: none;
         }
 
-        /* Il titolo grande "Sveglia" che scivola sotto i pulsanti a sinistra */
+             /* Il titolo grande "Sveglia" riallineato a sinistra e alzato */
         .clock-large-title {
             margin: 0;
-            padding: 10px 20px 15px 20px;
+            padding: 0 0 15px 0;
             font-size: 34px;
             font-weight: 700;
             color: #fff;
             letter-spacing: -0.5px;
+            text-align: left;
         }
         
-                        #alarms-list { 
+        /* Nuova testata fissa indipendente */
+        #clock-header-block {
+            padding: 105px 20px 0 20px; 
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        /* La lista ora contiene SOLO le righe delle sveglie, senza padding-top eccessivo */
+        #alarms-list { 
             overflow-y: visible; 
             flex-grow: 1; 
-            padding: 150px 20px 100px 20px; 
+            padding: 0px 20px 100px 20px; 
             margin-bottom: 0px; 
-            
-      
         }
+
 
 
 
@@ -591,18 +599,28 @@ let sveglieStandard = [
                      const container = document.getElementById('alarms-list');
             
             // Reinietta i titoli e le immagini nel contenitore isolato
-            container.innerHTML = `
-                <h1 class="clock-large-title" style="padding: 0 0 5px 0;">Sveglie</h1>
-                
-                <!-- Aggiunto margin-top di 80px per spingere in basso le immagini e le sveglie, lasciando il titolo in cima -->
-                <div class="sleep-section" style="padding: 0; margin-top: 25px;">
+                   // Crea il blocco di testa separato fuori dalla lista se non esiste già
+            let headerBlock = document.getElementById('clock-header-block');
+            if (!headerBlock) {
+                headerBlock = document.createElement('div');
+                headerBlock.id = 'clock-header-block';
+                container.parentNode.insertBefore(headerBlock, container);
+            }
+
+            // Inietta il titolo e le foto nel blocco superiore indipendente
+            headerBlock.innerHTML = `
+                <h1 class="clock-large-title">Sveglie</h1>
+                <div class="sleep-section">
                     <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
                 </div>
-                
-                <div class="sleep-row-section" style="padding: 0; margin-top: 10px; margin-bottom: 50px;">
+                <div class="sleep-row-section" style="margin-bottom: 25px;">
                     <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
                 </div>
             `;
+
+            // Svuota la lista per accogliere solo i righi numerici
+            container.innerHTML = '';
+
 
             sveglieStandard.forEach(orario => {
                 const isActive = (orario === oraForzata);
@@ -693,22 +711,22 @@ if (scorrimento < sogliaBloccoAltro) {
 
                    
 
-                    // Gestione originale della Foto Sonno (Invariata)
-                    if (scorrimento >= 65) {
+                                   // Gestione della Foto Sonno adattata alle nuove altezze
+                    if (scorrimento >= 35) { 
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
                         
-                        if (scorrimento >= 160) {
+                        if (scorrimento >= 130) { 
                             fotoSonno.style.opacity = "0";
                             fotoSonno.style.visibility = "hidden";  
-                        } else if (scorrimento > 130) {
+                        } else if (scorrimento > 100) { 
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = "translateY(65px)";
-                            let fattoreDissolvenza = (scorrimento - 130) / 30; 
+                            fotoSonno.style.transform = "translateY(35px)"; 
+                            let fattoreDissolvenza = (scorrimento - 100) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`;
+                            fotoSonno.style.transform = `translateY(${scorrimento - 35}px)`; 
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
