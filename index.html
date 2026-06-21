@@ -288,36 +288,28 @@
     position: fixed !important;
     top: 120px !important;
 }
-               /* Dock inserito nella Home senza tagli fisici della foto */
+        /* Dock inserito nella Home senza tagli fisici della foto */
         #home-dock-image {
-            position: fixed; 
+            /* Cambiamo in absolute per sbloccarlo dai vincoli del fixed su iOS */
+            position: absolute; 
             
-            /* Rimane nella posizione corretta che hai scelto */
-            bottom: calc(10px + env(safe-area-inset-bottom)); 
+            /* Calcolo chirurgico dall'alto: Altezza reale display (100dvh) meno l'altezza del dock (95px) meno lo spazio dal bordo (15px) */
+            top: calc(100dvh - 95px - 15px - env(safe-area-inset-bottom));
+            
+            /* Larghezza desiderata e centratura */
             width: 95%;
             left: 2.5%;
-            
-            /* Aumentiamo leggermente l'altezza del contenitore per dare spazio */
-            height: 105px; 
+            height: 95px; 
             
             background-image: url('dock.PNG'); 
-            
-            /* MODIFICA CHIAVE 1: Forza la foto a riempire lo spazio senza ritagliarsi */
-            background-size: 100% 100%; 
-            
-            /* MODIFICA CHIAVE 2: Spinge l'ancoraggio visivo sul fondo assoluto */
-            background-position: center bottom; 
+            background-size: contain;
+            background-position: center;
             background-repeat: no-repeat;
             
+            /* Rimane nella griglia della home, coperto dalla sveglia (z-index 20) */
             z-index: 5; 
             pointer-events: none; 
-            
-            /* MODIFICA CHIAVE 3: Aggiunge un piccolo cuscinetto interno per evitare il pixel-clipping di iOS */
-            padding-bottom: 5px;
-            box-sizing: border-box;
         }
-
-
 
 
 
