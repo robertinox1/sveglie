@@ -291,7 +291,7 @@
                 /* Dock fisso come immagine singola */
         #home-dock-image {
             position: fixed;
-            bottom: 25px; /* Alza o abbassa il dock dal fondo dello schermo */
+           bottom: calc(20px + env(safe-area-inset-bottom));
             left: 5%;
             width: 90%;
             height: 95px; /* Regola l'altezza in base alle proporzioni della tua foto */
