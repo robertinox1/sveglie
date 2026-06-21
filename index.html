@@ -40,7 +40,7 @@
             opacity: 0;
             transform: scale(0.01);
             transform-origin: 25% 10%; /* Posizione approssimativa di Riga 1 Colonna 2 */
-            transition: transform 0.38s cubic-bezier(0.24, 1.1, 0.45, 1), opacity 0.25s ease-out;
+            transition: transform 0.5s cubic-bezier(0.24, 1.1, 0.45, 1), opacity 0.35s ease-out;
             pointer-events: none; /* Impedisce tocchi quando è chiusa */
         }
 
@@ -292,7 +292,7 @@
             position: fixed; 
             
             /* Incollato al fondo reale dello schermo dell'iPhone */
-            bottom: calc(-10px + env(safe-area-inset-bottom));
+            bottom: calc(-17px + env(safe-area-inset-bottom));
             
             /* Largo e centrato */
             width: 95%;
