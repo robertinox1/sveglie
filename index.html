@@ -288,30 +288,35 @@
     position: fixed !important;
     top: 120px !important;
 }
-        /* Il dock inserito come immagine singola nella Home */
+               /* Dock inserito nella Home senza tagli fisici della foto */
         #home-dock-image {
-            /* Mantiene la foto bloccata sullo schermo anche mentre scorri le pagine */
             position: fixed; 
             
-            /* Calcola la posizione esatta dal fondo visibile reale del telefono */
+            /* Rimane nella posizione corretta che hai scelto */
             bottom: calc(10px + env(safe-area-inset-bottom)); 
-            
-            /* Lo rende più largo (95%) e lo centra perfettamente (2.5% per lato) */
             width: 95%;
             left: 2.5%;
             
-            height: 95px; /* Altezza proporzionata per le 4 icone */
-            background-image: url('dock.PNG'); /* Nome del tuo file immagine */
-            background-size: contain;
-            background-position: center bottom; /* Forza l'immagine a mostrare prima il fondo, evitando i tagli */
+            /* Aumentiamo leggermente l'altezza del contenitore per dare spazio */
+            height: 105px; 
+            
+            background-image: url('dock.PNG'); 
+            
+            /* MODIFICA CHIAVE 1: Forza la foto a riempire lo spazio senza ritagliarsi */
+            background-size: 100% 100%; 
+            
+            /* MODIFICA CHIAVE 2: Spinge l'ancoraggio visivo sul fondo assoluto */
+            background-position: center bottom; 
             background-repeat: no-repeat;
             
-            /* Rimane sopra lo slider delle icone, ma sotto la schermata sveglia (#clock-screen ha z-index 20) */
             z-index: 5; 
-            
-            /* Permette al dito di scorrere le pagine anche se tocca sopra la foto del dock */
             pointer-events: none; 
+            
+            /* MODIFICA CHIAVE 3: Aggiunge un piccolo cuscinetto interno per evitare il pixel-clipping di iOS */
+            padding-bottom: 5px;
+            box-sizing: border-box;
         }
+
 
 
 
