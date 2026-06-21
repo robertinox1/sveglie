@@ -288,29 +288,27 @@
     position: fixed !important;
     top: 120px !important;
 }
-              /* Regola definitiva per il Dock Immagine */
+        /* Regola definitiva: In fondo a tutto e senza tagli */
         #home-dock-image {
-            position: absolute;
+            position: fixed; 
             
-            /* Lo allontaniamo decisamente dal fondo per farlo rientrare nella zona sicura */
-            bottom: calc(45px + env(safe-area-inset-bottom)); 
+            /* Spinto al limite estremo del fondo dello schermo dell'iPhone */
+            bottom: calc(2px + env(safe-area-inset-bottom)); 
             
-            /* Larghezza e centratura perfette */
+            /* Più largo (95%) e centrato */
             width: 95%;
             left: 2.5%;
-            height: auto; /* Lasciamo l'altezza automatica per non schiacciare il file */
+            height: auto; 
             
-            /* IL COMANDO DI FERRO: Impedisce a iOS di tagliare o deformare i bordi della foto */
-            object-fit: contain !important; 
-            
-            z-index: 5;
+            /* Comandi di ferro per non alterare la foto */
+            object-fit: contain !important;
             pointer-events: none;
+            z-index: 5;
             
-            /* Rimuove qualsiasi effetto ombra o overflow strano di iOS */
-            overflow: visible !important; 
+            /* LA SOLUZIONE: Dice a iOS di ignorare i tagli dell'overflow e mostrare i pixel */
+            contain: layout paint !important;
+            overflow: visible !important;
         }
-
-
 
 
     </style>
