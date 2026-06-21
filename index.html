@@ -288,6 +288,30 @@
     position: fixed !important;
     top: 120px !important;
 }
+        /* Il dock inserito come immagine singola nella Home */
+        #home-dock-image {
+            /* Mantiene la foto bloccata sullo schermo anche mentre scorri le pagine */
+            position: fixed; 
+            
+            /* Calcola la posizione esatta dal fondo visibile reale del telefono */
+            bottom: calc(10px + env(safe-area-inset-bottom)); 
+            
+            /* Lo rende più largo (95%) e lo centra perfettamente (2.5% per lato) */
+            width: 95%;
+            left: 2.5%;
+            
+            height: 95px; /* Altezza proporzionata per le 4 icone */
+            background-image: url('dock.PNG'); /* Nome del tuo file immagine */
+            background-size: contain;
+            background-position: center bottom; /* Forza l'immagine a mostrare prima il fondo, evitando i tagli */
+            background-repeat: no-repeat;
+            
+            /* Rimane sopra lo slider delle icone, ma sotto la schermata sveglia (#clock-screen ha z-index 20) */
+            z-index: 5; 
+            
+            /* Permette al dito di scorrere le pagine anche se tocca sopra la foto del dock */
+            pointer-events: none; 
+        }
 
 
 
@@ -302,6 +326,7 @@
             <div class="grid-page" id="p2"></div>
             <div class="grid-page" id="p3"></div>
         </div>
+         <div id="home-dock-image"></div>
     </div>
 
              <div id="clock-screen" class="screen">
