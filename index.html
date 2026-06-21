@@ -288,28 +288,28 @@
     position: fixed !important;
     top: 120px !important;
 }
-        /* Dock inserito nella Home senza tagli fisici della foto */
+              /* Regola definitiva per il Dock Immagine */
         #home-dock-image {
-            /* Cambiamo in absolute per sbloccarlo dai vincoli del fixed su iOS */
-            position: absolute; 
+            position: absolute;
             
-            /* Calcolo chirurgico dall'alto: Altezza reale display (100dvh) meno l'altezza del dock (95px) meno lo spazio dal bordo (15px) */
-            top: calc(100dvh - 95px - 15px - env(safe-area-inset-bottom));
+            /* Lo allontaniamo decisamente dal fondo per farlo rientrare nella zona sicura */
+            bottom: calc(45px + env(safe-area-inset-bottom)); 
             
-            /* Larghezza desiderata e centratura */
+            /* Larghezza e centratura perfette */
             width: 95%;
             left: 2.5%;
-            height: 95px; 
+            height: auto; /* Lasciamo l'altezza automatica per non schiacciare il file */
             
-            background-image: url('dock.PNG'); 
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
+            /* IL COMANDO DI FERRO: Impedisce a iOS di tagliare o deformare i bordi della foto */
+            object-fit: contain !important; 
             
-            /* Rimane nella griglia della home, coperto dalla sveglia (z-index 20) */
-            z-index: 5; 
-            pointer-events: none; 
+            z-index: 5;
+            pointer-events: none;
+            
+            /* Rimuove qualsiasi effetto ombra o overflow strano di iOS */
+            overflow: visible !important; 
         }
+
 
 
 
@@ -323,7 +323,7 @@
             <div class="grid-page" id="p2"></div>
             <div class="grid-page" id="p3"></div>
         </div>
-         <div id="home-dock-image"></div>
+        <img src="dock.PNG" id="home-dock-image" alt="Dock">
     </div>
 
              <div id="clock-screen" class="screen">
