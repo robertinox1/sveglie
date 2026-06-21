@@ -288,28 +288,23 @@
     position: fixed !important;
     top: 120px !important;
 }
-        /* Regola definitiva: In fondo a tutto e senza tagli */
-        #home-dock-image {
+             #home-dock-image {
             position: fixed; 
             
-            /* Spinto al limite estremo del fondo dello schermo dell'iPhone */
-            bottom: calc(2px + env(safe-area-inset-bottom)); 
+            /* Incollato al fondo reale dello schermo dell'iPhone */
+            bottom: calc(5px + env(safe-area-inset-bottom)); 
             
-            /* Più largo (95%) e centrato */
+            /* Largo e centrato */
             width: 95%;
             left: 2.5%;
-            height: auto; 
+            height: auto;
             
-            /* Comandi di ferro per non alterare la foto */
             object-fit: contain !important;
             pointer-events: none;
-            z-index: 5;
             
-            /* LA SOLUZIONE: Dice a iOS di ignorare i tagli dell'overflow e mostrare i pixel */
-            contain: layout paint !important;
-            overflow: visible !important;
+            /* ATTENZIONE: Mettiamo z-index 4 così la sveglia (che ha z-index 20) lo coprirà in automatico senza toccare il JavaScript */
+            z-index: 4; 
         }
-
 
     </style>
 </head>
@@ -321,7 +316,6 @@
             <div class="grid-page" id="p2"></div>
             <div class="grid-page" id="p3"></div>
         </div>
-        <img src="dock.PNG" id="home-dock-image" alt="Dock">
     </div>
 
              <div id="clock-screen" class="screen">
@@ -349,7 +343,7 @@
         </div>
     </div>
 
-
+  <img src="dock.PNG" id="home-dock-image" alt="Dock">
     <script>
         let inputDigits = [];
         let temporaryDigit = 0; 
