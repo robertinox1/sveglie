@@ -228,13 +228,24 @@
             display: block;
         }
 
-        /* Le righe delle sveglie numeriche */
-        .alarm-item {
-            padding: 9px 20px !important; 
+            .alarm-item {
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.25);
+            /* Cambiato da 9px 20px a 9px 0: togliamo il padding per sbloccare la linea grigia */
+            padding: 9px 0 !important; 
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.25) !important;
+            
+            /* LE REGIOLE CHIAVE: Costringono la linea a partire a 20px e finire a 20px */
+            margin-left: 20px !important;
+            margin-right: 20px !important;
+            width: calc(100% - 40px) !important; /* Mantiene il rigo proporzionato alla larghezza dello schermo */
+            box-sizing: border-box;
+        }
+
+        /* AGGIUNGE IL BORDO ANCHE SOPRA LA PRIMA SVEGLIA */
+        .sleep-row-section + .alarm-item {
+            border-top: 0.5px solid rgba(255, 255, 255, 0.25) !important;
         }
 
         /* 3. DISTANZIATORE: Ridotto leggermente (da 120px a 110px) per compensare la discesa delle foto */
