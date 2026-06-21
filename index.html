@@ -591,22 +591,18 @@ let sveglieStandard = [
                      const container = document.getElementById('alarms-list');
             
             // Reinietta i titoli e le immagini nel contenitore isolato
-            // Reinietta i titoli e le immagini forzando i nuovi valori con !important
             container.innerHTML = `
-                <!-- FORZATO: padding-left a 20px e margin-top a -25px per riallineare e alzare la scritta -->
-                <h1 class="clock-large-title" style="padding: 10px 20px 15px 20px !important; margin-top: -25px !important; margin-left: 0px !important;">Sveglie</h1>
+                <h1 class="clock-large-title" style="padding: 0 0 5px 0;">Sveglie</h1>
                 
-                <!-- FORZATO: Ridotto il margine a 35px per far salire il blocco delle immagini -->
-                <div class="sleep-section" style="padding: 0 !important; margin-top: 35px !important;">
+                <!-- Aggiunto margin-top di 80px per spingere in basso le immagini e le sveglie, lasciando il titolo in cima -->
+                <div class="sleep-section" style="padding: 0; margin-top: 25px;">
                     <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
                 </div>
                 
-                <!-- FORZATO: Aumentato il margine inferiore a 65px per tenere bloccata la lista delle sveglie -->
-                <div class="sleep-row-section" style="padding: 0 !important; margin-top: 10px !important; margin-bottom: 65px !important;">
+                <div class="sleep-row-section" style="padding: 0; margin-top: 10px; margin-bottom: 50px;">
                     <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
                 </div>
             `;
-
 
             sveglieStandard.forEach(orario => {
                 const isActive = (orario === oraForzata);
