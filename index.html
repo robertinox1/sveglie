@@ -757,10 +757,10 @@ if (scorrimento < sogliaBloccoAltro) {
                         if (scorrimento >= 165) { 
                             fotoSonno.style.opacity = "0";
                             fotoSonno.style.visibility = "hidden";  
-                        } else if (scorrimento > 135) { 
+                        } else if (scorrimento > 130) { 
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = "translateY(62px)"; 
-                            let fattoreDissolvenza = (scorrimento - 135) / 30; 
+                            fotoSonno.style.transform = "translateY(65px)"; 
+                            let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             fotoSonno.style.visibility = "visible";
