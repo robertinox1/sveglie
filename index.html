@@ -350,6 +350,40 @@
             /* ATTENZIONE: Mettiamo z-index 4 così la sveglia (che ha z-index 20) lo coprirà in automatico senza toccare il JavaScript */
             z-index: 4; 
         }
+                /* Il pannello parte nascosto sotto lo schermo */
+        #pannello-modifica {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 94%;
+            background-color: #1c1c1e;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            z-index: 40;
+            transition: bottom 0.35s ease-out;
+            box-sizing: border-box;
+            padding: 20px;
+            color: #fff;
+        }
+
+        /* Classe per farlo salire */
+        #pannello-modifica.attivo {
+            bottom: 0;
+        }
+
+        /* Stile base per i due bottoni di testo in alto */
+        .pannello-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .bottone-arancione {
+            color: #ff9f0a;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
 
     </style>
 </head>
@@ -389,6 +423,17 @@
     </div>
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
+      <div id="pannello-modifica">
+      <div class="pannello-header">
+          <!-- Al click esegue la funzione per scendere -->
+          <span class="bottone-arancione" onclick="chiudiMioPannello()">Annulla</span>
+          <span style="font-size: 17px; font-weight: 600;">Modifica</span>
+          <span class="bottone-arancione" onclick="chiudiMioPannello()" style="font-weight: 600;">Salva</span>
+      </div>
+      
+      <!-- Spazio per mostrare l'orario della sveglia che hai toccato -->
+      <div id="testo-orario-pannello" style="text-align: center; font-size: 64px; margin-top: 60px; font-weight: 200;">00:00</div>
+  </div>
     <script>
         let inputDigits = [];
         let temporaryDigit = 0; 
@@ -675,19 +720,30 @@ let sveglieStandard = [
                     </div>
                 `;
                 // RENDE TUTTI GLI INTERRUTTORI CLICCABILI IN MODO INDIPENDENTE
-alarmRow.querySelector('.ios-switch').addEventListener('click', function() {
-    // Cambia lo stato "on" dello switch al tocco
-    this.classList.toggle('on');
-    
-    // Cambia il colore del testo della riga (acceso = bianco, spento = grigio)
-    if (this.classList.contains('on')) {
-        alarmRow.classList.add('active-alarm');
-    } else {
-        alarmRow.classList.remove('active-alarm');
-    }
-});
+                // Gestione dello switch (interruttore)
+                const mioInterruttore = alarmRow.querySelector('.ios-switch');
+                mioInterruttore.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Evita che toccando lo switch si apra anche il pannello
+                    this.classList.toggle('on');
+                    if (this.classList.contains('on')) {
+                        alarmRow.classList.add('active-alarm');
+                    } else {
+                        alarmRow.classList.remove('active-alarm');
+                    }
+                });
+
+                // Gestione del click sul rigo per aprire il pannello
+                alarmRow.addEventListener('click', function() {
+                    // Prende il testo dell'orario dentro questo specifico rigo
+                    const oraToccata = this.querySelector('.alarm-time').innerText;
+                    // Lo scrive dentro il pannello
+                    document.getElementById('testo-orario-pannello').innerText = oraToccata;
+                    // Fa salire il pannello
+                    document.getElementById('pannello-modifica').classList.add('attivo');
+                });
 
                 container.appendChild(alarmRow);
+
             });
 const labelAltroEsterna = document.getElementById('altro-label-fissa');
 if (labelAltroEsterna) {
@@ -779,17 +835,24 @@ if (scorrimento < sogliaBloccoAltro) {
             });
 
         } // <-- Questa è la graffa originale che chiude apriSveglia()
-        function resetApp() {
-
+            function resetApp() {
             inputDigits = [];
             temporaryDigit = 0;
             lastPage = 0;
             homeScreen.scrollLeft = 0; 
-                       document.getElementById('clock-screen').classList.remove('open');
+            document.getElementById('clock-screen').classList.remove('open');
             document.getElementById('clock-scroll-wrapper').scrollTop = 0;
-
-
+            
+            // Chiude il pannello se l'utente resetta l'applicazione
+            chiudiMioPannello();
         }
+
+        // Funzione per far scendere il pannello sotto lo schermo
+        function chiudiMioPannello() {
+            const pan = document.getElementById('pannello-modifica');
+            if (pan) {
+                pan.classList.remove('attivo');
+            }
         // Pre-caricamento forzato in memoria per eliminare i micro-scatti
 function precaricaImmaginiSveglia() {
     const immagini = ['sonno-risveglio.PNG', 'riga-configura.PNG'];
