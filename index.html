@@ -858,6 +858,24 @@ if (scorrimento < sogliaBloccoAltro) {
                 });
 
                 container.appendChild(alarmRow);
+                function resetApp() {
+            inputDigits = [];
+            temporaryDigit = 0;
+            lastPage = 0;
+            homeScreen.scrollLeft = 0; 
+            document.getElementById('clock-screen').classList.remove('open');
+            document.getElementById('clock-scroll-wrapper').scrollTop = 0;
+            
+            // Chiude il pannello modifica se era rimasto aperto al reset
+            chiudiPannello();
+        }
+
+        // Funzione dedicata a far scendere il pannello sotto lo schermo
+        function chiudiPannello() {
+            document.getElementById('edit-alarm-panel').classList.remove('show');
+        }
+    </script>
+
 
         // Pre-caricamento forzato in memoria per eliminare i micro-scatti
 function precaricaImmaginiSveglia() {
