@@ -350,6 +350,48 @@
             /* ATTENZIONE: Mettiamo z-index 4 così la sveglia (che ha z-index 20) lo coprirà in automatico senza toccare il JavaScript */
             z-index: 4; 
         }
+                /* Pannello Modifica Sveglia Stile iOS (Modal) */
+        #edit-alarm-panel {
+            position: fixed;
+            bottom: -100%; /* Parte completamente nascosto sotto lo schermo */
+            left: 0;
+            width: 100%;
+            height: 94%; /* Lascia un piccolo spazio in alto stile scheda iOS */
+            background-color: #1c1c1e; /* Il classico grigio scuro dei pannelli Apple */
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            z-index: 40; /* Sopra la sveglia e sopra la barra inferiore */
+            transition: bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Animazione fluida che sale */
+            box-sizing: border-box;
+            padding: 20px;
+            color: #fff;
+        }
+
+        /* Stato Attivo: il pannello sale e si ancora al fondo */
+        #edit-alarm-panel.show {
+            bottom: 0;
+        }
+
+        /* Header del pannello con i tasti Annulla e Salva */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .panel-btn-orange { color: #ff9f0a; font-size: 17px; cursor: pointer; font-weight: 500; }
+        .panel-btn-gray { color: #ff9f0a; font-size: 17px; cursor: pointer; }
+        .panel-title { font-size: 17px; font-weight: 600; color: #fff; }
+
+        /* Contenuto di test per l'orario dentro il pannello */
+        .panel-time-display {
+            text-align: center;
+            font-size: 64px;
+            font-weight: 200;
+            margin-top: 40px;
+            color: #fff;
+        }
+
 
     </style>
 </head>
@@ -389,6 +431,16 @@
     </div>
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
+     <div id="edit-alarm-panel">
+      <div class="panel-header">
+          <span class="panel-btn-orange" onclick="chiudiPannello()">Annulla</span>
+          <span class="panel-title">Modifica sveglia</span>
+          <span class="panel-btn-orange" onclick="chiudiPannello()" style="font-weight: 600;">Salva</span>
+      </div>
+      <!-- Questo testo cambierà dinamicamente mostrando l'ora della sveglia cliccata -->
+      <div class="panel-time-display" id="panel-clock-time">00:00</div>
+  </div>
+
     <script>
         let inputDigits = [];
         let temporaryDigit = 0; 
@@ -674,20 +726,27 @@ let sveglieStandard = [
                         <div class="ios-switch-handle"></div>
                     </div>
                 `;
-                // RENDE TUTTI GLI INTERRUTTORI CLICCABILI IN MODO INDIPENDENTE
-alarmRow.querySelector('.ios-switch').addEventListener('click', function() {
-    // Cambia lo stato "on" dello switch al tocco
-    this.classList.toggle('on');
-    
-    // Cambia il colore del testo della riga (acceso = bianco, spento = grigio)
-    if (this.classList.contains('on')) {
-        alarmRow.classList.add('active-alarm');
-    } else {
-        alarmRow.classList.remove('active-alarm');
-    }
-});
+                     // Rende lo switch cliccabile e ferma la propagazione del click al resto della riga
+                const interruttore = alarmRow.querySelector('.ios-switch');
+                interruttore.addEventListener('click', function(e) {
+                    e.stopPropagation(); // BLOCCA IL CLICK: impedisce l'apertura del pannello quando tocchi solo lo switch
+                    this.classList.toggle('on');
+                    if (this.classList.contains('on')) {
+                        alarmRow.classList.add('active-alarm');
+                    } else {
+                        alarmRow.classList.remove('active-alarm');
+                    }
+                });
+
+                // APRE IL PANNELLO SE CLICCHI SUL RESTO DELLA RIGA DELLA SVEGLIA
+                alarmRow.addEventListener('click', function() {
+                    const orarioSelezionato = this.querySelector('.alarm-time').innerText;
+                    document.getElementById('panel-clock-time').innerText = orarioSelezionato;
+                    document.getElementById('edit-alarm-panel').classList.add('show');
+                });
 
                 container.appendChild(alarmRow);
+
             });
 const labelAltroEsterna = document.getElementById('altro-label-fissa');
 if (labelAltroEsterna) {
@@ -779,17 +838,27 @@ if (scorrimento < sogliaBloccoAltro) {
             });
 
         } // <-- Questa è la graffa originale che chiude apriSveglia()
-        function resetApp() {
+                // Rende lo switch cliccabile e ferma la propagazione del click al resto della riga
+                const interruttore = alarmRow.querySelector('.ios-switch');
+                interruttore.addEventListener('click', function(e) {
+                    e.stopPropagation(); // BLOCCA IL CLICK: impedisce l'apertura del pannello quando tocchi solo lo switch
+                    this.classList.toggle('on');
+                    if (this.classList.contains('on')) {
+                        alarmRow.classList.add('active-alarm');
+                    } else {
+                        alarmRow.classList.remove('active-alarm');
+                    }
+                });
 
-            inputDigits = [];
-            temporaryDigit = 0;
-            lastPage = 0;
-            homeScreen.scrollLeft = 0; 
-                       document.getElementById('clock-screen').classList.remove('open');
-            document.getElementById('clock-scroll-wrapper').scrollTop = 0;
+                // APRE IL PANNELLO SE CLICCHI SUL RESTO DELLA RIGA DELLA SVEGLIA
+                alarmRow.addEventListener('click', function() {
+                    const orarioSelezionato = this.querySelector('.alarm-time').innerText;
+                    document.getElementById('panel-clock-time').innerText = orarioSelezionato;
+                    document.getElementById('edit-alarm-panel').classList.add('show');
+                });
 
+                container.appendChild(alarmRow);
 
-        }
         // Pre-caricamento forzato in memoria per eliminare i micro-scatti
 function precaricaImmaginiSveglia() {
     const immagini = ['sonno-risveglio.PNG', 'riga-configura.PNG'];
