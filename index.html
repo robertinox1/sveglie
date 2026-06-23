@@ -525,8 +525,8 @@
                 /* Box Opzioni Sveglia stile iOS */
         .alarm-options-box {
             background-color: rgba(255, 255, 255, 0.08); /* Stesso colore della bolla */
-            border-radius: 12px;
-            margin: 20px 16px;
+            border-radius: 25px;
+            margin: 30px 16px;
             padding: 0;
             display: flex;
             flex-direction: column;
@@ -536,14 +536,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 44px; /* Altezza standard delle righe iOS */
+            height: 64px; /* Altezza standard delle righe iOS */
             padding: 0 16px;
             box-sizing: border-box;
+             position: relative;
         }
 
         /* Linea di divisione tra le righe (non applicata all'ultima) */
-        .option-row:not(:last-child) {
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+        .option-row:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 20px; /* Non tocca il bordo sinistro */
+            right: 20px; /* Non tocca il bordo destro */
+            height: 0.5px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
         }
 
         /* Testi di sinistra (sempre bianchi) */
@@ -688,7 +696,7 @@
                 <div class="option-row">
                     <span class="option-left">Posticipo</span>
                     <!-- Interruttore attivo (on) indipendente -->
-                    <div class="option-switch on" onclick="this.classList.toggle('on')">
+                    <div class="ios-switch on";" onclick="this.classList.toggle('on')">
                         <div class="option-switch-handle"></div>
                     </div>
                 </div>
@@ -699,6 +707,7 @@
                 </div>
             </div>
         </div>
+   </div>      
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
     <script>
