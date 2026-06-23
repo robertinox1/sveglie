@@ -453,79 +453,75 @@
             font-weight: 300;
         }
                 /* Selettore a Ruota Stile iOS Picker */
-              /* Contenitore con prospettiva 3D per l'effetto ruota */
+              /* Contenitore con prospettiva 3D bilanciata */
         .picker-container {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 200px; /* Ridotto leggermente per compattare */
+            height: 240px; /* Aumentata l'altezza generale per dare spazio */
             background-color: #1c1c1e;
             overflow: hidden;
-            margin-top: 30px;
+            margin-top: 25px;
             user-select: none;
-            perspective: 1000px; /* Attiva la profondità 3D */
+            perspective: 1200px; /* Prospettiva aumentata per addolcire la curva */
         }
 
-        /* Bolla grigia adattata alle nuove scritte più piccole */
+        /* Bolla grigia centrale riproporzionata */
         .picker-selection-glow {
             position: absolute;
             left: 16px;
             right: 16px;
-            height: 36px; /* Ridotta da 46px a 36px */
+            height: 40px; /* Spessore perfetto per contenere il numero attivo */
             background-color: rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
+            border-radius: 9px;
             pointer-events: none;
             z-index: 1;
         }
 
-        /* Colonne più vicine tra loro */
         .picker-column {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 65px; 
+            width: 75px; 
             height: 100%;
             z-index: 2;
             transform-style: preserve-3d;
         }
 
-        /* Stile di base dei numeri (Più piccoli e vicini verticalmente) */
+        /* Stile dei numeri: più distanziati e opacità fissa al 100% */
         .picker-number {
-            font-size: 18px; /* Scritte più piccole */
+            font-size: 21px; /* Leggermente più grandi e leggibili */
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.22); /* Più scuri quando si allontanano */
-            height: 26px; /* Spazio verticale ridotto per avvicinarli */
-            line-height: 26px;
+            color: #fff; /* Tutti i numeri sono bianchi di base, nessuna sfumatura */
+            height: 32px; /* Aumentato lo spazio verticale per staccarli */
+            line-height: 32px;
             text-align: center;
-            transition: transform 0.2s, opacity 0.2s;
+            transition: transform 0.2s;
             transform-origin: center center;
         }
 
-        /* Cifra centrale attiva perfettamente centrata nella bolla */
+        /* Numero centrale attivo */
         .picker-number.active {
-            font-size: 20px; /* Più piccola rispetto a prima */
-            font-weight: 600;
-            color: #fff;
+            font-size: 21px;
+            font-weight: 400;
             transform: rotateX(0deg) translateZ(0px);
-            opacity: 1;
         }
 
-        /* INCLINAZIONE 3D VERSO IL DIETRO DELLO SCHERMO */
-        /* Livello 1 (Subito sopra e sotto) */
-        .p-prev-1 { transform: rotateX(22deg) translateZ(-8px); opacity: 0.6; }
-        .p-next-1 { transform: rotateX(-22deg) translateZ(-8px); opacity: 0.6; }
+        /* ROTAZIONE GRADUALE E FLUIDA (Rimosso opacity, modificati i gradi) */
+        /* Primo livello sopra e sotto: piegatura leggerissima */
+        .p-prev-1 { transform: rotateX(15deg) translateZ(-4px); }
+        .p-next-1 { transform: rotateX(-15deg) translateZ(-4px); }
 
-        /* Livello 2 (Ancora più lontani e inclinati) */
-        .p-prev-2 { transform: rotateX(45deg) translateZ(-25px); opacity: 0.35; }
-        .p-next-2 { transform: rotateX(-45deg) translateZ(-25px); opacity: 0.35; }
+        /* Secondo livello: piegatura intermedia */
+        .p-prev-2 { transform: rotateX(32deg) translateZ(-14px); }
+        .p-next-2 { transform: rotateX(-32deg) translateZ(-14px); }
 
-        /* Livello 3 (Estremi della ruota, quasi invisibili dietro) */
-        .p-prev-3 { transform: rotateX(65deg) translateZ(-45px); opacity: 0.12; }
-        .p-next-3 { transform: rotateX(-65deg) translateZ(-45px); opacity: 0.12; }
-
+        /* Terzo livello (gli estremi): ora rimangono visibili e distanti */
+        .p-prev-3 { transform: rotateX(48deg) translateZ(-28px); }
+        .p-next-3 { transform: rotateX(-48deg) translateZ(-28px); }
 
     </style>
 </head>
