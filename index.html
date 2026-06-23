@@ -378,6 +378,52 @@
         .dot.active {
             background-color: #fff; /* Pallino attivo */
         }
+                /* Pannello Modifica Sveglia stile iOS (Foglio dal basso) */
+        #edit-alarm-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 94%; /* Copre quasi tutto lo schermo stile foglio iOS 15+ */
+            background-color: #1c1c1e; /* Grigio scuro tipico dei pannelli iOS */
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            z-index: 40; /* Sopra la schermata sveglia e sopra il footer */
+            transform: translateY(100%); /* Nascondi sotto lo schermo all'inizio */
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Stato aperto del pannello */
+        #edit-alarm-panel.show {
+            transform: translateY(0);
+        }
+
+        /* Elementi grafici interni del pannello */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-btn-cancel { color: #ff9f0a; font-size: 17px; cursor: pointer; }
+        .panel-btn-save { color: #ff9f0a; font-size: 17px; font-weight: 600; cursor: pointer; }
+        .panel-title { font-size: 17px; font-weight: 600; }
+        
+        .panel-body {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            font-weight: 300;
+        }
+
 
 
     </style>
@@ -419,6 +465,16 @@
         <!-- La bolla/barra di navigazione fissa sul fondo dello schermo -->
         <div class="clock-footer">
             <img src="barra-basso.PNG" class="footer-nav-img" alt="Navigazione">
+        </div>
+    </div>
+     <div id="edit-alarm-panel">
+        <div class="panel-header">
+            <span class="panel-btn-cancel" onclick="chiudiPannelloModifica()">Annulla</span>
+            <span class="panel-title">Modifica sveglia</span>
+            <span class="panel-btn-save" onclick="chiudiPannelloModifica()">Salva</span>
+        </div>
+        <div class="panel-body">
+            <span id="panel-current-time">00:00</span>
         </div>
     </div>
 
@@ -851,6 +907,24 @@ homeScreen.addEventListener('scroll', () => {
         }
     });
 });
+        document.getElementById('alarms-list').addEventListener('click', function(e) {
+    if (e.target.closest('.ios-switch')) return;
+    
+    const alarmItem = e.target.closest('.alarm-item');
+    if (alarmItem) {
+        const orarioSveglia = alarmItem.querySelector('.alarm-time').innerText;
+        apriPannelloModifica(orarioSveglia);
+    }
+});
+
+function apriPannelloModifica(orario) {
+    document.getElementById('panel-current-time').innerText = orario;
+    document.getElementById('edit-alarm-panel').classList.add('show');
+}
+
+function chiudiPannelloModifica() {
+    document.getElementById('edit-alarm-panel').classList.remove('show');
+}
 
 
     </script>
