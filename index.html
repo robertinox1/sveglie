@@ -452,6 +452,57 @@
             font-size: 48px;
             font-weight: 300;
         }
+                /* Selettore a Ruota Stile iOS Picker */
+        .picker-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 220px; /* Altezza standard del rullo iOS */
+            background-color: #1c1c1e;
+            overflow: hidden;
+            margin-top: 30px;
+            user-select: none;
+        }
+
+        /* La bolla grigia orizzontale che evidenzia le cifre corrette */
+        .picker-selection-glow {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            height: 46px;
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 9px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Colonne verticali per le ore e per i minuti */
+        .picker-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 100%;
+            z-index: 2;
+            font-size: 23px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.35); /* Numeri sopra e sotto più spenti */
+            line-height: 44px;
+            text-align: center;
+        }
+
+     
+
+        /* Cifra centrale attiva: grande, bianca e perfettamente allineata alla bolla */
+        .picker-number.active {
+            font-size: 25px;
+            font-weight: 600;
+            color: #fff;
+        }
+
 
 
 
@@ -502,10 +553,28 @@
             <div class="panel-title">Modifica sveglia</div>
             <div class="panel-btn-save" onclick="chiudiPannelloModifica()">✓</div>
         </div>
-        <div class="panel-body">
-            <span id="panel-current-time">00:00</span>
+             <div class="panel-body" style="display: block;">
+            <div class="picker-container">
+                <!-- Bolla grigia di selezione -->
+                <div class="picker-selection-glow"></div>
+                
+                <!-- Colonna Ore -->
+                <div class="picker-column">
+                    <div class="picker-number" id="picker-h-prev">06</div>
+                    <div class="picker-number active" id="picker-h-curr">07</div>
+                    <div class="picker-number" id="picker-h-next">08</div>
+                </div>
+                
+                
+                <!-- Colonna Minuti -->
+                <div class="picker-column">
+                    <div class="picker-number" id="picker-m-prev">59</div>
+                    <div class="picker-number active" id="picker-m-curr">00</div>
+                    <div class="picker-number" id="picker-m-next">01</div>
+                </div>
+            </div>
         </div>
-    </div>
+
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
     <script>
@@ -945,11 +1014,32 @@ homeScreen.addEventListener('scroll', () => {
         apriPannelloModifica(orarioSveglia);
     }
 });
-
 function apriPannelloModifica(orario) {
-    document.getElementById('panel-current-time').innerText = orario;
+    const parti = orario.split(':');
+    const oreAperte = parseInt(parti[0], 10);
+    const minAperti = parseInt(parti[1], 10);
+
+    // Calcolo ruota Ore (0-23)
+    const orePrev = (oreAperte === 0) ? 23 : oreAperte - 1;
+    const oreNext = (oreAperte === 23) ? 0 : oreAperte + 1;
+
+    // Calcolo ruota Minuti (0-59)
+    const minPrev = (minAperti === 0) ? 59 : minAperti - 1;
+    const minNext = (minAperti === 59) ? 0 : minAperti + 1;
+
+    // Iniezione testi a due cifre
+    document.getElementById('picker-h-prev').innerText = String(orePrev).padStart(2, '0');
+    document.getElementById('picker-h-curr').innerText = String(oreAperte).padStart(2, '0');
+    document.getElementById('picker-h-next').innerText = String(oreNext).padStart(2, '0');
+
+    document.getElementById('picker-m-prev').innerText = String(minPrev).padStart(2, '0');
+    document.getElementById('picker-m-curr').innerText = String(minAperti).padStart(2, '0');
+    document.getElementById('picker-m-next').innerText = String(minNext).padStart(2, '0');
+
     document.getElementById('edit-alarm-panel').classList.add('show');
 }
+
+
 
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
