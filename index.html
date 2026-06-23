@@ -599,6 +599,13 @@
         .option-switch.on .option-switch-handle {
             transform: translateX(20px);
         }
+                /* Forza il pomello dello switch statico a stare fisso a destra senza animazioni */
+        .ios-switch.on .static-handle {
+            left: auto !important;
+            right: 2px !important;
+            transform: none !important;
+        }
+
 
 
     </style>
@@ -695,8 +702,8 @@
                 <div class="option-row">
                     <span class="option-left">Posticipo</span>
                     <!-- Interruttore attivo (on) indipendente -->
-                    <div class="ios-switch on" onclick="this.classList.toggle('on')">
-                        <div class="option-switch-handle"></div>
+                    <div class="ios-switch on">
+                        <div class="ios-switch-handle static-handle"></div>
                     </div>
                 </div>
                 <!-- Riga 5 -->
