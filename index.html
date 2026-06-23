@@ -522,6 +522,77 @@
         /* Terzo livello (gli estremi): ora rimangono visibili e distanti */
         .p-prev-3 { transform: rotateX(48deg) translateZ(-28px); }
         .p-next-3 { transform: rotateX(-48deg) translateZ(-28px); }
+                /* Box Opzioni Sveglia stile iOS */
+        .alarm-options-box {
+            background-color: rgba(255, 255, 255, 0.08); /* Stesso colore della bolla */
+            border-radius: 12px;
+            margin: 20px 16px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px; /* Altezza standard delle righe iOS */
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+
+        /* Linea di divisione tra le righe (non applicata all'ultima) */
+        .option-row:not(:last-child) {
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Testi di sinistra (sempre bianchi) */
+        .option-left {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        /* Testi di destra (grigio chiaro) */
+        .option-right {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        /* Colore arancione speciale per l'ultima riga */
+        .option-orange {
+            color: #ff9f0a;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        /* Interruttore dedicato più piccolo per il box opzioni */
+        .option-switch {
+            width: 51px; /* Dimensione esatta degli switch secondari iOS */
+            height: 31px;
+            background-color: #48484a;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+        }
+        .option-switch.on {
+            background-color: #34c759;
+        }
+        .option-switch-handle {
+            width: 27px;
+            height: 27px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.1s linear;
+        }
+        .option-switch.on .option-switch-handle {
+            transform: translateX(20px);
+        }
+
 
     </style>
 </head>
@@ -597,9 +668,37 @@
                     <div class="picker-number p-next-3" id="picker-m-next3">03</div>
                 </div>
             </div>
+                   <div class="alarm-options-box">
+                <!-- Riga 1 -->
+                <div class="option-row">
+                    <span class="option-left">Ripetizione</span>
+                    <span class="option-right">Mai &gt;</span>
+                </div>
+                <!-- Riga 2 -->
+                <div class="option-row">
+                    <span class="option-left">Etichetta</span>
+                    <span class="option-right">Sveglia</span>
+                </div>
+                <!-- Riga 3 -->
+                <div class="option-row">
+                    <span class="option-left">Suono</span>
+                    <span class="option-right">Radar &gt;</span>
+                </div>
+                <!-- Riga 4 -->
+                <div class="option-row">
+                    <span class="option-left">Posticipo</span>
+                    <!-- Interruttore attivo (on) indipendente -->
+                    <div class="option-switch on" onclick="this.classList.toggle('on')">
+                        <div class="option-switch-handle"></div>
+                    </div>
+                </div>
+                <!-- Riga 5 -->
+                <div class="option-row">
+                    <span class="option-left">Durata del posticipo</span>
+                    <span class="option-orange">9 min</span>
+                </div>
+            </div>
         </div>
-    </div>
-
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
     <script>
