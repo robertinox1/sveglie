@@ -350,6 +350,33 @@
             /* ATTENZIONE: Mettiamo z-index 4 così la sveglia (che ha z-index 20) lo coprirà in automatico senza toccare il JavaScript */
             z-index: 4; 
         }
+                /* Indicatore di pagina a pallini stile iOS */
+        #page-indicator {
+            position: fixed;
+            bottom: calc(75px + env(safe-area-inset-bottom)); /* Spazio perfetto sopra il dock */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.08); /* Bolla semitrasparente leggera */
+            z-index: 5; /* Sopra la griglia, sotto la sveglia */
+            pointer-events: none;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            background-color: rgba(255, 255, 255, 0.35); /* Pallino spento */
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+
+        .dot.active {
+            background-color: #fff; /* Pallino attivo */
+        }
+
 
     </style>
 </head>
@@ -361,6 +388,11 @@
             <div class="grid-page" id="p2"></div>
             <div class="grid-page" id="p3"></div>
         </div>
+    </div>
+      <div id="page-indicator">
+        <div class="dot active" id="dot-0"></div>
+        <div class="dot" id="dot-1"></div>
+        <div class="dot" id="dot-2"></div>
     </div>
 
              <div id="clock-screen" class="screen">
@@ -787,6 +819,12 @@ if (scorrimento < sogliaBloccoAltro) {
             homeScreen.scrollLeft = 0; 
                        document.getElementById('clock-screen').classList.remove('open');
             document.getElementById('clock-scroll-wrapper').scrollTop = 0;
+                        // NUOVO: Ripristina il primo pallino attivo al reset
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                if (index === 0) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+
 
 
         }
@@ -800,6 +838,18 @@ function precaricaImmaginiSveglia() {
 }
 // Avvia il caricamento silenzioso all'avvio dell'app
 precaricaImmaginiSveglia();
+        // NUOVO: Ascolta lo scorrimento della home in modo indipendente per aggiornare solo i pallini
+homeScreen.addEventListener('scroll', () => {
+    const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        if (index === currentPage) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+});
+
 
     </script>
 </body>
