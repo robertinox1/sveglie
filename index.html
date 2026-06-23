@@ -420,8 +420,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
-            font-weight: 200; /* Tratto molto sottile */
+            font-size: 40px;
+            font-weight: 100; /* Tratto molto sottile */
             cursor: pointer; 
             user-select: none;
         }
@@ -462,7 +462,7 @@
             height: 240px; /* Aumentata l'altezza generale per dare spazio */
             background-color: #1c1c1e;
             overflow: hidden;
-            margin-top: 15px;
+            margin-top: 5px;
             user-select: none;
             perspective: 1200px; /* Prospettiva aumentata per addolcire la curva */
         }
@@ -492,11 +492,11 @@
 
         /* Stile dei numeri: più distanziati e opacità fissa al 100% */
         .picker-number {
-            font-size: 21px; /* Leggermente più grandi e leggibili */
+            font-size: 26px; /* Leggermente più grandi e leggibili */
             font-weight: 400;
             color: rgba(255, 255, 255, 0.22); /* Tutti i numeri sono bianchi di base, nessuna sfumatura */
-            height: 32px; /* Aumentato lo spazio verticale per staccarli */
-            line-height: 32px;
+            height: 37px; /* Aumentato lo spazio verticale per staccarli */
+            line-height: 37px;
             text-align: center;
             transition: transform 0.2s;
             transform-origin: center center;
@@ -504,8 +504,9 @@
 
         /* Numero centrale attivo */
         .picker-number.active {
-            font-size: 21px;
+            font-size: 26px;
             font-weight: 400;
+            color: #fff;
             transform: rotateX(0deg) translateZ(0px);
         }
 
