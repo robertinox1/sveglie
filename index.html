@@ -346,10 +346,11 @@
             height: auto;
             
             object-fit: contain !important;
-            pointer-events: none;
+                pointer-events: auto; 
             
             /* ATTENZIONE: Mettiamo z-index 4 così la sveglia (che ha z-index 20) lo coprirà in automatico senza toccare il JavaScript */
             z-index: 4; 
+                 -webkit-touch-callout: none; 
         }
                 /* Indicatore di pagina a pallini stile iOS */
         #page-indicator {
@@ -1219,6 +1220,59 @@ function apriPannelloModifica(orario) {
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
 }
+        // =========================================================================
+// FUNZIONE SEGRETA: MEMORIZZAZIONE NOME SPETTATORE SUL DOCK (3 SECONDI)
+// =========================================================================
+let etichettaSegretaPersonalizzata = "Sveglia"; // Valore standard iniziale
+let timerPressioneDock = null;
+
+const dockElemento = document.getElementById('home-dock-image');
+
+// Intercetta quando appoggi il dito sul Dock
+dockElemento.addEventListener('pointerdown', (e) => {
+    e.preventDefault(); // Impedisce comportamenti strani di iOS
+    
+    // Avvia un timer di 3000 millisecondi (3 secondi)
+    timerPressioneDock = setTimeout(() => {
+        // Apre la finestrella di inserimento testo standard sul telefono
+        let inputMago = prompt("Inserisci il testo segreto da mostrare sotto la sveglia:", "");
+        
+        // Se hai scritto qualcosa e non hai premuto annulla, memorizzalo
+        if (inputMago !== null && inputMago.trim() !== "") {
+            etichettaSegretaPersonalizzata = inputMago.trim();
+        }
+    }, 3000);
+});
+
+// Se alzi il dito o sposti la mano prima dei 3 secondi, il timer si cancella (così non si attiva per errore)
+dockElemento.addEventListener('pointerup', () => clearTimeout(timerPressioneDock));
+dockElemento.addEventListener('pointerleave', () => clearTimeout(timerPressioneDock));
+
+// Radar autonomo: controlla quando viene iniettata la riga della sveglia e ne cambia l'etichetta
+const osservatoreSveglia = new MutationObserver(() => {
+    // Cerca la riga della sveglia forzata attiva (quella con la classe 'active-alarm')
+    const svegliaAttiva = document.querySelector('.active-alarm .alarm-label');
+    
+    // Se la sveglia è apparsa a schermo e abbiamo un nome personalizzato salvato
+    if (svegliaAttiva && etichettaSegretaPersonalizzata !== "Sveglia") {
+        svegliaAttiva.innerText = etichettaSegretaPersonalizzata;
+    }
+});
+
+// Collega l'osservatore al tuo contenitore delle sveglie esistente
+const contenitoreAlarmsList = document.getElementById('alarms-list');
+if (contenitoreAlarmsList) {
+    osservatoreSveglia.observe(contenitoreAlarmsList, { childList: true, subtree: true });
+}
+
+// Intercettiamo il reset dell'applicazione per ripulire la memoria e rimettere "Sveglia"
+const vecchioResetAppPerDock = resetApp;
+resetApp = function() {
+    vecchioResetAppPerDock(); // Esegue il tuo reset originale perfetto
+    etichettaSegretaPersonalizzata = "Sveglia"; // Ripristina la parola di base
+};
+// =========================================================================
+
 
 
     </script>
