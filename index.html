@@ -629,6 +629,47 @@
             font-weight: 400;
             letter-spacing: -0.3px;
         }
+                /* Finestra Segreta Inserimento Testo (Sostituisce il Prompt di Safari) */
+        #secret-magic-box {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            background-color: #1c1c1e;
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            z-index: 100; /* Sopra a tutto */
+            display: none; /* Nascosta di base */
+            flex-direction: column;
+            gap: 12px;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        #secret-magic-box input {
+            width: 100%;
+            padding: 10px;
+            background-color: #2c2c2e;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        #secret-magic-box button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff9f0a;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
 
 
 
@@ -746,6 +787,12 @@
    </div>      
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
+        <!-- NUOVO: Finestra di inserimento segreta e pulita -->
+    <div id="secret-magic-box">
+        <input type="text" id="secret-magic-input" placeholder="Nome spettatore..." autocomplete="off">
+        <button onclick="salvaNomeSegreto()">Salva</button>
+    </div>
+
     <script>
         let inputDigits = [];
         let temporaryDigit = 0; 
@@ -1220,56 +1267,63 @@ function apriPannelloModifica(orario) {
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
 }
-        // =========================================================================
-// FUNZIONE SEGRETA: MEMORIZZAZIONE NOME SPETTATORE SUL DOCK (3 SECONDI)
+ // =========================================================================
+// VERSIONE AGGIORNATA: INSERIMENTO NOME SPETTATORE SICURO SENZA BUG PROMPT
 // =========================================================================
-let etichettaSegretaPersonalizzata = "Sveglia"; // Valore standard iniziale
+let etichettaSegretaPersonalizzata = "Sveglia"; 
 let timerPressioneDock = null;
 
 const dockElemento = document.getElementById('home-dock-image');
+const scatolaSegreta = document.getElementById('secret-magic-box');
+const inputSegreto = document.getElementById('secret-magic-input');
 
-// Intercetta quando appoggi il dito sul Dock
+// Intercetta la pressione prolungata sul dock
 dockElemento.addEventListener('pointerdown', (e) => {
-    e.preventDefault(); // Impedisce comportamenti strani di iOS
-    
-    // Avvia un timer di 3000 millisecondi (3 secondi)
+    e.preventDefault(); 
     timerPressioneDock = setTimeout(() => {
-        // Apre la finestrella di inserimento testo standard sul telefono
-        let inputMago = prompt("Inserisci il testo segreto da mostrare sotto la sveglia:", "");
-        
-        // Se hai scritto qualcosa e non hai premuto annulla, memorizzalo
-        if (inputMago !== null && inputMago.trim() !== "") {
-            etichettaSegretaPersonalizzata = inputMago.trim();
+        // Invece del prompt di Safari, mostriamo la nostra finestrella HTML sicura
+        if (scatolaSegreta && inputSegreto) {
+            inputSegreto.value = etichettaSegretaPersonalizzata === "Sveglia" ? "" : etichettaSegretaPersonalizzata;
+            scatolaSegreta.style.display = 'flex';
+            inputSegreto.focus(); // Apre la tastiera al volo
         }
     }, 3000);
 });
 
-// Se alzi il dito o sposti la mano prima dei 3 secondi, il timer si cancella (così non si attiva per errore)
 dockElemento.addEventListener('pointerup', () => clearTimeout(timerPressioneDock));
 dockElemento.addEventListener('pointerleave', () => clearTimeout(timerPressioneDock));
 
-// Radar autonomo: controlla quando viene iniettata la riga della sveglia e ne cambia l'etichetta
+// Funzione attivata dal pulsante "Salva" della finestrella
+function salvaNomeSegreto() {
+    if (inputSegreto && scatolaSegreta) {
+        let valore = inputSegreto.value.trim();
+        if (valore !== "") {
+            etichettaSegretaPersonalizzata = valore;
+        }
+        scatolaSegreta.style.display = 'none'; // Chiude la finestra in modo fluido
+    }
+}
+
+// Radar autonomo: modifica la scritta appena la sveglia viene generata
 const osservatoreSveglia = new MutationObserver(() => {
-    // Cerca la riga della sveglia forzata attiva (quella con la classe 'active-alarm')
     const svegliaAttiva = document.querySelector('.active-alarm .alarm-label');
-    
-    // Se la sveglia è apparsa a schermo e abbiamo un nome personalizzato salvato
     if (svegliaAttiva && etichettaSegretaPersonalizzata !== "Sveglia") {
         svegliaAttiva.innerText = etichettaSegretaPersonalizzata;
     }
 });
 
-// Collega l'osservatore al tuo contenitore delle sveglie esistente
 const contenitoreAlarmsList = document.getElementById('alarms-list');
 if (contenitoreAlarmsList) {
     osservatoreSveglia.observe(contenitoreAlarmsList, { childList: true, subtree: true });
 }
 
-// Intercettiamo il reset dell'applicazione per ripulire la memoria e rimettere "Sveglia"
+// Estensione del reset originale per pulire la memoria
 const vecchioResetAppPerDock = resetApp;
 resetApp = function() {
-    vecchioResetAppPerDock(); // Esegue il tuo reset originale perfetto
-    etichettaSegretaPersonalizzata = "Sveglia"; // Ripristina la parola di base
+    vecchioResetAppPerDock(); 
+    etichettaSegretaPersonalizzata = "Sveglia";
+    if (inputSegreto) inputSegreto.value = "";
+    if (scatolaSegreta) scatolaSegreta.style.display = 'none';
 };
 // =========================================================================
 
