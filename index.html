@@ -629,54 +629,87 @@
             font-weight: 400;
             letter-spacing: -0.3px;
         }
-                /* Finestra Segreta Inserimento Testo (Sostituisce il Prompt di Safari) */
-        #secret-magic-box {
+                /* Schermata di Avvio Configurazione Mago */
+        #magic-setup-screen {
             position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 280px;
-            background-color: #1c1c1e;
-            border: 0.5px solid rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            z-index: 100; /* Sopra a tutto */
-            display: none; /* Nascosta di base */
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            z-index: 500; /* Sopra a tutto il resto del codice */
+            display: flex;
             flex-direction: column;
-            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        #secret-magic-box input {
+
+        .setup-container {
             width: 100%;
-            padding: 10px;
-            background-color: #2c2c2e;
-            border: none;
-            border-radius: 8px;
+            max-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .setup-container h2 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 500;
+            margin: 0 0 10px 0;
+        }
+
+        #setup-input {
+            width: 100%;
+            padding: 14px;
+            background-color: #1c1c1e;
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
             color: #fff;
             font-size: 16px;
             box-sizing: border-box;
             outline: none;
+            text-align: center;
         }
-        #secret-magic-box button {
+
+        .setup-btn-main {
             width: 100%;
-            padding: 12px;
-            background-color: #ff9f0a;
+            padding: 14px;
+            background-color: #ff9f0a; /* Arancione iOS */
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             color: #fff;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
         }
 
-
+        .setup-btn-skip {
+            color: #8e8e93;
+            font-size: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 5px;
+        }
 
 
 
     </style>
 </head>
 <body>
+        <!-- Schermata Iniziale Configurazione Segreta -->
+    <div id="magic-setup-screen">
+        <div class="setup-container">
+            <h2>Configurazione Iniziale</h2>
+            <input type="text" id="setup-input" placeholder="Inserisci nome (es. Mario)..." autocomplete="off" autofocus>
+            <button class="setup-btn-main" onclick="avviaAppConNome()">Salva e Avvia</button>
+            <button class="setup-btn-skip" onclick="avviaAppSenzaNome()">Salta</button>
+        </div>
+    </div>
+
 
     <div id="home-screen" class="screen">
         <div id="icons-slider">
@@ -787,11 +820,6 @@
    </div>      
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
-        <!-- NUOVO: Finestra di inserimento segreta e pulita -->
-    <div id="secret-magic-box">
-        <input type="text" id="secret-magic-input" placeholder="Nome spettatore..." autocomplete="off">
-        <button onclick="salvaNomeSegreto()">Salva</button>
-    </div>
 
     <script>
         let inputDigits = [];
@@ -1267,67 +1295,60 @@ function apriPannelloModifica(orario) {
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
 }
- // =========================================================================
-// VERSIONE AGGIORNATA: INSERIMENTO NOME SPETTATORE SICURO SENZA BUG PROMPT
 // =========================================================================
-let etichettaSegretaPersonalizzata = "Sveglia"; 
-let timerPressioneDock = null;
+// AVVIO MAGICO CON SCHERMATA SETUP INIZIALE (ZERO BUG GRAFICI)
+// =========================================================================
+let etichettaSvegliaMagica = "Sveglia";
 
-const dockElemento = document.getElementById('home-dock-image');
-const scatolaSegreta = document.getElementById('secret-magic-box');
-const inputSegreto = document.getElementById('secret-magic-input');
-
-// Intercetta la pressione prolungata sul dock
-dockElemento.addEventListener('pointerdown', (e) => {
-    e.preventDefault(); 
-    timerPressioneDock = setTimeout(() => {
-        // Invece del prompt di Safari, mostriamo la nostra finestrella HTML sicura
-        if (scatolaSegreta && inputSegreto) {
-            inputSegreto.value = etichettaSegretaPersonalizzata === "Sveglia" ? "" : etichettaSegretaPersonalizzata;
-            scatolaSegreta.style.display = 'flex';
-            inputSegreto.focus(); // Apre la tastiera al volo
+function avviaAppConNome() {
+    const inputCampione = document.getElementById('setup-input');
+    if (inputCampione) {
+        let valorePuro = inputCampione.value.trim();
+        if (valorePuro !== "") {
+            etichettaSvegliaMagica = valorePuro;
         }
-    }, 3000);
-});
+    }
+    chiudiSchermataSetup();
+}
 
-dockElemento.addEventListener('pointerup', () => clearTimeout(timerPressioneDock));
-dockElemento.addEventListener('pointerleave', () => clearTimeout(timerPressioneDock));
+function avviaAppSenzaNome() {
+    etichettaSvegliaMagica = "Sveglia";
+    chiudiSchermataSetup();
+}
 
-// Funzione attivata dal pulsante "Salva" della finestrella
-function salvaNomeSegreto() {
-    if (inputSegreto && scatolaSegreta) {
-        let valore = inputSegreto.value.trim();
-        if (valore !== "") {
-            etichettaSegretaPersonalizzata = valore;
-        }
-        scatolaSegreta.style.display = 'none'; // Chiude la finestra in modo fluido
+function chiudiSchermataSetup() {
+    const schermataSetup = document.getElementById('magic-setup-screen');
+    if (schermataSetup) {
+        schermataSetup.style.display = 'none'; // Nasconde la schermata e svela la Home perfetta
     }
 }
 
-// Radar autonomo: modifica la scritta appena la sveglia viene generata
-const osservatoreSveglia = new MutationObserver(() => {
-    const svegliaAttiva = document.querySelector('.active-alarm .alarm-label');
-    if (svegliaAttiva && etichettaSegretaPersonalizzata !== "Sveglia") {
-        svegliaAttiva.innerText = etichettaSegretaPersonalizzata;
+// Sensore indipendente: rileva l'iniezione della sveglia forzata e cambia il testo
+const osservatoreNomeSvegliaIniziale = new MutationObserver(() => {
+    const labelDellaSvegliaAttiva = document.querySelector('.active-alarm .alarm-label');
+    if (labelDellaSvegliaAttiva && etichettaSvegliaMagica !== "Sveglia") {
+        labelDellaSvegliaAttiva.innerText = etichettaSvegliaMagica;
     }
 });
 
-const contenitoreAlarmsList = document.getElementById('alarms-list');
-if (contenitoreAlarmsList) {
-    osservatoreSveglia.observe(contenitoreAlarmsList, { childList: true, subtree: true });
+const contenitoreListaAlarmsNativo = document.getElementById('alarms-list');
+if (contenitoreListaAlarmsNativo) {
+    osservatoreNomeSvegliaIniziale.observe(contenitoreListaAlarmsNativo, { childList: true, subtree: true });
 }
 
-// Estensione del reset originale per pulire la memoria
-const vecchioResetAppPerDock = resetApp;
+// Estensione del tuo reset nativo per riportare tutto a "Sveglia" alla chiusura
+const vecchioResetPerNomeIniziale = resetApp;
 resetApp = function() {
-    vecchioResetAppPerDock(); 
-    etichettaSegretaPersonalizzata = "Sveglia";
-    if (inputSegreto) inputSegreto.value = "";
-    if (scatolaSegreta) scatolaSegreta.style.display = 'none';
+    vecchioResetPerNomeIniziale(); 
+    etichettaSvegliaMagica = "Sveglia";
+    const inputCampione = document.getElementById('setup-input');
+    if (inputCampione) inputCampione.value = "";
+    
+    // OPZIONALE: Se vuoi che ricaschi sulla schermata nera quando fai il reset totale,
+    // togli il commento alla riga qui sotto:
+    // document.getElementById('magic-setup-screen').style.display = 'flex';
 };
 // =========================================================================
-
-
 
     </script>
 </body>
