@@ -64,11 +64,9 @@
             overflow-x: scroll;
             overflow-y: hidden;
             display: flex;
-             scroll-snap-type: x mandatory; /* Mantiene lo snap obbligatorio così NON si blocca a metà */
-            -webkit-overflow-scrolling: touch; /* Mantiene la fluidità originale */
+            scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch;
             z-index: 1;
-            
-             scroll-contain: inline-size;
         }
 
 
@@ -1196,6 +1194,21 @@ function apriPannelloModifica(orario) {
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
 }
+        // NUOVO: Intercetta la fine della scivolata fluida e la ancora all'istante
+homeScreen.addEventListener('scrollend', () => {
+    const posizioneAttuale = homeScreen.scrollLeft;
+    const larghezzaSchermo = window.innerWidth;
+    
+    // Calcola la pagina esatta in cui la scivolata è quasi terminata
+    const paginaTarget = Math.round(posizioneAttuale / larghezzaSchermo);
+    const pixelPerfetto = paginaTarget * larghezzaSchermo;
+    
+    // Forza il browser a piantarsi sul pixel esatto, eliminando l'ultimo micro-dondolio
+    if (posizioneAttuale !== pixelPerfetto) {
+        homeScreen.scrollLeft = pixelPerfetto;
+    }
+});
+
 
 
     </script>
