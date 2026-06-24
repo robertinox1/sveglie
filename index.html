@@ -346,11 +346,10 @@
             height: auto;
             
             object-fit: contain !important;
-                pointer-events: auto; 
+            pointer-events: none;
             
             /* ATTENZIONE: Mettiamo z-index 4 così la sveglia (che ha z-index 20) lo coprirà in automatico senza toccare il JavaScript */
             z-index: 4; 
-                 -webkit-touch-callout: none; 
         }
                 /* Indicatore di pagina a pallini stile iOS */
         #page-indicator {
@@ -629,87 +628,13 @@
             font-weight: 400;
             letter-spacing: -0.3px;
         }
-                /* Schermata di Avvio Configurazione Mago */
-        #magic-setup-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000;
-            z-index: 500; /* Sopra a tutto il resto del codice */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        }
 
-        .setup-container {
-            width: 100%;
-            max-width: 300px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-        }
-
-        .setup-container h2 {
-            color: #fff;
-            font-size: 20px;
-            font-weight: 500;
-            margin: 0 0 10px 0;
-        }
-
-        #setup-input {
-            width: 100%;
-            padding: 14px;
-            background-color: #1c1c1e;
-            border: 0.5px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-            text-align: center;
-        }
-
-        .setup-btn-main {
-            width: 100%;
-            padding: 14px;
-            background-color: #ff9f0a; /* Arancione iOS */
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .setup-btn-skip {
-            color: #8e8e93;
-            font-size: 14px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            margin-top: 5px;
-        }
 
 
 
     </style>
 </head>
 <body>
-        <!-- Schermata Iniziale Configurazione Segreta -->
-    <div id="magic-setup-screen">
-        <div class="setup-container">
-            <h2>Configurazione Iniziale</h2>
-            <input type="text" id="setup-input" placeholder="Inserisci nome (es. Mario)..." autocomplete="off" autofocus>
-            <button class="setup-btn-main" onclick="avviaAppConNome()">Salva e Avvia</button>
-            <button class="setup-btn-skip" onclick="avviaAppSenzaNome()">Salta</button>
-        </div>
-    </div>
-
 
     <div id="home-screen" class="screen">
         <div id="icons-slider">
@@ -820,7 +745,6 @@
    </div>      
 
   <img src="dock.PNG" id="home-dock-image" alt="Dock">
-
     <script>
         let inputDigits = [];
         let temporaryDigit = 0; 
@@ -1295,60 +1219,7 @@ function apriPannelloModifica(orario) {
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
 }
-// =========================================================================
-// AVVIO MAGICO CON SCHERMATA SETUP INIZIALE (ZERO BUG GRAFICI)
-// =========================================================================
-let etichettaSvegliaMagica = "Sveglia";
 
-function avviaAppConNome() {
-    const inputCampione = document.getElementById('setup-input');
-    if (inputCampione) {
-        let valorePuro = inputCampione.value.trim();
-        if (valorePuro !== "") {
-            etichettaSvegliaMagica = valorePuro;
-        }
-    }
-    chiudiSchermataSetup();
-}
-
-function avviaAppSenzaNome() {
-    etichettaSvegliaMagica = "Sveglia";
-    chiudiSchermataSetup();
-}
-
-function chiudiSchermataSetup() {
-    const schermataSetup = document.getElementById('magic-setup-screen');
-    if (schermataSetup) {
-        schermataSetup.style.display = 'none'; // Nasconde la schermata e svela la Home perfetta
-    }
-}
-
-// Sensore indipendente: rileva l'iniezione della sveglia forzata e cambia il testo
-const osservatoreNomeSvegliaIniziale = new MutationObserver(() => {
-    const labelDellaSvegliaAttiva = document.querySelector('.active-alarm .alarm-label');
-    if (labelDellaSvegliaAttiva && etichettaSvegliaMagica !== "Sveglia") {
-        labelDellaSvegliaAttiva.innerText = etichettaSvegliaMagica;
-    }
-});
-
-const contenitoreListaAlarmsNativo = document.getElementById('alarms-list');
-if (contenitoreListaAlarmsNativo) {
-    osservatoreNomeSvegliaIniziale.observe(contenitoreListaAlarmsNativo, { childList: true, subtree: true });
-}
-
-// Estensione del tuo reset nativo per riportare tutto a "Sveglia" alla chiusura
-const vecchioResetPerNomeIniziale = resetApp;
-resetApp = function() {
-    vecchioResetPerNomeIniziale(); 
-    etichettaSvegliaMagica = "Sveglia";
-    const inputCampione = document.getElementById('setup-input');
-    if (inputCampione) inputCampione.value = "";
-    
-    // OPZIONALE: Se vuoi che ricaschi sulla schermata nera quando fai il reset totale,
-    // togli il commento alla riga qui sotto:
-    // document.getElementById('magic-setup-screen').style.display = 'flex';
-};
-// =========================================================================
 
     </script>
 </body>
