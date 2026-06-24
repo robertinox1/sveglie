@@ -64,9 +64,12 @@
             overflow-x: scroll;
             overflow-y: hidden;
             display: flex;
-              scroll-snap-type: x proximity; 
-            -webkit-overflow-scrolling: auto; 
-                    z-index: 1;
+             scroll-snap-type: x mandatory; /* Mantiene lo snap obbligatorio così NON si blocca a metà */
+            -webkit-overflow-scrolling: touch; /* Mantiene la fluidità originale */
+            z-index: 1;
+            
+            /* INSERISCI SOLO QUESTA RIGA PER ELIMINARE IL FRENO LENTO FINALE: */
+            scroll-snap-stop: always;
         }
 
 
