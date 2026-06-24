@@ -64,7 +64,7 @@
             overflow-x: scroll;
             overflow-y: hidden;
             display: flex;
-            scroll-snap-type: x mandatory; 
+            scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             z-index: 1;
         }
@@ -95,7 +95,7 @@
             row-gap: 8px;
             column-gap: 12px;
             scroll-snap-align: start;
-                 scroll-snap-stop: always;
+                 scroll-snap-stop: always; 
         }
 
 
@@ -609,6 +609,26 @@
             right: 2px !important;
             transform: none !important;
         }
+                /* Pulsante Elimina Sveglia stile iOS */
+        .delete-alarm-btn-box {
+            background-color: rgba(255, 255, 255, 0.08); /* Stesso sfondo della bolla e del box */
+            border-radius: 25px; /* Stessi angoli arrotondati del tuo box opzioni */
+            margin: 10px 16px 30px 16px; /* 0 sopra per stare vicino al box, 30px sotto di margine */
+            height: 64px; /* Stessa identica altezza delle righe del tuo box */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Testo centrale rosso tipico dei pulsanti distruttivi Apple */
+        .delete-alarm-text {
+            color: #ff453a; /* Rosso iOS nativo per l'eliminazione */
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+        }
+
 
 
 
@@ -716,6 +736,11 @@
                     <span class="option-orange">9 min</span>
                 </div>
             </div>
+                             <!-- Pulsante Elimina Sveglia (Puro elemento estetico, non fa nulla al click) -->
+            <div class="delete-alarm-btn-box">
+                <span class="delete-alarm-text">Elimina sveglia</span>
+            </div>
+
         </div>
    </div>      
 
@@ -1194,21 +1219,6 @@ function apriPannelloModifica(orario) {
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
 }
-        // NUOVO: Intercetta la fine della scivolata fluida e la ancora all'istante
-homeScreen.addEventListener('scrollend', () => {
-    const posizioneAttuale = homeScreen.scrollLeft;
-    const larghezzaSchermo = window.innerWidth;
-    
-    // Calcola la pagina esatta in cui la scivolata è quasi terminata
-    const paginaTarget = Math.round(posizioneAttuale / larghezzaSchermo);
-    const pixelPerfetto = paginaTarget * larghezzaSchermo;
-    
-    // Forza il browser a piantarsi sul pixel esatto, eliminando l'ultimo micro-dondolio
-    if (posizioneAttuale !== pixelPerfetto) {
-        homeScreen.scrollLeft = pixelPerfetto;
-    }
-});
-
 
 
     </script>
