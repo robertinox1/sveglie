@@ -64,17 +64,9 @@
             overflow-x: scroll;
             overflow-y: hidden;
             display: flex;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            z-index: 1;
-              -webkit-overflow-scrolling: touch; 
-            
-            /* SFORBICIATA FINALE: Costringe la GPU ad azzerare il dondolio di assestamento */
-            scroll-behavior: auto;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
+              scroll-snap-type: x proximity; 
+            -webkit-overflow-scrolling: auto; 
+                    z-index: 1;
         }
 
 
