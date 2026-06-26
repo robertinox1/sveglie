@@ -452,22 +452,14 @@
 
         .panel-title { font-size: 17px; font-weight: 600; }
         
-     /* Corpo del pannello di modifica */
-.panel-body {
-    flex-grow: 1;
-    display: flex !important;
-    flex-direction: column !important;
-    
-    /* MODIFICATO CHIRURGICAMENTE: Allinea tutto in alto invece che al centro */
-    justify-content: flex-start !important; 
-    align-items: center;
-    
-    /* NUOVO: Elimina spazi vuoti interni in alto */
-    padding-top: 0px !important; 
-    font-size: 48px;
-    font-weight: 300;
-}
-
+        .panel-body {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            font-weight: 300;
+        }
                 /* Selettore a Ruota Stile iOS Picker */
               /* Contenitore con prospettiva 3D bilanciata */
         .picker-container {
@@ -476,10 +468,10 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 290px; /* Aumentata l'altezza generale per dare spazio */
+            height: 170px; /* Aumentata l'altezza generale per dare spazio */
             background-color: #1c1c1e;
             overflow: hidden;
-            margin-top: 2px;
+            margin-top: 15px;
             user-select: none;
             perspective: 1200px; /* Prospettiva aumentata per addolcire la curva */
         }
@@ -539,15 +531,11 @@
         /* Terzo livello (gli estremi): ora rimangono visibili e distanti */
         .p-prev-3 { transform: rotateX(48deg) translateZ(-28px); }
         .p-next-3 { transform: rotateX(-48deg) translateZ(-28px); }
-        /* Quarto livello (gli estremi massimi): quasi invisibili e molto ruotati */
-.p-prev-4 { transform: rotateX(64deg) translateZ(-44px); }
-.p-next-4 { transform: rotateX(-64deg) translateZ(-44px); }
-
                 /* Box Opzioni Sveglia stile iOS */
         .alarm-options-box {
             background-color: rgba(255, 255, 255, 0.08); /* Stesso colore della bolla */
             border-radius: 25px;
-            margin: 10px 16px;
+            margin: 31px 16px;
             padding: 0;
             display: flex;
             flex-direction: column;
@@ -731,7 +719,6 @@
                 
                <!-- Colonna Ore -->
                 <div class="picker-column">
-                     <div class="picker-number p-prev-4" id="picker-h-prev4">03</div>
                     <div class="picker-number p-prev-3" id="picker-h-prev3">04</div>
                     <div class="picker-number p-prev-2" id="picker-h-prev2">05</div>
                     <div class="picker-number p-prev-1" id="picker-h-prev1">06</div>
@@ -739,12 +726,10 @@
                     <div class="picker-number p-next-1" id="picker-h-next1">08</div>
                     <div class="picker-number p-next-2" id="picker-h-next2">09</div>
                     <div class="picker-number p-next-3" id="picker-h-next3">10</div>
-                    <div class="picker-number p-next-4" id="picker-h-next4">11</div>
                 </div>
                 
                 <!-- Colonna Minuti -->
                 <div class="picker-column">
-                    <div class="picker-number p-prev-4" id="picker-m-prev4">56</div>
                     <div class="picker-number p-prev-3" id="picker-m-prev3">57</div>
                     <div class="picker-number p-prev-2" id="picker-m-prev2">58</div>
                     <div class="picker-number p-prev-1" id="picker-m-prev1">59</div>
@@ -752,7 +737,6 @@
                     <div class="picker-number p-next-1" id="picker-m-next1">01</div>
                     <div class="picker-number p-next-2" id="picker-m-next2">02</div>
                     <div class="picker-number p-next-3" id="picker-m-next3">03</div>
-                    <div class="picker-number p-next-4" id="picker-m-next4">04</div>
                 </div>
             </div>
                    <div class="alarm-options-box">
@@ -1280,7 +1264,6 @@ function apriPannelloModifica(orario) {
     };
 
     // Iniezione e formattazione Ore (0-23) - Originale
-    document.getElementById('picker-h-prev4').innerText = String(getLoopValue(ore, -4, 24)).padStart(2, '0');
     document.getElementById('picker-h-prev3').innerText = String(getLoopValue(ore, -3, 24)).padStart(2, '0');
     document.getElementById('picker-h-prev2').innerText = String(getLoopValue(ore, -2, 24)).padStart(2, '0');
     document.getElementById('picker-h-prev1').innerText = String(getLoopValue(ore, -1, 24)).padStart(2, '0');
@@ -1288,10 +1271,8 @@ function apriPannelloModifica(orario) {
     document.getElementById('picker-h-next1').innerText = String(getLoopValue(ore, 1, 24)).padStart(2, '0');
     document.getElementById('picker-h-next2').innerText = String(getLoopValue(ore, 2, 24)).padStart(2, '0');
     document.getElementById('picker-h-next3').innerText = String(getLoopValue(ore, 3, 24)).padStart(2, '0');
-    document.getElementById('picker-h-next4').innerText = String(getLoopValue(ore, 4, 24)).padStart(2, '0');
 
     // Iniezione e formattazione Minuti (0-59) - Originale
-     document.getElementById('picker-m-prev4').innerText = String(getLoopValue(min, -4, 60)).padStart(2, '0');
     document.getElementById('picker-m-prev3').innerText = String(getLoopValue(min, -3, 60)).padStart(2, '0');
     document.getElementById('picker-m-prev2').innerText = String(getLoopValue(min, -2, 60)).padStart(2, '0');
     document.getElementById('picker-m-prev1').innerText = String(getLoopValue(min, -1, 60)).padStart(2, '0');
@@ -1299,7 +1280,6 @@ function apriPannelloModifica(orario) {
     document.getElementById('picker-m-next1').innerText = String(getLoopValue(min, 1, 60)).padStart(2, '0');
     document.getElementById('picker-m-next2').innerText = String(getLoopValue(min, 2, 60)).padStart(2, '0');
     document.getElementById('picker-m-next3').innerText = String(getLoopValue(min, 3, 60)).padStart(2, '0');
-    document.getElementById('picker-m-next4').innerText = String(getLoopValue(min, 4, 60)).padStart(2, '0');
 
     document.getElementById('edit-alarm-panel').classList.add('show');
 }
