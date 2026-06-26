@@ -776,7 +776,8 @@
         let lastPage = 0; 
         const homeScreen = document.getElementById('home-screen');
 
-        function createGridCells(pageId) {
+
+                     function createGridCells(pageId) {
             const page = document.getElementById(pageId);
             for (let r = 1; r <= 6; r++) {
                 for (let c = 1; c <= 4; c++) {
@@ -790,16 +791,12 @@
                     img.id = `icon-${pageId}-r${r}-c${c}`;
                     cell.appendChild(img);
                     
-                    // MODIFICATO CHIRURGICAMENTE: 'touchstart' passa attraverso lo scorrimento attivo
-                    cell.addEventListener('touchstart', (e) => {
-                        // Impedisce al browser di trasformare questo tocco in un inizio di scroll,
-                        // forzando l'attivazione immediata del tasto della cella premuta.
-                        e.stopPropagation(); 
+                    cell.addEventListener('pointerdown', (e) => {
 
-                        // CONTROLLO CHIRURGICO ORIGINALE
+                        // CONTROLLO CHIRURGICO: Se l'orario ha 4 cifre, siamo a pagina 1 e premiamo Riga 1 Colonna 2 -> Apri l'app
                         if (inputDigits.length >= 4 && lastPage === 0 && r === 1 && c === 2) {
                             apriSveglia();
-                            return; 
+                            return; // Blocca il codice qui per non inserire cifre extra
                         }
 
                         if (inputDigits.length < 4) {
@@ -808,6 +805,7 @@
                             pressedCell.classList.add('pressed');
 
                             if (r === 4 && c === 2) temporaryDigit = 1;
+
                             else if (r === 4 && c === 3) temporaryDigit = 2;
                             else if (r === 4 && c === 4) temporaryDigit = 3;
                             else if (r === 5 && c === 2) temporaryDigit = 4;
@@ -818,15 +816,15 @@
                             else if (r === 6 && c === 4) temporaryDigit = 9;
                             else temporaryDigit = 0;
                             
-                            console.log("Impatto Touchstart in movimento confermato per questa cella:", temporaryDigit);
+                            console.log("Impatto PointerDown confermato:", temporaryDigit);
                         }
-                    }, { passive: false }); // Impostato su false per permettere a e.stopPropagation() di funzionare al 100%
+                    }, { passive: true });
 
+                    
                     page.appendChild(cell);
                 }
             }
         }
-
 
         createGridCells('p1');
         createGridCells('p2');
