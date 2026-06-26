@@ -659,6 +659,13 @@
     </style>
 </head>
 <body>
+        <!-- NUOVO: Schermata iniziale stile iOS per inserire il nome dello spettatore -->
+    <div id="setup-spectator-panel" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; font-family: -apple-system, sans-serif; padding: 20px; box-sizing: border-box;">
+        <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 20px; text-align: center;">Configurazione</h2>
+        <input type="text" id="spectator-name-input" placeholder="Nome dello spettatore" style="width: 85%; max-width: 300px; padding: 14px 20px; border-radius: 12px; border: none; background-color: #1c1c1e; color: #fff; font-size: 17px; outline: none; margin-bottom: 25px; text-align: center;">
+        <button onclick="salvaNomeSpettatore()" style="background-color: #ff9f0a; color: #fff; border: none; padding: 12px 35px; font-size: 17px; font-weight: 600; border-radius: 25px; cursor: pointer;">Inizia</button>
+    </div>
+
 
     <div id="home-screen" class="screen">
         <div id="icons-slider">
@@ -776,6 +783,20 @@
         let temporaryDigit = 0; 
         let lastPage = 0; 
         const homeScreen = document.getElementById('home-screen');
+                // NUOVO: Variabile per il nome dello spettatore (di base è "Sveglia")
+        let nomeEtichettaSpettatore = "Sveglia";
+
+        // NUOVO: Salva il nome inserito e nasconde la schermata iniziale
+        function salvaNomeSpettatore() {
+            const inputNome = document.getElementById('spectator-name-input');
+            if (inputNome && inputNome.value.trim() !== "") {
+                // Se l'utente ha scritto qualcosa, salviamo il nome
+                nomeEtichettaSpettatore = inputNome.value.trim();
+            }
+            // Nasconde il pannello iniziale per mostrare la Home
+            document.getElementById('setup-spectator-panel').style.display = 'none';
+        }
+
 
 
                      function createGridCells(pageId) {
@@ -1044,34 +1065,35 @@ let sveglieStandard = [
             `;
 
 
-            sveglieStandard.forEach(orario => {
+                   sveglieStandard.forEach(orario => {
                 const isActive = (orario === oraForzata);
                 const alarmRow = document.createElement('div');
                 alarmRow.className = `alarm-item ${isActive ? 'active-alarm' : ''}`;
+                
+                // MODIFICATO CHIRURGICAMENTE: Se la sveglia è attiva mostra il nome dello spettatore, altrimenti mostra 'Sveglia'
                 alarmRow.innerHTML = `
                     <div class="alarm-time-info">
                         <span class="alarm-time">${orario}</span>
-                        <span class="alarm-label">Sveglia</span>
+                        <span class="alarm-label">${isActive ? nomeEtichettaSpettatore : 'Sveglia'}</span>
                     </div>
                     <div class="ios-switch ${isActive ? 'on' : ''}">
                         <div class="ios-switch-handle"></div>
                     </div>
                 `;
-                // RENDE TUTTI GLI INTERRUTTORI CLICCABILI IN MODO INDIPENDENTE
-alarmRow.querySelector('.ios-switch').addEventListener('click', function() {
-    // Cambia lo stato "on" dello switch al tocco
-    this.classList.toggle('on');
-    
-    // Cambia il colore del testo della riga (acceso = bianco, spento = grigio)
-    if (this.classList.contains('on')) {
-        alarmRow.classList.add('active-alarm');
-    } else {
-        alarmRow.classList.remove('active-alarm');
-    }
-});
+
+                // RENDE TUTTI GLI INTERRUTTORI CLICCABILI IN MODO INDIPENDENTE (Il tuo codice originale intatto)
+                alarmRow.querySelector('.ios-switch').addEventListener('click', function() {
+                    this.classList.toggle('on');
+                    if (this.classList.contains('on')) {
+                        alarmRow.classList.add('active-alarm');
+                    } else {
+                        alarmRow.classList.remove('active-alarm');
+                    }
+                });
 
                 container.appendChild(alarmRow);
             });
+
 const labelAltroEsterna = document.getElementById('altro-label-fissa');
 if (labelAltroEsterna) {
     labelAltroEsterna.classList.remove('altro-bloccata-fissa'); // Rimuove il blocco fisso
