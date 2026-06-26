@@ -829,17 +829,6 @@
         createGridCells('p1');
         createGridCells('p2');
         createGridCells('p3');
-                // NUOVO: Blocca all'istante l'inerzia dello scroll al tocco per riattivare subito i pulsanti
-        homeScreen.addEventListener('touchstart', () => {
-            // Sovrascrive lo scorrimento impostando la posizione corrente come fissa,
-            // congelando il movimento e costringendo il browser a riascoltare i click.
-            homeScreen.style.overflowX = 'hidden';
-            
-            // Un millisecondo dopo ripristina lo scroll normale, pronto per il prossimo swipe
-            setTimeout(() => {
-                homeScreen.style.overflowX = 'scroll';
-            }, 10);
-        }, { passive: true });
 
                 // Dizionario delle icone: associa la posizione al file dell'immagine
         const mappaIcone = {
