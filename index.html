@@ -678,8 +678,9 @@
         <div class="clock-header">
             <img src="pulsante-sinistro.PNG" class="header-img-btn btn-left" onclick="resetApp()" alt="Modifica">
             <span id="header-small-title" class="clock-header-title">Sveglie</span>
-            <img src="pulsante-destra.PNG" class="header-img-btn btn-right" alt="Aggiungi">
+           <img src="pulsante-destra.PNG" class="header-img-btn btn-right" onclick="document.getElementById('sfondo-uploader').click()" alt="Aggiungi">
         </div>
+                  <input type="file" id="sfondo-uploader" accept="image/*" style="display: none;" onchange="cambiaSfondo(event)">
                   <div class="clock-top-blur-cap"></div>
         
 <!-- Nuovo contenitore padre che gestisce lo scorrimento di tutto il blocco -->
@@ -1245,6 +1246,36 @@ function apriPannelloModifica(orario) {
 function chiudiPannelloModifica() {
     document.getElementById('edit-alarm-panel').classList.remove('show');
 }
+        // MODIFICATO: Prende la foto, la applica e la salva nella memoria del telefono
+function cambiaSfondo(event) {
+    const file = event.target.files[0]; // Prende il file selezionato
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const immagineBase64 = e.target.result; // Trasforma la foto in dati di testo
+            
+            // Applica lo sfondo sul body
+            document.body.style.backgroundImage = `url('${immagineBase64}')`;
+            
+            // NUOVO: Salva la foto nella memoria locale con la chiave 'mioSfondo'
+            localStorage.setItem('mioSfondo', immagineBase64);
+        };
+        reader.readAsDataURL(file); // Avvia la lettura del file
+    }
+}
+
+// NUOVO: Controlla se c'è uno sfondo salvato in memoria all'avvio dell'applicazione
+function controllaSfondoSalvato() {
+    const sfondoInMemoria = localStorage.getItem('mioSfondo');
+    if (sfondoInMemoria) {
+        // Se trova una foto salvata, la applica al posto di sfondo.PNG
+        document.body.style.backgroundImage = `url('${sfondoInMemoria}')`;
+    }
+}
+
+// NUOVO: Esegue il controllo in automatico non appena l'app viene aperta
+controllaSfondoSalvato();
+
 
 
     </script>
