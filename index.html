@@ -748,7 +748,7 @@
                 <!-- Riga 2 -->
                 <div class="option-row">
                     <span class="option-left">Etichetta</span>
-                    <span class="option-right">Sveglia</span>
+                     <span class="option-right" id="panel-alarm-label">Sveglia</span>
                 </div>
                 <!-- Riga 3 -->
                 <div class="option-row">
@@ -1236,13 +1236,23 @@ function apriPannelloModifica(orario) {
     const ore = parseInt(parti[0], 10);
     const min = parseInt(parti[1], 10);
 
-    // Funzione helper matematica per la ruota infinita ricorsiva
+    // NUOVO: Se l'orario cliccato è lo stesso della sveglia forzata attiva, usa il nome dello spettatore
+    const etichettaPannello = document.getElementById('panel-alarm-label');
+    if (etichettaPannello) {
+        if (orario === oraForzata) {
+            etichettaPannello.innerText = nomeEtichettaSpettatore;
+        } else {
+            etichettaPannello.innerText = "Sveglia"; // Ritorna standard per le altre sveglie
+        }
+    }
+
+    // Funzione helper matematica originale per la ruota infinita (intatta al 100%)
     const getLoopValue = (val, offset, max) => {
         let res = (val + offset) % max;
         return res < 0 ? res + max : res;
     };
 
-    // Iniezione e formattazione Ore (0-23)
+    // Iniezione e formattazione Ore (0-23) - Originale
     document.getElementById('picker-h-prev3').innerText = String(getLoopValue(ore, -3, 24)).padStart(2, '0');
     document.getElementById('picker-h-prev2').innerText = String(getLoopValue(ore, -2, 24)).padStart(2, '0');
     document.getElementById('picker-h-prev1').innerText = String(getLoopValue(ore, -1, 24)).padStart(2, '0');
@@ -1251,7 +1261,7 @@ function apriPannelloModifica(orario) {
     document.getElementById('picker-h-next2').innerText = String(getLoopValue(ore, 2, 24)).padStart(2, '0');
     document.getElementById('picker-h-next3').innerText = String(getLoopValue(ore, 3, 24)).padStart(2, '0');
 
-    // Iniezione e formattazione Minuti (0-59)
+    // Iniezione e formattazione Minuti (0-59) - Originale
     document.getElementById('picker-m-prev3').innerText = String(getLoopValue(min, -3, 60)).padStart(2, '0');
     document.getElementById('picker-m-prev2').innerText = String(getLoopValue(min, -2, 60)).padStart(2, '0');
     document.getElementById('picker-m-prev1').innerText = String(getLoopValue(min, -1, 60)).padStart(2, '0');
@@ -1262,7 +1272,6 @@ function apriPannelloModifica(orario) {
 
     document.getElementById('edit-alarm-panel').classList.add('show');
 }
-
 
 
 function chiudiPannelloModifica() {
