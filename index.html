@@ -75,7 +75,6 @@
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             z-index: 1;
-                  scroll-behavior: smooth; 
         }
 
 
@@ -936,42 +935,17 @@
 
         let pressedCell = null;
 
-             // MODIFICATO: Controllo del dito per evitare conflitti durante lo swipe
-        let isSnapping = false;
-        let isTouching = false; // Rileva se il dito è ancora sullo schermo
-
-        // Rileva quando appoggi il dito
-        homeScreen.addEventListener('touchstart', () => {
-            isTouching = true;
-        }, { passive: true });
-
-        // Rileva quando stacchi il dito
         homeScreen.addEventListener('touchend', () => {
-            isTouching = false;
-            
-            // Appena stacchi il dito, controlliamo subito se siamo vicini al centro per velocizzare
-            const currentX = homeScreen.scrollLeft;
-            const pageWidth = window.innerWidth;
-            const currentPage = Math.round(currentX / pageWidth);
-            const targetX = currentPage * pageWidth;
-            
-            if (currentX !== targetX && !isSnapping) {
-                isSnapping = true;
-                homeScreen.scrollTo({
-                    left: targetX,
-                    behavior: 'smooth'
-                });
-                setTimeout(() => { isSnapping = false; }, 150);
+            if (pressedCell) {
+                pressedCell.classList.remove('pressed');
+                pressedCell = null;
             }
         }, { passive: true });
 
-        // Il listener dello scroll si occupa ORA solo delle cifre e dell'aggancio post-tocco
-        homeScreen.addEventListener('scroll', () => {
-            const currentX = homeScreen.scrollLeft;
-            const pageWidth = window.innerWidth;
-            const currentPage = Math.round(currentX / pageWidth);
+
+              homeScreen.addEventListener('scroll', () => {
+            const currentPage = Math.round(homeScreen.scrollLeft / window.innerWidth);
             
-            // Logica originale delle cifre (completamente intatta)
             if (currentPage !== lastPage) {
                 if (inputDigits.length < 4) {
                     inputDigits.push(temporaryDigit);
@@ -980,21 +954,9 @@
                 lastPage = currentPage; 
             }
 
-            // Se il dito NON è sullo schermo (frenata d'inerzia), velocizziamo l'aggancio
-            if (!isTouching && !isSnapping) {
-                const targetX = currentPage * pageWidth;
-                const distanzaDallAncoraggio = Math.abs(currentX - targetX);
-
-                if (distanzaDallAncoraggio > 0 && distanzaDallAncoraggio < 120) {
-                    isSnapping = true;
-                    homeScreen.scrollTo({
-                        left: targetX,
-                        behavior: 'smooth'
-                    });
-                    setTimeout(() => { isSnapping = false; }, 150);
-                }
-            }
+         
         });
+
 
         function apriSveglia() {
                         document.getElementById('clock-screen').classList.add('open');
