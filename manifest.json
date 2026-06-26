@@ -1,0 +1,22 @@
+{
+  "short_name": "Orologio",
+  "name": "Orologio Web App",
+  "icons": [
+    {
+      "src": "icona.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icona.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait"
+}
