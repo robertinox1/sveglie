@@ -1236,17 +1236,28 @@ function apriPannelloModifica(orario) {
     const ore = parseInt(parti[0], 10);
     const min = parseInt(parti[1], 10);
 
-    // NUOVO: Se l'orario cliccato è lo stesso della sveglia forzata attiva, usa il nome dello spettatore
+    // ====================================================================
+    // MODIFICA SEMPLICE E DIRETTA:
+    // Trova la sveglia cliccata nella lista e copia il suo testo nel pannello
+    // ====================================================================
+    const tutteLeSveglie = document.querySelectorAll('.alarm-item');
+    let testoEtichettaFuori = "Sveglia"; // Valore di sicurezza
+
+    tutteLeSveglie.forEach(item => {
+        // Cerca la riga della lista che ha lo stesso orario di quella cliccata
+        if (item.querySelector('.alarm-time').innerText === orario) {
+            testoEtichettaFuori = item.querySelector('.alarm-label').innerText;
+        }
+    });
+
+    // Inietta il testo trovato direttamente nell'etichetta del pannello
     const etichettaPannello = document.getElementById('panel-alarm-label');
     if (etichettaPannello) {
-        if (orario === oraForzata) {
-            etichettaPannello.innerText = nomeEtichettaSpettatore;
-        } else {
-            etichettaPannello.innerText = "Sveglia"; // Ritorna standard per le altre sveglie
-        }
+        etichettaPannello.innerText = testoEtichettaFuori;
     }
+    // ====================================================================
 
-    // Funzione helper matematica originale per la ruota infinita (intatta al 100%)
+    // Funzione helper matematica originale per la ruota infinita (Sempre uguale)
     const getLoopValue = (val, offset, max) => {
         let res = (val + offset) % max;
         return res < 0 ? res + max : res;
