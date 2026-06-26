@@ -265,7 +265,7 @@
         /* La tua bolla/barra inferiore fissa */
             .clock-footer {
             position: absolute;
-            bottom: 50px; /* Alza la bolla di 10px dal fondo per farla fluttuare (puoi modificare questo valore) */
+            bottom: 65px; /* Alza la bolla di 10px dal fondo per farla fluttuare (puoi modificare questo valore) */
             left: 5%; /* Centra la bolla lasciando spazio ai lati */
             width: 90%; /* La bolla non prende più tutto lo schermo ma solo il 90% della larghezza */
             height: 65px; /* Altezza iniziale della bolla (la adatteremo passo dopo passo) */
@@ -325,8 +325,8 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     z-index: 20;
-      -webkit-mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
-    mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px, #000 85%, rgba(0,0,0,0.3) 93%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 58px, rgba(0,0,0,0.3) 80px, #000 110px, #000 85%, rgba(0,0,0,0.3) 93%, transparent 100%);
 }
 
 /* La classe che blocca la scritta sul vetro dello schermo */
@@ -628,6 +628,22 @@
             font-weight: 400;
             letter-spacing: -0.3px;
         }
+        /* NUOVO: Elemento di sfocatura superiore sfumata stile iOS */
+.clock-top-blur-cap {
+    position: absolute;
+    top: 58px; /* Parte esattamente da sotto i pulsanti/barra di stato */
+    left: 0;
+    width: 100%;
+    height: 45px; /* Spazio di sfocatura sotto il tasto modifica */
+    z-index: 22; /* Superiore alla lista (20) ma inferiore ai testi/bottoni (35) */
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    /* Sfuma l'effetto blur facendolo scomparire verso il basso */
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+}
+
 
 
 
@@ -656,6 +672,7 @@
             <span id="header-small-title" class="clock-header-title">Sveglie</span>
             <img src="pulsante-destra.PNG" class="header-img-btn btn-right" alt="Aggiungi">
         </div>
+                  <div class="clock-top-blur-cap"></div>
         
 <!-- Nuovo contenitore padre che gestisce lo scorrimento di tutto il blocco -->
 <div id="clock-scroll-wrapper">
