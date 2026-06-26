@@ -452,14 +452,22 @@
 
         .panel-title { font-size: 17px; font-weight: 600; }
         
-        .panel-body {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 48px;
-            font-weight: 300;
-        }
+     /* Corpo del pannello di modifica */
+.panel-body {
+    flex-grow: 1;
+    display: flex !important;
+    flex-direction: column !important;
+    
+    /* MODIFICATO CHIRURGICAMENTE: Allinea tutto in alto invece che al centro */
+    justify-content: flex-start !important; 
+    align-items: center;
+    
+    /* NUOVO: Elimina spazi vuoti interni in alto */
+    padding-top: 0px !important; 
+    font-size: 48px;
+    font-weight: 300;
+}
+
                 /* Selettore a Ruota Stile iOS Picker */
               /* Contenitore con prospettiva 3D bilanciata */
         .picker-container {
@@ -539,7 +547,7 @@
         .alarm-options-box {
             background-color: rgba(255, 255, 255, 0.08); /* Stesso colore della bolla */
             border-radius: 25px;
-            margin: 31px 16px;
+            margin: 10px 16px;
             padding: 0;
             display: flex;
             flex-direction: column;
