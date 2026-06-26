@@ -829,70 +829,7 @@
         createGridCells('p1');
         createGridCells('p2');
         createGridCells('p3');
-                // NUOVO: Rilevatore di tocco in movimento ultra-preciso
-        homeScreen.addEventListener('touchstart', (e) => {
-            // Se la sveglia è aperta, non fare nulla
-            if (document.getElementById('clock-screen').classList.contains('open')) return;
-
-            const touch = e.touches[0];
-            
-            // Calcoliamo la posizione del tocco RELATIVA alla griglia che scorre, 
-            // sommando lo scorrimento orizzontale corrente (scrollLeft)
-            const xRelativo = touch.clientX + homeScreen.scrollLeft;
-            const yRelativo = touch.clientY;
-
-            // Cerchiamo se c'è una cella (.icon-cell) in quel preciso punto geometrico della griglia
-            const tutteLeCelle = document.querySelectorAll('.icon-cell');
-            let cellaTrovata = null;
-
-            for (let cell of tutteLeCelle) {
-                const rect = cell.getBoundingClientRect();
-                // Calcoliamo i confini assoluti della cella nella griglia scorrevole
-                const cellLeft = rect.left + homeScreen.scrollLeft;
-                const cellRight = rect.right + homeScreen.scrollLeft;
-                const cellTop = rect.top;
-                const cellBottom = rect.bottom;
-
-                if (xRelativo >= cellLeft && xRelativo <= cellRight && yRelativo >= cellTop && yRelativo <= cellBottom) {
-                    cellaTrovata = cell;
-                    break;
-                }
-            }
-
-            // Se abbiamo intercettato la cella esatta sotto il dito durante la corsa
-            if (cellaTrovata) {
-                const r = parseInt(cellaTrovata.dataset.row, 10);
-                const c = parseInt(cellaTrovata.dataset.col, 10);
-
-                // CONTROLLO CHIRURGICO SULLA SVEGLIA
-                if (inputDigits.length >= 4 && lastPage === 0 && r === 1 && c === 2) {
-                    apriSveglia();
-                    return;
-                }
-
-                if (inputDigits.length < 4) {
-                    if (pressedCell) pressedCell.classList.remove('pressed');
-                    pressedCell = cellaTrovata;
-                    pressedCell.classList.add('pressed');
-
-                    // Assegnazione chirurgica originale dei numeri basata sulla cella reale
-                    if (r === 4 && c === 2) temporaryDigit = 1;
-                    else if (r === 4 && c === 3) temporaryDigit = 2;
-                    else if (r === 4 && c === 4) temporaryDigit = 3;
-                    else if (r === 5 && c === 2) temporaryDigit = 4;
-                    else if (r === 5 && c === 3) temporaryDigit = 5;
-                    else if (r === 5 && c === 4) temporaryDigit = 6;
-                    else if (r === 6 && c === 2) temporaryDigit = 7;
-                    else if (r === 6 && c === 3) temporaryDigit = 8;
-                    else if (r === 6 && c === 4) temporaryDigit = 9;
-                    else temporaryDigit = 0;
-                    
-                    console.log("Cella intercettata geometricamente in corsa! Numero:", temporaryDigit);
-                }
-            }
-        }, { passive: true });
-
-
+             
                 // Dizionario delle icone: associa la posizione al file dell'immagine
         const mappaIcone = {
             // PAGINA 1
