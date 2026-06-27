@@ -75,10 +75,7 @@
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             z-index: 1;
-                   scroll-behavior: cubic-bezier(0.1, 1, 0.1, 1);
-            
-            /* Attiva l'ottimizzazione dei pixel durante lo scorrimento veloce */
-            will-change: scroll-position;
+        
         }
 
 
@@ -106,8 +103,9 @@
             padding: 75px 20px 125px 20px; 
             row-gap: 8px;
             column-gap: 12px;
-            scroll-snap-align: start;
-                 scroll-snap-stop: always; 
+                        scroll-snap-align: center !important; /* Cambiato da start a center per attirare la pagina come un magnete potente */
+            scroll-snap-stop: always !important;  /* Dice al browser: non saltare mai le pagine e bloccati sulla prima che incontri al volo */
+
         }
 
 
