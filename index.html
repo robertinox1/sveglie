@@ -1155,6 +1155,7 @@ if (scorrimento < sogliaBloccoAltro) {
 
                                        // Ripristinati i calcoli originali al 100% per far funzionare l'animazione
                     // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
+                                      // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
                     if (scorrimento >= 65) { 
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
@@ -1169,7 +1170,10 @@ if (scorrimento < sogliaBloccoAltro) {
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`; 
+                            
+                            // SEZIONE MODIFICATA: Una volta superati i 65px, la distanza dal tasto modifica diventa FISSA a 0px.
+                            // In questo modo smette di calcolare la distanza dinamica e si congela sul posto fino a 130px.
+                            fotoSonno.style.transform = "translateY(0px)"; 
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
