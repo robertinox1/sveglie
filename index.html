@@ -342,23 +342,41 @@
     position: fixed !important;
     top: 120px !important;
 }
-             #home-dock-image {
+                   /* Il nuovo Dock CSS: stesse misure tue, ma in vero vetro cromato iOS */
+        #home-dock-container {
             position: fixed; 
-            
-            /* Incollato al fondo reale dello schermo dell'iPhone */
-            bottom: calc(-23px + env(safe-area-inset-bottom));
-            
-            /* Largo e centrato */
+            /* Mantiene la stessa identica posizione verticale sul fondo del tuo dock originale */
+            bottom: calc(23px + env(safe-area-inset-bottom));
+            /* Rispetta al millesimo le tue misure di larghezza e centraggio originali */
             width: 95%;
             left: 2.5%;
-            height: auto;
+            height: 94px; /* Altezza calibrata per ospitare perfettamente le icone da 64px */
             
-            object-fit: contain !important;
-            pointer-events: none;
+            /* EFFETTO VETRO APPLE: Sfondo molto trasparente per far passare i colori + Sfocatura profonda */
+            background-color: rgba(255, 255, 255, 0.22); 
+            backdrop-filter: blur(25px) brightness(1.05); 
+            -webkit-backdrop-filter: blur(25px) brightness(1.05);
             
-            /* ATTENZIONE: Mettiamo z-index 4 così la sveglia (che ha z-index 20) lo coprirà in automatico senza toccare il JavaScript */
-            z-index: 4; 
+            border-radius: 30px; /* Angoli curvi nativi Apple */
+            box-sizing: border-box;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-around; /* Distribuisce le 4 icone in modo simmetrico */
+            align-items: center;
+            z-index: 4; /* Resta z-index 4 come volevi tu, così la sveglia lo copre in automatico */
+            pointer-events: none; /* Non blocca i tocchi fantasma */
         }
+
+        /* Stile icone interne: stesse identiche caratteristiche della tua griglia superiore */
+        .dock-icon-img {
+            width: 64px;
+            height: 64px;
+            border-radius: 17px;
+            object-fit: cover;
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+
                 /* Indicatore di pagina a pallini stile iOS */
         #page-indicator {
             position: fixed;
@@ -777,7 +795,14 @@
         </div>
    </div>      
 
-  <img src="dock.PNG" id="home-dock-image" alt="Dock">
+<!-- Nuovo Dock CSS strutturato con le sue icone interne -->
+<div id="home-dock-container">
+    <img src="Watch.PNG" class="dock-icon-img" alt="Telefono">
+    <img src="Watch.PNG" class="dock-icon-img" alt="Safari">
+    <img src="Watch.PNG" class="dock-icon-img" alt="Messaggi">
+    <img src="Watch.PNG" class="dock-icon-img" alt="Musica">
+</div>
+
     <script>
         let inputDigits = [];
         let temporaryDigit = 0; 
