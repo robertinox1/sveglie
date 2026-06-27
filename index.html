@@ -346,11 +346,11 @@
         #home-dock-container {
             position: fixed; 
             /* Mantiene la stessa identica posizione verticale sul fondo del tuo dock originale */
-            bottom: calc(14px + env(safe-area-inset-bottom));
+            bottom: calc(4px + env(safe-area-inset-bottom));
             /* Rispetta al millesimo le tue misure di larghezza e centraggio originali */
             width: 95%;
             left: 2.5%;
-            height: 94px; /* Altezza calibrata per ospitare perfettamente le icone da 64px */
+            height: 104px; /* Altezza calibrata per ospitare perfettamente le icone da 64px */
             
             /* EFFETTO VETRO APPLE: Sfondo molto trasparente per far passare i colori + Sfocatura profonda */
            background-color: rgba(255, 255, 255, 0.07); 
@@ -358,10 +358,11 @@
             /* Satura i colori sottostanti facendoli risaltare attraverso la sfocatura */
             backdrop-filter: blur(20px) saturate(1.8) brightness(1.1); 
             -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+              border: 1.5px solid rgba(255, 255, 255, 0.2);
             
-            border-radius: 30px; /* Angoli curvi nativi Apple */
+            border-radius: 33px; /* Angoli curvi nativi Apple */
             box-sizing: border-box;
-            padding: 0 20px;
+            padding: 0 10px;
             display: flex;
             justify-content: space-around; /* Distribuisce le 4 icone in modo simmetrico */
             align-items: center;
