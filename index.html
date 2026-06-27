@@ -698,11 +698,6 @@
     
     <!-- La scritta nasce in position: absolute dentro il blocco mobile, partendo da 345px (120+225) -->
     <div id="altro-label-fissa" style="color: #fff; font-size: 20px; font-weight: 700; position: absolute; left: 20px; z-index: 35; width: calc(100% - 40px); pointer-events: none; opacity: 0; top: 360px; transition: opacity 0.2s ease;">Altro</div>
-    <!-- Contenitore nativo per la foto sonno sul vetro dello schermo, controllato dalle tue animazioni -->
-<div id="foto-sonno-fissa" class="sleep-section" style="position: absolute; left: 0; width: 100%; z-index: 32; pointer-events: none; opacity: 0; top: 125px; margin-top: 0 !important; visibility: hidden;">
-    <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
-</div>
-
 </div>
 
         
@@ -1054,26 +1049,20 @@ let sveglieStandard = [
                 sveglieStandard.sort(); 
             }
 
-                                                      const container = document.getElementById('alarms-list');
+                            const container = document.getElementById('alarms-list');
             
-            // Nuovo blocco unico senza la foto sonno all'interno
+            // Ripristinato il blocco unico dentro alarms-list
             container.innerHTML = `
                 <h1 class="clock-large-title">Sveglie</h1>
+                
+                <div class="sleep-section">
+                    <img src="sonno-risveglio.PNG" class="sleep-full-img" alt="Sonno/Risveglio">
+                </div>
                 
                 <div class="sleep-row-section">
                     <img src="riga-configura.PNG" class="sleep-row-img" alt="Configura Sveglia">
                 </div>
             `;
-
-            // Accendi e resetta la posizione della nuova foto fissa esterna allo start
-            const fotoFissaEsterna = document.getElementById('foto-sonno-fissa');
-            if (fotoFissaEsterna) {
-                fotoFissaEsterna.style.position = "absolute";
-                fotoFissaEsterna.style.top = "125px";
-                fotoFissaEsterna.style.opacity = "1";
-                fotoFissaEsterna.style.visibility = "visible";
-            }
-
 
 
                    sveglieStandard.forEach(orario => {
@@ -1124,6 +1113,7 @@ wrapper.addEventListener('scroll', () => {
     let scorrimento = wrapper.scrollTop; // Legge lo scorrimento dal padre invisibile
 
                 const bottoneModifica = document.querySelector('.btn-left');
+                const fotoSonno = container.querySelector('.sleep-section');
                 const labelAltro = document.getElementById('altro-label-fissa');
 
                 
@@ -1165,41 +1155,32 @@ if (scorrimento < sogliaBloccoAltro) {
 
                                        // Ripristinati i calcoli originali al 100% per far funzionare l'animazione
                     // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
-                                        // Gestione della foto sonno fissa esterna con le tue logiche e distanze originali
-                    const fotoFissa = document.getElementById('foto-sonno-fissa');
-                    if (fotoFissa) {
-                        if (scorrimento < 65) { 
-                            // 1. Prima dei 65px: la foto scende fluida di pari passo con la lista
-                            fotoFissa.style.position = "absolute";
-                            fotoFissa.style.top = "125px";
-                            fotoFissa.style.opacity = "1";
-                            fotoFissa.style.visibility = "visible";
-                        } 
-                        else if (scorrimento >= 65 && scorrimento < 130) { 
-                            // 2. Tra 65px e 130px: LA TUA ANIMAZIONE. Si stacca completamente dalla lista 
-                            // e rimane immobile sotto il tasto Modifica senza calcoli JavaScript. Zero tremolii.
-                            fotoFissa.style.position = "fixed";
-                            fotoFissa.style.top = "60px"; // Altezza esatta e fissa sotto il tasto Modifica sullo schermo
-                            fotoFissa.style.opacity = "1";
-                            fotoFissa.style.visibility = "visible";
-                        } 
-                        else if (scorrimento >= 130 && scorrimento < 165) { 
-                            // 3. Tra 130px e 165px: Rimane bloccata lì ma applica la tua dissolvenza originale
-                            fotoFissa.style.position = "fixed";
-                            fotoFissa.style.top = "60px";
-                            fotoFissa.style.visibility = "visible";
-                            
+                    if (scorrimento >= 65) { 
+                        fotoSonno.style.display = "block";
+                        fotoSonno.style.zIndex = "32"; 
+                        
+                        if (scorrimento >= 165) { 
+                            fotoSonno.style.opacity = "0";
+                            fotoSonno.style.visibility = "hidden";  
+                        } else if (scorrimento > 130) { 
+                            fotoSonno.style.visibility = "visible";
+                            fotoSonno.style.transform = "translateY(65px)"; 
                             let fattoreDissolvenza = (scorrimento - 130) / 30; 
-                            fotoFissa.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
-                        } 
-                        else {
-                            // 4. Oltre i 165px: Scompare del tutto
-                            fotoFissa.style.opacity = "0";
-                            fotoFissa.style.visibility = "hidden";
+                            fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
+                        } else {
+                            fotoSonno.style.visibility = "visible";
+                            fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`; 
+                            fotoSonno.style.opacity = "1";
                         }
+                    } else {
+                        fotoSonno.style.visibility = "visible";
+                        fotoSonno.style.display = "block";
+                        fotoSonno.style.transform = "translateY(0px)";
+                        fotoSonno.style.opacity = "1";
+                        fotoSonno.style.zIndex = "30";
                     }
 
-
+                }
             });
 
         } // <-- Questa è la graffa originale che chiude apriSveglia()
@@ -1211,15 +1192,6 @@ if (scorrimento < sogliaBloccoAltro) {
             homeScreen.scrollLeft = 0; 
                        document.getElementById('clock-screen').classList.remove('open');
             document.getElementById('clock-scroll-wrapper').scrollTop = 0;
-                        // Nasconde e resetta la foto fissa esterna al reset dell'app
-            const fotoFissaReset = document.getElementById('foto-sonno-fissa');
-            if (fotoFissaReset) {
-                fotoFissaReset.style.position = "absolute";
-                fotoFissaReset.style.top = "125px";
-                fotoFissaReset.style.opacity = "0";
-                fotoFissaReset.style.visibility = "hidden";
-            }
-
                         // NUOVO: Ripristina il primo pallino attivo al reset
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 if (index === 0) dot.classList.add('active');
