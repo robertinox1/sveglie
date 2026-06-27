@@ -697,7 +697,7 @@
     </div>
     
     <!-- La scritta nasce in position: absolute dentro il blocco mobile, partendo da 345px (120+225) -->
-    <div id="altro-label-fissa" style="color: #fff; font-size: 20px; font-weight: 700; position: absolute; left: 20px; z-index: 35; width: calc(100% - 40px); pointer-events: none; opacity: 0; top: 345px; transition: opacity 0.2s ease;">Altro</div>
+    <div id="altro-label-fissa" style="color: #fff; font-size: 20px; font-weight: 700; position: absolute; left: 20px; z-index: 35; width: calc(100% - 40px); pointer-events: none; opacity: 0; top: 360px; transition: opacity 0.2s ease;">Altro</div>
 </div>
 
         
@@ -1097,7 +1097,7 @@ let sveglieStandard = [
 const labelAltroEsterna = document.getElementById('altro-label-fissa');
 if (labelAltroEsterna) {
     labelAltroEsterna.classList.remove('altro-bloccata-fissa'); // Rimuove il blocco fisso
-    labelAltroEsterna.style.top = "345px"; // Ripristina la posizione iniziale mobile nativa
+    labelAltroEsterna.style.top = "360px"; // Ripristina la posizione iniziale mobile nativa
     labelAltroEsterna.style.opacity = "1";
 }
 
@@ -1139,13 +1139,13 @@ wrapper.addEventListener('scroll', () => {
                     let scorrimento = wrapper.scrollTop;
                     
                     // IL TUO NUOVO INTERRUTTORE FISSO (Zero tremolii, zero calcoli continui)
-                    let sogliaBloccoAltro = 225; // Modifica questo numero per decidere quando deve bloccarsi
+                    let sogliaBloccoAltro = 240; // Modifica questo numero per decidere quando deve bloccarsi
                     let pixelDallAltoDelloSchermo = 120; // CORRETTO: Variabile unita senza 
                                         // INSERISCI QUESTO BLOCCO QUI:
 if (scorrimento < sogliaBloccoAltro) {
     // Sotto la soglia la scritta è un pezzo unico con la lista. Zero calcoli, zero tremolii.
     labelAltro.classList.remove('altro-bloccata-fissa');
-    labelAltro.style.top = "345px"; 
+    labelAltro.style.top = "360px"; 
 } else {
     // Al millesimo di secondo in cui tocca i 225px, si ancora istantaneamente a top: 120px sul display
     labelAltro.classList.add('altro-bloccata-fissa');
