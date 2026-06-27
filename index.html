@@ -217,8 +217,6 @@
             box-sizing: border-box;
             /* MODIFICATO: Aggiunto margine per allontanarla dalla scritta Sveglie e spingerla in basso */
             margin-top: 15px !important; 
-               position: sticky !important;
-            top: 58px !important; 
         }
         .sleep-full-img {
             height: 22px !important; 
@@ -1157,7 +1155,7 @@ if (scorrimento < sogliaBloccoAltro) {
 
                                        // Ripristinati i calcoli originali al 100% per far funzionare l'animazione
                     // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
-                    // Gestione della Foto Sonno con Ancoraggio Nativo e Dissolvenza Originale
+                    // Gestione della Foto Sonno originale con blocco fisso antiriflesso
                     if (scorrimento >= 65) { 
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
@@ -1168,16 +1166,26 @@ if (scorrimento < sogliaBloccoAltro) {
                         } else if (scorrimento > 130) { 
                             fotoSonno.style.visibility = "visible";
                             
-                            // Mantiene la posizione e sfuma con la tua formula originale
+                            // 1. BLOCCO COMPLETO: Raggiunto il punto di blocco (130px), il valore si ferma a 65px
+                            // e non viene più calcolato dinamicamente, eliminando il tremolio.
+                            fotoSonno.style.transform = "translateY(65px)"; 
+                            
+                            // Continua solo a gestire la sparizione con la tua formula originale
                             let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             fotoSonno.style.visibility = "visible";
+                            
+                            // 2. FASCIA INTERMEDIA: Continua a scendere mantenendo la distanza dinamica originale
+                            // ma arrotondata al pixel intero per non far vibrare i display Retina di iOS.
+                            let distanzaDinamica = Math.round(scorrimento - 65);
+                            fotoSonno.style.transform = `translateY(${distanzaDinamica}px)`; 
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
                         fotoSonno.style.visibility = "visible";
                         fotoSonno.style.display = "block";
+                        fotoSonno.style.transform = "translateY(0px)";
                         fotoSonno.style.opacity = "1";
                         fotoSonno.style.zIndex = "30";
                     }
