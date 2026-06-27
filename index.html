@@ -342,6 +342,14 @@
     position: fixed !important;
     top: 120px !important;
 }
+        /* NUOVO: Blocca la foto sonno eliminando il tremolio */
+.foto-sonno-bloccata-fissa {
+    position: fixed !important;
+    top: 58px !important;
+    left: 0;
+    width: 100% !important;
+}
+
              #home-dock-image {
             position: fixed; 
             
@@ -1155,30 +1163,37 @@ if (scorrimento < sogliaBloccoAltro) {
 
                                        // Ripristinati i calcoli originali al 100% per far funzionare l'animazione
                     // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
-                    if (scorrimento >= 65) { 
-                        fotoSonno.style.display = "block";
-                        fotoSonno.style.zIndex = "32"; 
-                        
-                        if (scorrimento >= 165) { 
-                            fotoSonno.style.opacity = "0";
-                            fotoSonno.style.visibility = "hidden";  
-                        } else if (scorrimento > 130) { 
-                            fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = "translateY(65px)"; 
-                            let fattoreDissolvenza = (scorrimento - 130) / 30; 
-                            fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
-                        } else {
-                            fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = `translateY(${scorrimento - 65}px)`; 
-                            fotoSonno.style.opacity = "1";
-                        }
-                    } else {
-                        fotoSonno.style.visibility = "visible";
-                        fotoSonno.style.display = "block";
+                                     // NUOVA GESTIONE FOTO SONNO (ANCHORAGGIO FISSO SENZA TREMOLII)
+                    let sogliaBloccoSonno = 65;       
+                    let sogliaInizioScomparsa = 130;   
+                    let sogliaScomparsaTotale = 165;   
+
+                    if (scorrimento < sogliaBloccoSonno) {
+                        fotoSonno.classList.remove('foto-sonno-bloccata-fissa');
                         fotoSonno.style.transform = "translateY(0px)";
                         fotoSonno.style.opacity = "1";
+                        fotoSonno.style.visibility = "visible";
                         fotoSonno.style.zIndex = "30";
+                    } 
+                    else if (scorrimento >= sogliaBloccoSonno && scorrimento < sogliaInizioScomparsa) {
+                        fotoSonno.classList.add('foto-sonno-bloccata-fissa');
+                        fotoSonno.style.transform = "none";
+                        fotoSonno.style.opacity = "1";
+                        fotoSonno.style.visibility = "visible";
+                        fotoSonno.style.zIndex = "32";
+                    } 
+                    else if (scorrimento >= sogliaInizioScomparsa && scorrimento < sogliaScomparsaTotale) {
+                        fotoSonno.classList.add('foto-sonno-bloccata-fissa');
+                        fotoSonno.style.transform = "none";
+                        fotoSonno.style.visibility = "visible";
+                        let fattoreDissolvenza = (scorrimento - 130) / 30; 
+                        fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
+                    } 
+                    else {
+                        fotoSonno.style.opacity = "0";
+                        fotoSonno.style.visibility = "hidden";
                     }
+
 
                 }
             });
@@ -1192,6 +1207,15 @@ if (scorrimento < sogliaBloccoAltro) {
             homeScreen.scrollLeft = 0; 
                        document.getElementById('clock-screen').classList.remove('open');
             document.getElementById('clock-scroll-wrapper').scrollTop = 0;
+                        // Ripristina lo stato iniziale della foto sonno al reset
+            const fotoSonnoReset = document.querySelector('.sleep-section');
+            if (fotoSonnoReset) {
+                fotoSonnoReset.classList.remove('foto-sonno-bloccata-fissa');
+                fotoSonnoReset.style.transform = "translateY(0px)";
+                fotoSonnoReset.style.opacity = "1";
+                fotoSonnoReset.style.visibility = "visible";
+            }
+
                         // NUOVO: Ripristina il primo pallino attivo al reset
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 if (index === 0) dot.classList.add('active');
