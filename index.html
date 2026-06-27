@@ -356,9 +356,11 @@
             
             height: 105px; /* Altezza calibrata per coprire la stessa area della foto precedente */
             
-            /* L'effetto vetro sfocato che si adatta agli sfondi chiari/scuri */ 
-            backdrop-filter: blur(17px);
-            -webkit-backdrop-filter: blur(17px);
+  background-color: rgba(255, 255, 255, 0.05); 
+            
+            /* MODIFICATO CHIRURGICAMENTE: Sfocatura profonda unita all'aumento di saturazione e luminosità */
+            backdrop-filter: blur(20px) saturate(160%) brightness(110%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%) brightness(110%);
             border: 1.5px solid rgba(255, 255, 255, 0.12);
             
             border-radius: 34px; 
