@@ -217,7 +217,6 @@
             box-sizing: border-box;
             /* MODIFICATO: Aggiunto margine per allontanarla dalla scritta Sveglie e spingerla in basso */
             margin-top: 15px !important; 
-            will-change: transform;
         }
         .sleep-full-img {
             height: 22px !important; 
@@ -652,6 +651,15 @@
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
 }
+        /* Blocca la foto sonno sullo schermo nel punto esatto del primo blocco */
+.sleep-section-congelata {
+    position: fixed !important;
+    top: 133px !important; /* Mantiene la foto esattamente allineata sotto il tasto Modifica */
+    left: 0;
+    width: 100% !important;
+    transform: none !important;
+}
+
 
 
 
@@ -1156,31 +1164,34 @@ if (scorrimento < sogliaBloccoAltro) {
 
                                        // Ripristinati i calcoli originali al 100% per far funzionare l'animazione
                     // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
-                                     // Gestione della Foto Sonno originale stabilizzata via Hardware
+                    // Gestione Foto Sonno con interruttore di congelamento totale dello schermo
                     if (scorrimento >= 65) { 
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
                         
                         if (scorrimento >= 165) { 
+                            fotoSonno.classList.remove('sleep-section-congelata');
                             fotoSonno.style.opacity = "0";
                             fotoSonno.style.visibility = "hidden";  
                         } else if (scorrimento > 130) { 
+                            // SECONDA ANIMAZIONE: Rimuove il congelamento e applica il tuo blocco finale con dissolvenza
+                            fotoSonno.classList.remove('sleep-section-congelata');
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = "translateY(65px) translateZ(0)"; 
+                            fotoSonno.style.transform = "translateY(65px)"; 
                             let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
+                            // PRIMA ANIMAZIONE (FASCIA INTERMEDIA): Si stacca da tutto e si congela sullo schermo
+                            fotoSonno.classList.add('sleep-section-congelata');
                             fotoSonno.style.visibility = "visible";
-                            
-                            // Mantiene il tuo calcolo ma attiva l'asse Z hardware per azzerare il ritardo di iOS
-                            let calcoloDistanza = scorrimento - 65;
-                            fotoSonno.style.transform = `translateY(${calcoloDistanza}px) translateZ(0)`; 
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
+                        // Sotto i 65px torna ad essere un elemento normale della lista
+                        fotoSonno.classList.remove('sleep-section-congelata');
                         fotoSonno.style.visibility = "visible";
                         fotoSonno.style.display = "block";
-                        fotoSonno.style.transform = "translateY(0px) translateZ(0)";
+                        fotoSonno.style.transform = "translateY(0px)";
                         fotoSonno.style.opacity = "1";
                         fotoSonno.style.zIndex = "30";
                     }
@@ -1198,6 +1209,15 @@ if (scorrimento < sogliaBloccoAltro) {
             homeScreen.scrollLeft = 0; 
                        document.getElementById('clock-screen').classList.remove('open');
             document.getElementById('clock-scroll-wrapper').scrollTop = 0;
+                        // Rimuove lo stato congelato al reset
+            const fotoSonnoReset = document.querySelector('.sleep-section');
+            if (fotoSonnoReset) {
+                fotoSonnoReset.classList.remove('sleep-section-congelata');
+                fotoSonnoReset.style.transform = "translateY(0px)";
+                fotoSonnoReset.style.opacity = "1";
+                fotoSonnoReset.style.visibility = "visible";
+            }
+
                         // NUOVO: Ripristina il primo pallino attivo al reset
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 if (index === 0) dot.classList.add('active');
