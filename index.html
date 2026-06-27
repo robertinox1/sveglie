@@ -217,6 +217,8 @@
             box-sizing: border-box;
             /* MODIFICATO: Aggiunto margine per allontanarla dalla scritta Sveglie e spingerla in basso */
             margin-top: 15px !important; 
+               position: sticky !important;
+            top: 58px !important; 
         }
         .sleep-full-img {
             height: 22px !important; 
@@ -1155,7 +1157,7 @@ if (scorrimento < sogliaBloccoAltro) {
 
                                        // Ripristinati i calcoli originali al 100% per far funzionare l'animazione
                     // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
-                    // Gestione della Foto Sonno ricalibrata sulle nuove altezze visive dello schermo
+                    // Gestione della Foto Sonno con Ancoraggio Nativo e Dissolvenza Originale
                     if (scorrimento >= 65) { 
                         fotoSonno.style.display = "block";
                         fotoSonno.style.zIndex = "32"; 
@@ -1165,21 +1167,17 @@ if (scorrimento < sogliaBloccoAltro) {
                             fotoSonno.style.visibility = "hidden";  
                         } else if (scorrimento > 130) { 
                             fotoSonno.style.visibility = "visible";
-                            fotoSonno.style.transform = "translateY(65px)"; 
+                            
+                            // Mantiene la posizione e sfuma con la tua formula originale
                             let fattoreDissolvenza = (scorrimento - 130) / 30; 
                             fotoSonno.style.opacity = Math.max(0, 1 - fattoreDissolvenza);
                         } else {
                             fotoSonno.style.visibility = "visible";
-                            
-                            // LOGICA IDENTICA: Si muove di pari passo con lo scorrimento.
-                            // Mantiene la distanza costante dal tasto modifica senza frizioni o tremolii.
-                            fotoSonno.style.transform = `translateY(${scorrimento}px)`; 
                             fotoSonno.style.opacity = "1";
                         }
                     } else {
                         fotoSonno.style.visibility = "visible";
                         fotoSonno.style.display = "block";
-                        fotoSonno.style.transform = "translateY(0px)";
                         fotoSonno.style.opacity = "1";
                         fotoSonno.style.zIndex = "30";
                     }
